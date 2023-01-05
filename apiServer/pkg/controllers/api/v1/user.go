@@ -2,6 +2,7 @@ package v1controllers
 
 import (
 	"encoding/json"
+	"io"
 
 	u "github.com/SpotKube/SpotKube/apiServer/pkg/helpers"
 	v1s "github.com/SpotKube/SpotKube/apiServer/pkg/services/api/v1"
@@ -14,16 +15,19 @@ func UserList(c *gin.Context) {
 	var userService v1s.UserService
 
 	//decode the request body into struct and failed if any error occur
+
 	err := json.NewDecoder(c.Request.Body).Decode(&userService.User)
-	if err != nil {
+
+	if err == nil || err == io.EOF {
+		//call service
+		resp := userService.UserList()
+
+		//return response using api helper
+		u.Respond(c.Writer, resp)
+
+	} else if err != nil {
 		u.Respond(c.Writer, u.Message(1, "Invalid request"))
 		return
 	}
-
-	//call service
-	resp := userService.UserList()
-
-	//return response using api helper
-	u.Respond(c.Writer, resp)
 
 }

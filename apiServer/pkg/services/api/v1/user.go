@@ -8,9 +8,9 @@ import (
 
 // User structure
 type User struct {
-	ID    uint   `gorm:"primary_key" json:"id,omitempty"`
-	Name  string `gorm:"type:varchar(50)" json:"name" validate:"required"`
-	Email string `gorm:"type:varchar(50)" json:"email" validate:"required,email"`
+	ID    uint   `json:"id,omitempty"`
+	Name  string `json:"name"`
+	Email string `json:"email"`
 }
 
 // UserService struct
@@ -20,10 +20,8 @@ type UserService struct {
 
 // UserList function returns the list of users
 func (us *UserService) UserList() map[string]interface{} {
-	user := us.User
 
 	userData := res.UserResponse{
-		ID:    user.ID,
 		Name:  "test",
 		Email: "test@gmail.com",
 	}
