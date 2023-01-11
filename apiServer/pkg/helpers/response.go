@@ -12,8 +12,8 @@ type ResponseData struct {
 }
 
 // Message returns map data
-func Message(status int, message string) map[string]interface{} {
-	return map[string]interface{}{"status": status, "message": message}
+func Message(errno int, message string) map[string]interface{} {
+	return map[string]interface{}{"errno": errno, "message": message}
 }
 
 // Respond returns basic response structure

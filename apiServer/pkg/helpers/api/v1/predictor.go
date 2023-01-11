@@ -1,7 +1,7 @@
 package v1resources
 
 type PredictorResponse struct {
-	rps    string `json:"rps"`
-	cpu    string `json:"cpu"`
-	memory string `json:"memory"`
+	Rps    string `json:"rps"`
+	Cpu    string `json:"cpu"`
+	Memory string `json:"memory"`
 }
