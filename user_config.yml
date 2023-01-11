@@ -2,23 +2,11 @@ version: 1.0
 
 services:
   - name: service1
-    maxRPS: 10000
-      metrices:
-        cpu:
-        memory:
-    minRPS: 100
-      metrices:
-          cpu:
-          memory:
+      maxRPS: 10000
+      minRPS: 100
 
   - name: service2
-    maxRPS: 50000
-      metrices:
-        cpu:
-        memory:
-    minRPS: 100
-      metrices:
-        cpu:
-        memory:
+      maxRPS: 50000
+      minRPS: 100
 
 
