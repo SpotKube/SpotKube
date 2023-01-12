@@ -34,7 +34,7 @@ func (mps *MetricPredictorService) Predict(filepath string) map[string]interface
 	mps.predictCpu(filepath)
 	mps.predictMemory(filepath)
 
-	// update the user_config file. nned to implement a functionality for that
+	// update the config file. need to implement a functionality for that
 
 	// metricData := res.PredictorResponse{
 	// 	Rps:    mps.cpuPredictor.Rps,
