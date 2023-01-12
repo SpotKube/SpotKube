@@ -39,6 +39,7 @@ func SetupRouter() *gin.Engine {
 		v1.POST("user-list", apiControllerV1.UserList)
 		// v1.GET("user-list", apiControllerV1.UserList)
 		v1.POST("predict-metrices", apiControllerV1.MetricPredictor)
+		v1.POST("calculate-pods", apiControllerV1.PodCalculator)
 	}
 
 	return r

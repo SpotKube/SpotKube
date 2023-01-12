@@ -20,5 +20,9 @@ services:
         metrices:
           cpu:
           memory:
+resources:
+  pods:
+    maxCPU: 100m
+    maxMemory: 200Mi
 
 
