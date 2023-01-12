@@ -2,24 +2,25 @@ version: 1.0
 
 services:
   - name: service1
-      maxRPS: 10000
-        metrices:
-          cpu:
-          memory:
-      minRPS: 100
-        metrices:
-            cpu:
-            memory:
+    maxRPS: 
+      rps: 10000
+      cpu:
+      memory:
+    minRPS:
+      rps: 100
+      cpu:
+      memory:
 
   - name: service2
-      maxRPS: 50000
-        metrices:
-          cpu:
-          memory:
-      minRPS: 100
-        metrices:
-          cpu:
-          memory:
+    maxRPS:
+      rps: 50000
+      cpu:
+      memory:
+    minRPS:
+      rps: 100
+      cpu:
+      memory:
+
 resources:
   pods:
     maxCPU: 100m
