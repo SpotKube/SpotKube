@@ -2,4 +2,4 @@
 
 ## High Level Architecture
 
-![SpotKube](/posts/path/to/img.jpg "SpotKube")
+![SpotKube](https://github.com/SpotKube/SpotKube/blob/main/resources/OPEN%20SOURCE%20%20-%20Methodology.png "SpotKube")
