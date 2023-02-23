@@ -1,15 +1,15 @@
 data "local_file" "public_key" {
-  filename = "/home/pasindu/.ssh/id_spotkube.pub"
+  filename = "${var.file_path}"
 }
 
 resource "aws_key_pair" "key" {
-  key_name   = "spotkube"
+  key_name   = "spotkube_key"
   public_key = "${data.local_file.public_key.content}"
 }
 
 # Create ec2 instances on the subnets
 resource "aws_instance" "management_node" {
-  ami           = "ami-0533f2ba8a1995cf9"
+  ami           = var.ami_id
   instance_type = "t2.micro"
   key_name      = "${aws_key_pair.key.key_name}"
 
