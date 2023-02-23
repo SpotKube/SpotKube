@@ -9,7 +9,7 @@ resource "aws_instance" "test_node" {
   associate_public_ip_address = true
 
   tags = {
-    "Name" : "spotkube_managment_node"
+    "Name" : "spotkube_test_node"
   }
 }
 
