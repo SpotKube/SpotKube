@@ -17,14 +17,7 @@ resource "aws_instance" "management_node" {
   vpc_security_group_ids      = [aws_security_group.ingress_ssh.id]
   associate_public_ip_address = true
 
-  user_data = <<-EOF
-  #!/bin/bash -ex
-
-  sudo apt update
-  sudo apt install software-properties-common
-  sudo apt-add-repository --yes --update ppa:ansible/ansible
-  sudo apt install ansible
-  EOF
+  user_data = "${file("configure_management_node.sh")}"
 
   tags = {
     "Name" : "spotkube_managment_node"
