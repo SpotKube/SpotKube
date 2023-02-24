@@ -14,7 +14,7 @@ type MetricBody struct {
 	File string `json:"file"`
 }
 
-// metricPredictor function will give you the predicted metrices
+// metricPredictor function will give you the predicted metrics
 func MetricPredictor(c *gin.Context) {
 	var metricService v1s.MetricPredictorService
 	var metricBody MetricBody
