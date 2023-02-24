@@ -74,5 +74,3 @@ resource "aws_security_group" "ingress_ssh" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-
-
