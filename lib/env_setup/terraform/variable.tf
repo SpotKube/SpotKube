@@ -7,5 +7,5 @@ variable "ami_id" {
 }
 
 variable "file_path" {
-  default = "/home/pasindu/.ssh/id_spotkube.pub"
+  default = "/home/ksr/.ssh/id_spotkube.pub"
 }

@@ -12,4 +12,3 @@ resource "aws_instance" "test_node" {
     "Name" : "spotkube_test_node"
   }
 }
-
