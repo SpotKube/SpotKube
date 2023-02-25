@@ -1,6 +1,6 @@
 # Create ec2 instances on the subnets
 resource "aws_instance" "test_node" {
-  ami           = "ami-0533f2ba8a1995cf9"
+  ami           = "${var.ami_id}"
   instance_type = "t2.micro"
   key_name      = "${aws_key_pair.key.key_name}"
 
