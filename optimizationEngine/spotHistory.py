@@ -1,24 +1,20 @@
 import boto3
 import datetime
-from scipy.interpolate import interp1d
+from fbprophet import Prophet
+import pandas as pd
 
 client = boto3.client('ec2', region_name='us-east-1')
 # regions = [x["RegionName"] for x in client.describe_regions()["Regions"]]
 
 regions = ['us-east-1']
 
-INSTANCE = "p2.xlarge"
+INSTANCE = "c5.xlarge"
 print("Instance: %s" % INSTANCE)
 
-STARTTIME = (datetime.datetime.now() - datetime.timedelta(days=30)).isoformat()
+STARTTIME = (datetime.datetime.now() - datetime.timedelta(days=20)).isoformat()
 print("Start Time is: %s" % STARTTIME)
 
 results = []
-output = []
-vectors = {
-    'x': [],
-    'y': []
-}
 
 for region in regions:
     client = boto3.client('ec2', region_name=region)
@@ -36,40 +32,27 @@ for region in regions:
                         'Price': price["SpotPrice"]
                         })
 
-# for region, price in sorted(results, key=lambda x: x[1]):
-#     print("Region: %s price: %s" % (region, price))
-    count = 1
-    price = 0
-    for i in range(len(results)):
-        # this will not add the last timestamp to the output
-        # print("%sth result: %s" % (i, results[i]))
-        if i == 0:
-            temp = results[i]['Timestamp']
-        else:
-            if count == 1:
-                    price += float(results[i-1]['Price'])
-            if (results[i]['Timestamp'] == temp):
-                count += 1
-                price += float(results[i]['Price'])
-            else:
-                output.append({
-                    'Timestamp': results[i-1]['Timestamp'], 
-                    'Price': round(price/count, 3) 
-                })
-                vectors['x'].append(results[i-1]['Timestamp'])
-                vectors['y'].append(round(price/count, 3))
-                count = 1
-                price = 0
-                temp = results[i]['Timestamp']
-        
-        
-# print(output)
-# print(vectors)
-
-def interpolate(vectors, x):
-    # Finding the interpolation
-    y_interp = interp1d(vectors['x'], vectors['y'])
-    print("Value of Y at x = {} is".format(x),
-        y_interp(x))
     
-interpolate(vectors, '02-24-2023')
+df = pd.DataFrame.from_dict(results)
+df = df.rename(columns={'Timestamp': 'ds', 'Price': 'y'})
+
+df_new = df.sort_values('y', ascending=False).drop_duplicates('ds').sort_index()
+
+print(df_new)
+
+def interpolate(df):
+    model = Prophet(
+        daily_seasonality = True,
+        yearly_seasonality = False,
+    )
+    model.fit(df)
+    
+    future = model.make_future_dataframe(periods=1)
+    forecast = model.predict(future)
+    predicted_price = forecast['yhat'].iloc[-1]
+    
+    print('Predicted spot price:', round(predicted_price, 3))
+    
+    return round(predicted_price, 3)
+    
+interpolate(df_new)
