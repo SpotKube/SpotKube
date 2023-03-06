@@ -8,7 +8,7 @@ client = boto3.client('ec2', region_name='us-east-1')
 
 regions = ['us-east-1']
 
-INSTANCE = "c5.xlarge"
+INSTANCE = "m4.large"
 print("Instance: %s" % INSTANCE)
 
 STARTTIME = (datetime.datetime.now() - datetime.timedelta(days=20)).isoformat()
@@ -38,7 +38,7 @@ df = df.rename(columns={'Timestamp': 'ds', 'Price': 'y'})
 
 df_new = df.sort_values('y', ascending=False).drop_duplicates('ds').sort_index()
 
-print(df_new)
+# print(df_new)
 
 def interpolate(df):
     model = Prophet(
@@ -56,3 +56,4 @@ def interpolate(df):
     return round(predicted_price, 3)
     
 interpolate(df_new)
+print(df_new)
