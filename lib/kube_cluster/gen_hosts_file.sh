@@ -4,7 +4,7 @@ worker_ips=$(jq -r '.worker_ips.value | join(" ")' ../env_setup/terraform/terraf
 
 # Write the Ansible hosts file
 cat > hosts << EOF
-[control-plane]
+[control_plane]
 $control_plane_ip ansible_connection=ssh ansible_user=ubuntu
 
 [workers]
