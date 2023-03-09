@@ -1,5 +1,5 @@
 data "local_file" "public_key" {
-  filename = "${var.file_path}"
+  filename = "${var.pub_id_file_path}"
 }
 
 resource "aws_key_pair" "key" {
