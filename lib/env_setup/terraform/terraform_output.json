@@ -8,8 +8,18 @@
       ]
     ],
     "value": [
-      "10.0.47.239"
+      "10.0.50.74"
     ]
+  },
+  "management_node_public_ip": {
+    "sensitive": false,
+    "type": "string",
+    "value": "18.206.151.119"
+  },
+  "pod_network_cidr": {
+    "sensitive": false,
+    "type": "string",
+    "value": "10.0.32.0/19"
   },
   "worker_ips": {
     "sensitive": false,
@@ -21,8 +31,8 @@
       ]
     ],
     "value": [
-      "10.0.41.22",
-      "10.0.62.128"
+      "10.0.53.78",
+      "10.0.38.23"
     ]
   }
 }

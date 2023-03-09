@@ -17,9 +17,14 @@ resource "aws_instance" "management_node" {
   vpc_security_group_ids      = [aws_security_group.ingress_ssh.id]
   associate_public_ip_address = true
 
-  user_data = "${file("scripts/configure_management_node.sh")}"
+  # user_data = "${file("scripts/configure_management_node.sh")}"
 
   tags = {
     "Name" : "spotkube_managment_node"
   }
+}
+
+# Save the public ip of the management node
+output "management_node_public_ip" {
+  value = "${aws_instance.management_node.public_ip}"
 }
