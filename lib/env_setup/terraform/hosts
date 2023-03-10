@@ -2,8 +2,8 @@
 10.0.50.74 
 
 [workers]
-10.0.53.78 ansible_connection=ssh ansible_user=ubuntu
-10.0.38.23 ansible_connection=ssh ansible_user=ubuntu
+10.0.53.78 
+10.0.38.23
 
 [control_plane:vars]
 ansible_connection=ssh

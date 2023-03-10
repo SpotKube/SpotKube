@@ -1,6 +1,6 @@
 # Create ec2 instances on the subnets
 resource "aws_instance" "master_node" {
-  ami           = "ami-0533f2ba8a1995cf9"
+  ami           = var.ami_id
   instance_type = "t2.micro"
   key_name      = "${aws_key_pair.key.key_name}"
 
@@ -16,7 +16,7 @@ resource "aws_instance" "master_node" {
 # Create ec2 instances on the subnets
 resource "aws_instance" "worker_node" {
   count         = 2 
-  ami           = "ami-0533f2ba8a1995cf9"
+  ami           = var.ami_id
   instance_type = "t2.micro"
   key_name      = "${aws_key_pair.key.key_name}"
 
