@@ -1,9 +1,10 @@
 #! /bin/bash
 
-# terraform destroy -auto-approve -target=aws_instance.management_node
-# terraform init
-# terraform apply -auto-approve
-# terraform output -json > terraform_output.json
+terraform destroy -auto-approve -target=aws_instance.management_node -target=aws_instance.worker_node -target=aws_instance.control_plane_node
+terraform init
+terraform apply -auto-approve
+sleep 60 # Wait for 60 seconds to ensure the instances are fully provisioned
+terraform output -json > terraform_output.json
 
 # Read control_plane_ip and worker_ips from input.json using jq
 control_plane_ip=$(jq -r '.control_plane_ip.value[0]' terraform_output.json)
@@ -45,7 +46,8 @@ scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr ~/.ssh/id_spotkube.pub
 ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" ubuntu@$management_node_public_ip <<EOF
 
 cd ansible
-# sh configure_management_node.sh
+sh configure_management_node.sh
 cp kube_cluster/.ansible.cfg ~/.ansible.cfg
-
+ansible-playbook -i hosts kube_cluster/initial.yml
+ansible-playbook -i hosts kube_cluster/kube-depndencies.yml
 EOF

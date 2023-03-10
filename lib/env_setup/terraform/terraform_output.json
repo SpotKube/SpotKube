@@ -8,13 +8,13 @@
       ]
     ],
     "value": [
-      "10.0.50.74"
+      "10.0.55.83"
     ]
   },
   "management_node_public_ip": {
     "sensitive": false,
     "type": "string",
-    "value": "18.206.151.119"
+    "value": "3.235.10.144"
   },
   "pod_network_cidr": {
     "sensitive": false,
@@ -31,8 +31,8 @@
       ]
     ],
     "value": [
-      "10.0.53.78",
-      "10.0.38.23"
+      "10.0.54.152",
+      "10.0.62.53"
     ]
   }
 }
