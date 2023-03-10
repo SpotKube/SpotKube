@@ -50,4 +50,5 @@ sh configure_management_node.sh
 cp kube_cluster/.ansible.cfg ~/.ansible.cfg
 ansible-playbook -i hosts kube_cluster/initial.yml
 ansible-playbook -i hosts kube_cluster/kube-depndencies.yml
+ansible-playbook -i hosts kube_cluster/control-plane.yml
 EOF
