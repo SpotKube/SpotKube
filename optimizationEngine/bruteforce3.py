@@ -10,47 +10,35 @@ node_types = {
     'c6g.xlarge': {'cpu': 4, 'memory': 8, 'cost': 0.06},
 }
 
-
 # Define the memory and CPU requirements of each pod
 pod_requirements = {
-    'Service 1': {
-        'memory': 2,
-        'cpu': 1,
-    },
-    'Service 2': {
-        'memory': 2,
-        'cpu': 1,
-    },
-    # Add more pods here if needed
+    'Service 1': {'memory': 3, 'cpu': 2},
+    'Service 2': {'memory': 5, 'cpu': 2},
 }
 
 # Define the total number of pods to deploy
 total_pods = len(pod_requirements)
 
 # Generate all possible combinations of nodes with repetition based on the pod requirements
-node_combinations = []
-for r in range(1, len(node_types) * total_pods + 1):
-    for nodes in itertools.product(node_types.keys(), repeat=r):
-        # Check if the selected nodes can deploy all the pods
-        total_memory = sum(node_types[node]['memory'] for node in nodes)
-        total_cpu = sum(node_types[node]['cpu'] for node in nodes)
-        if total_memory >= sum(pod['memory'] for pod in pod_requirements.values()) \
-                and total_cpu >= sum(pod['cpu'] for pod in pod_requirements.values()):
-            node_combinations.append(nodes)
-
+node_combinations = (nodes for r in range(1, 5)
+                    for nodes in itertools.product(node_types.keys(), repeat=r))
+print(*node_combinations)
 # Evaluate the cost function for each combination of nodes and select the optimal one
 optimal_cost = float('inf')
 optimal_nodes = None
 for nodes in node_combinations:
-    # Calculate the total memory and CPU capacity of the selected nodes
-    total_memory = sum(node_types[node]['memory'] for node in nodes)
-    total_cpu = sum(node_types[node]['cpu'] for node in nodes)
+    # Calculate the total memory and CPU requirements of the nodes and pods
+    total_memory_nodes = total_cpu_nodes = 0
+    total_memory_pods = sum(pod['memory'] for pod in pod_requirements.values())
+    total_cpu_pods = sum(pod['cpu'] for pod in pod_requirements.values())
+    for node in nodes:
+        total_memory_nodes += node_types[node]['memory']
+        total_cpu_nodes += node_types[node]['cpu']
 
     # Check if the selected nodes can deploy all the pods
-    if total_memory >= sum(pod['memory'] for pod in pod_requirements.values()) \
-            and total_cpu >= sum(pod['cpu'] for pod in pod_requirements.values()):
+    if total_memory_nodes >= total_memory_pods and total_cpu_nodes >= total_cpu_pods:
         # Calculate the cost of the selected nodes
-        cost = sum(node_types[node]['price'] for node in nodes)
+        cost = sum(node_types[node]['cost'] for node in nodes)
         if cost < optimal_cost:
             optimal_cost = cost
             optimal_nodes = nodes
