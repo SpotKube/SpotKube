@@ -17,6 +17,11 @@ resource "aws_subnet" "spot_subnet" {
   }
 }
 
+# Output aws pod network cidr
+output "pod_network_cidr" {
+  value = aws_subnet.spot_subnet.cidr_block
+}
+
 # Attach an internet gateway to the VPC
 resource "aws_internet_gateway" "spotkube_ig" {
   vpc_id = aws_vpc.spot_vpc.id
@@ -25,6 +30,7 @@ resource "aws_internet_gateway" "spotkube_ig" {
     Name = "spotkube_Internet-Gateway"
   }
 }
+
 
 # Create a route table for a public subnet
 resource "aws_route_table" "public_rt" {
