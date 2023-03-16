@@ -1,5 +1,11 @@
-module "env" {
-  source = "../../env_setup/terraform"
+data "terraform_remote_state" "env_setup" {
+  backend = "s3"
+
+  config = {
+    bucket = "spotkube-terraform-state-bucket"
+    key    = "env_setup-terraform.tfstate"
+    region = "us-west-2"
+   }
 }
 
 resource "aws_spot_instance_request" "worker_nodes" {
@@ -8,10 +14,13 @@ resource "aws_spot_instance_request" "worker_nodes" {
   spot_price             = "${each.value.spot_price}"
   instance_type          = "${each.value.instance_type}"
   spot_type              = "one-time"
-  block_duration_minutes = "120"
   wait_for_fulfillment   = "true"
-  key_name               = "spot_key"
+  key_name               = "spotkube_key" # Need to change
 
-  security_groups = ["${module.env.aws_subnet.spot_subnet.id}"]
-  # subnet_id = "${aws_subnet.subnet-uno.id}"
+  security_groups = ["${data.terraform_remote_state.env_setup.outputs.security_group_id}"]
+  subnet_id = "${data.terraform_remote_state.env_setup.outputs.subnet_id}"
+
+  tags = {
+    "Name" : "${each.key}"
+  }
 }
