@@ -1,0 +1,33 @@
+[
+    {
+        "instance": "t2.small",
+        "vcpu": 1000,
+        "memory": 2000
+    },
+    {
+        "instance": "t3.medium",
+        "vcpu": 2000,
+        "memory": 4000
+    },
+    {
+        "instance": "m6g.medium",
+        "vcpu": 1000,
+        "memory": 4000
+    },
+    {
+        "instance": "c6a.large",
+        "vcpu": 2000,
+        "memory": 4000
+    },
+    {
+        "instance": "t4g.large",
+        "vcpu": 2000,
+        "memory": 8000
+    },
+    {
+        "instance": "c6g.xlarge",
+        "vcpu": 4000,
+        "memory": 8000
+    }
+    
+]
