@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// metricPredictor function will give you the predicted metrices
+// metricPredictor function will give you the predicted metrics
 func PodCalculator(c *gin.Context) {
 	var metricService v1s.MetricPredictorService
 	var metricBody MetricBody

@@ -3,12 +3,16 @@ set -e
 
 # Install Ansible
 sudo apt update
-sudo apt install software-properties-common
+sudo apt install -y software-properties-common
 sudo apt-add-repository --yes --update ppa:ansible/ansible
 sudo apt install -y ansible
 
 # Install Terraform
 sudo apt-get update
+touch ~/.ansible.cfg
+echo "[defaults]" >> ~/.ansible.cfg
+echo "host_key_checking = False" >> ~/.ansible.cfg
+
 sudo apt install -y gnupg
 
 wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/share/keyrings/hashicorp-archive-keyring.gpg

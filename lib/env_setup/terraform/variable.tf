@@ -6,6 +6,11 @@ variable "ami_id" {
   default = "ami-0557a15b87f6559cf"
 }
 
-variable "file_path" {
-  default = "/home/pasindu/.ssh/id_spotkube.pub"
+variable "pub_id_file_path" {
+  # default = "/home/ksr/.ssh/id_spotkube.pub"
+  type        = string
+  description = "This contains the public key file path"
 }
+
+
+

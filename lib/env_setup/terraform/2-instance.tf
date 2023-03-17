@@ -1,5 +1,5 @@
 data "local_file" "public_key" {
-  filename = "${var.file_path}"
+  filename = "${var.pub_id_file_path}"
 }
 
 resource "aws_key_pair" "key" {
@@ -22,4 +22,9 @@ resource "aws_instance" "management_node" {
   tags = {
     "Name" : "spotkube_managment_node"
   }
+}
+
+# Save the public ip of the management node
+output "management_node_public_ip" {
+  value = "${aws_instance.management_node.public_ip}"
 }
