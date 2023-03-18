@@ -9,7 +9,7 @@ terraform {
 
   backend "s3" {
     bucket = "spotkube-terraform-state-bucket"
-    key    = "env_setup-terraform.tfstate"
+    key    = "private_cloud-terraform.tfstate"
     region = "us-west-2"
   }
 }
