@@ -51,30 +51,20 @@ resource "openstack_networking_router_interface_v2" "router_interface" {
   subnet_id   = openstack_networking_subnet_v2.private_subnet.id
 }
 
-# Create a security group
-resource "openstack_compute_secgroup_v2" "ssh_access" {
-  name        = "ssh_access"
-  description = "Security group for SSH access"
-
-  rule {
-    from_port   = 22
-    to_port     = 22
-    ip_protocol = "tcp"
-    cidr        = "0.0.0.0/0"
-  }
+resource "openstack_networking_secgroup_v2" "ssh_access_group" {
+  name        = "SSH access group"
+  description = "Allows SSH traffic to reach virtual machine instances"
 }
 
-# resource "openstack_networking_port_v2" "port_1" {
-#   name               = "port_1"
-#   network_id         = "${openstack_networking_network_v2.private_network.id}"
-#   admin_state_up     = "true"
-#   security_group_ids = ["${openstack_compute_secgroup_v2.secgroup_1.id}"]
+resource "openstack_networking_secgroup_rule_v2" "ssh_access_rule" {
+  direction     = "ingress"
+  ethertype     = "IPv4"
+  protocol      = "tcp"
+  port_range_min = 22
+  port_range_max = 22
 
-#   fixed_ip {
-#     subnet_id  = "${openstack_networking_subnet_v2.private_subnet.id}"
-#     ip_address = "10.0.1.10"
-#   }
-# }
+  security_group_id = openstack_networking_secgroup_v2.ssh_access_group.id
+}
 
 # Create an instance
 resource "openstack_compute_instance_v2" "private_master" {
@@ -82,7 +72,7 @@ resource "openstack_compute_instance_v2" "private_master" {
   image_id        = data.openstack_images_image_v2.image.id
   flavor_id       = data.openstack_compute_flavor_v2.flavor.id
   key_pair        = var.keypair
-  security_groups = [openstack_compute_secgroup_v2.ssh_access.id]
+  security_groups = [openstack_networking_secgroup_v2.ssh_access_group.id]
 
   network {
     name = "${openstack_networking_network_v2.private_network.name}"
