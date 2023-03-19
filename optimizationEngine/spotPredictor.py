@@ -52,7 +52,7 @@ def updateJson(file, instance, price):
     with open(file, "r") as jsonFile:
         data = json.load(jsonFile)
 
-    data[instance]["price"] = price
+    data[instance]["cost"] = price
     data[instance]["date"] = str(datetime.datetime.now().date())
 
     with open(file, "w") as jsonFile:
