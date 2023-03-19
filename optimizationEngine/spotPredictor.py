@@ -2,26 +2,19 @@ import boto3
 import datetime
 from fbprophet import Prophet
 import pandas as pd
+import json as json
 
-client = boto3.client('ec2', region_name='us-east-1')
-# regions = [x["RegionName"] for x in client.describe_regions()["Regions"]]
-
-regions = ['us-east-1']
-
-INSTANCE = "m4.large"
-print("Instance: %s" % INSTANCE)
-
-STARTTIME = (datetime.datetime.now() - datetime.timedelta(days=20)).isoformat()
-print("Start Time is: %s" % STARTTIME)
 
 results = []
 
-for region in regions:
-    client = boto3.client('ec2', region_name=region)
+def history(client, instance, region_):
+    INSTANCE = instance
+    STARTTIME = (datetime.datetime.now() - datetime.timedelta(days=20)).isoformat()
+    
     prices = client.describe_spot_price_history(
         InstanceTypes=[INSTANCE],
         ProductDescriptions=['Linux/UNIX'],
-        AvailabilityZone='us-east-1a',
+        AvailabilityZone="{region_}a".format(region_= region_),
         StartTime=STARTTIME,
         MaxResults=100
     )
@@ -32,13 +25,13 @@ for region in regions:
                         'Price': price["SpotPrice"]
                         })
 
+        
+    df = pd.DataFrame.from_dict(results)
+    df = df.rename(columns={'Timestamp': 'ds', 'Price': 'y'})
+    df = df.sort_values('y', ascending=False).drop_duplicates('ds').sort_index()
     
-df = pd.DataFrame.from_dict(results)
-df = df.rename(columns={'Timestamp': 'ds', 'Price': 'y'})
+    return df
 
-df_new = df.sort_values('y', ascending=False).drop_duplicates('ds').sort_index()
-
-# print(df_new)
 
 def interpolate(df):
     model = Prophet(
@@ -54,6 +47,21 @@ def interpolate(df):
     print('Predicted spot price:', round(predicted_price, 3))
     
     return round(predicted_price, 3)
+
+def updateJson(file, instance, price):
+    with open(file, "r") as jsonFile:
+        data = json.load(jsonFile)
+
+    data[instance]["price"] = price
+    data[instance]["date"] = str(datetime.datetime.now().date())
+
+    with open(file, "w") as jsonFile:
+        json.dump(data, jsonFile)
     
-interpolate(df_new)
-print(df_new)
+if __name__ == '__main__':
+    region = "us-east-1"
+    instance = "t3.medium"
+    client = boto3.client('ec2', region_name=region)
+    df = history(client, instance, region)
+    price = interpolate(df)
+    updateJson('./.spotConfig.json', instance, price)
