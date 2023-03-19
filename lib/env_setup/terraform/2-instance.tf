@@ -15,11 +15,16 @@ resource "aws_instance" "management_node" {
 
   subnet_id                   = aws_subnet.spot_subnet.id
   vpc_security_group_ids      = [aws_security_group.ingress_ssh.id]
-  associate_public_ip_address = true
+  # associate_public_ip_address = true
 
   user_data = "${file("scripts/configure_management_node.sh")}"
 
   tags = {
     "Name" : "spotkube_managment_node"
   }
+}
+
+resource "aws_eip" "management_node-eip" {
+  instance = aws_instance.management_node.id
+  vpc      = true
 }
