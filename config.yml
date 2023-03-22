@@ -23,7 +23,7 @@ services:
 
 resources:
   pods:
-    maxCPU: 100m
-    maxMemory: 200Mi
+    maxCPU: 0.4
+    maxMemory: 0.6
 
 
