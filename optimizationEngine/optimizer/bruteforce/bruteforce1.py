@@ -1,15 +1,8 @@
 import itertools
-import helper
+from bruteforce import helper
 
 # Define the available node types and their prices
-instances = {
-    't3.medium': {'cpu': 2, 'memory': 4, 'cost': 0.01},
-    'm6g.medium': {'cpu': 1, 'memory': 4, 'cost': 0.01},
-    'c6a.large': {'cpu': 2, 'memory': 4, 'cost': 0.02},
-    't4g.large': {'cpu': 2, 'memory': 8, 'cost': 0.02},
-    'c6g.xlarge': {'cpu': 4, 'memory': 8, 'cost': 0.06},
-    't2.small': {'cpu': 1, 'memory': 2, 'cost': 0.006}
-}
+instances = helper.readJson('../.spotConfig.json') ### These file paths are relative to the main.py file in optimizer package
 
 # Define the memory and CPU requirements of each service
 service_requirements = {
@@ -33,7 +26,6 @@ def optimize():
     for nodes in (nodes for r in range(1, 2 * total_pods + 1) # r ranges from 1 to len(node_types) * total_pods + 1
                         for nodes in itertools.product(node_types.keys(), repeat=r)):
         # Calculate the total memory and CPU requirements of the nodes and pods
-        print(nodes)
         total_memory_nodes = total_cpu_nodes = 0
         total_memory_pods = sum(pod['memory'] for pod in pod_requirements.values())
         total_cpu_pods = sum(pod['cpu'] for pod in pod_requirements.values())
@@ -55,4 +47,3 @@ def optimize():
     else:
         print("Optimal solution: {} (Cost: ${})".format(optimal_nodes, optimal_cost))
 
-optimize()

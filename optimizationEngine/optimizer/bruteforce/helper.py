@@ -1,9 +1,11 @@
-import yaml
 from collections import defaultdict
+
+import json
+import yaml
 
 def calculateResources(services):
     pods = defaultdict(dict)
-    with open("../../../config.yml", "r") as stream:
+    with open("../../config.yml", "r") as stream:
         try:
             data = yaml.safe_load(stream)
             maxCPU = data['resources']['pods']['maxCPU']
@@ -17,10 +19,9 @@ def calculateResources(services):
     print(pods)
     return pods
 
-# def main():
-#     service_requirements = {
-#     'Service 1': {'pods': 3,},
-#     'Service 2': {'pods': 5}
-#     }
-#     print(calculateResources(service_requirements))
+
+def readJson(file):
+    with open(file, "r") as jsonFile:
+        data = json.load(jsonFile)
+    return data
     
