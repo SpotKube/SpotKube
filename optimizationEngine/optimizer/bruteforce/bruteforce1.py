@@ -1,4 +1,5 @@
 import itertools
+import helper
 
 # Define the available node types and their prices
 instances = {
@@ -11,9 +12,9 @@ instances = {
 }
 
 # Define the memory and CPU requirements of each service
-pod_requirements = {
-    'Service 1': {'memory': 3, 'cpu': 2},
-    'Service 2': {'memory': 5, 'cpu': 2},
+service_requirements = {
+    'Service 1': {'pods': 3,},
+    'Service 2': {'pods': 5}
 }
 
 # sort node types based on the cost
@@ -24,6 +25,7 @@ def sort_node_types(item):
 def optimize():
     node_types = dict(sorted(instances.items(), key=sort_node_types))
     # Define the total number of pods to deploy
+    pod_requirements = helper.calculateResources(service_requirements)
     total_pods = len(pod_requirements)
     # Evaluate the cost function for each combination of nodes and select the optimal one
     optimal_cost = float('inf')
@@ -52,3 +54,5 @@ def optimize():
         print("Unable to find a valid solution.")
     else:
         print("Optimal solution: {} (Cost: ${})".format(optimal_nodes, optimal_cost))
+
+optimize()
