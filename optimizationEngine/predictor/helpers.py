@@ -58,10 +58,4 @@ def updateJson(file, instance, price):
     with open(file, "w") as jsonFile:
         json.dump(data, jsonFile)
     
-if __name__ == '__main__':
-    region = "us-east-1"
-    instance = "t3.medium"
-    client = boto3.client('ec2', region_name=region)
-    df = history(client, instance, region)
-    price = interpolate(df)
-    updateJson('./.spotConfig.json', instance, price)
+
