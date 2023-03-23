@@ -10,3 +10,9 @@ variable "ami_id" {
 variable "spot_instances" {
   type = map
 }
+
+variable "pub_id_file_path" {
+  default = "/home/ubuntu/.ssh/id_rsa.pub"
+  type        = string
+  description = "This contains the public key file path"
+}

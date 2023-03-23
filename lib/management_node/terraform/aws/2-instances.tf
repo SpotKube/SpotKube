@@ -4,7 +4,7 @@ resource "aws_instance" "master_node" {
   key_name      = "${aws_key_pair.key.key_name}"
 
   subnet_id                   = "${data.terraform_remote_state.env_setup.outputs.subnet_id}"
-  vpc_security_group_ids      = [aws_security_group.ingress_ssh.id]
+  vpc_security_group_ids      = ["${data.terraform_remote_state.env_setup.outputs.security_group_id}"]
 
   tags = {
     "Name" : "spotkube_master_node"
