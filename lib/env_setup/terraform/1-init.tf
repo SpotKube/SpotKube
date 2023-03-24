@@ -9,8 +9,8 @@ resource "aws_vpc" "spot_vpc" {
 
 resource "aws_subnet" "spot_subnet" {
   # creates a subnet
-  cidr_block        = "${cidrsubnet(aws_vpc.spot_vpc.cidr_block, 3, 1)}"
-  vpc_id            = "${aws_vpc.spot_vpc.id}"
+  cidr_block        = cidrsubnet(aws_vpc.spot_vpc.cidr_block, 3, 1)
+  vpc_id            = aws_vpc.spot_vpc.id
   availability_zone = var.availability_zone
   tags = {
     Name = "spotkube"
@@ -61,7 +61,7 @@ resource "aws_route_table_association" "public_1_rt_a" {
 # Create security groups to allow specific traffic
 resource "aws_security_group" "ingress_ssh" {
   name   = "allow-ssh-sg"
-  vpc_id = "${aws_vpc.spot_vpc.id}"
+  vpc_id = aws_vpc.spot_vpc.id
 
   ingress {
     cidr_blocks = [

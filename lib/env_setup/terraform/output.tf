@@ -16,5 +16,5 @@ output "security_group_https_id" {
 
 # Save the public ip of the management node
 output "management_node_public_ip" {
-  value = "${aws_instance.management_node.public_ip}"
+  value = aws_instance.management_node.public_ip
 }
