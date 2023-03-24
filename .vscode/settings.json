@@ -1,0 +1,5 @@
+{
+    "yaml.schemas": {
+        "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/playbook": "file:///home/ksr/Documents/FYP/dev/SpotKube/lib/management_node/ansible/kube-depndencies.yml"
+    }
+}
