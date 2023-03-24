@@ -1,14 +1,14 @@
 resource "aws_spot_instance_request" "worker_nodes" {
-  for_each = var.spot_instances
-  ami                    = "${var.ami_id}"
-  spot_price             = "${each.value.spot_price}"
-  instance_type          = "${each.value.instance_type}"
-  spot_type              = "one-time"
-  wait_for_fulfillment   = "true"
-  key_name               = "${aws_key_pair.key.key_name}"
+  for_each             = var.spot_instances
+  ami                  = var.ami_id
+  spot_price           = each.value.spot_price
+  instance_type        = each.value.instance_type
+  spot_type            = "one-time"
+  wait_for_fulfillment = "true"
+  key_name             = aws_key_pair.key.key_name
 
   security_groups = ["${data.terraform_remote_state.env_setup.outputs.security_group_ssh_id}", "${data.terraform_remote_state.env_setup.outputs.security_group_http_id}", "${data.terraform_remote_state.env_setup.outputs.security_group_https_id}"]
-  subnet_id = "${data.terraform_remote_state.env_setup.outputs.subnet_id}"
+  subnet_id       = data.terraform_remote_state.env_setup.outputs.subnet_id
 
   tags = {
     "Name" : "${each.key}"
