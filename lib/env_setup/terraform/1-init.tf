@@ -82,7 +82,8 @@ resource "aws_security_group" "ingress_ssh" {
 }
 
 resource "aws_security_group" "ingress_http" {
-  name_prefix = "http_ingress_"
+  name_prefix = "allow-http-sg"
+  vpc_id = aws_vpc.spot_vpc.id
 
   ingress {
     from_port   = 80
@@ -97,8 +98,9 @@ resource "aws_security_group" "ingress_http" {
 }
 
 resource "aws_security_group" "ingress_https" {
-  name_prefix = "http_ingress_"
-
+  name_prefix = "allow-https-sg"
+  vpc_id = aws_vpc.spot_vpc.id
+  
   ingress {
     from_port   = 443
     to_port     = 443
