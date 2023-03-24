@@ -14,7 +14,7 @@ resource "aws_instance" "management_node" {
   key_name      = "${aws_key_pair.key.key_name}"
 
   subnet_id                   = aws_subnet.spot_subnet.id
-  vpc_security_group_ids      = [aws_security_group.ingress_ssh.id]
+  vpc_security_group_ids      = [aws_security_group.ingress_ssh.id, aws_security_group.ingress_http.id, aws_security_group.ingress_https.id]
   # associate_public_ip_address = true
 
   user_data = "${file("scripts/configure_management_node.sh")}"
