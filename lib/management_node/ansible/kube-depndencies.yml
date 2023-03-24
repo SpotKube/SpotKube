@@ -38,24 +38,24 @@
         enabled: yes
 
     - name: add Kubernetes apt-key
-     apt_key:
+      apt_key:
        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
        state: present
 
     - name: add Kubernetes' APT repository
-     apt_repository:
-      repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
-      state: present
-      filename: 'kubernetes'
+      apt_repository:
+        repo: deb http://apt.kubernetes.io/ kubernetes-xenial main
+        state: present
+        filename: 'kubernetes'
 
     - name: install kubelet
-     apt:
+      apt:
        name: kubelet=1.22.4-00
        state: present
        update_cache: true
 
     - name: install kubeadm
-     apt:
+      apt:
        name: kubeadm=1.22.4-00
        state: present
 
@@ -63,7 +63,7 @@
   become: yes
   tasks:
     - name: install kubectl
-     apt:
+      apt:
        name: kubectl=1.22.4-00
        state: present
        force: yes
