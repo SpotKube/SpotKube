@@ -1,5 +1,5 @@
 output "subnet_id" {
-  value = aws_subnet.spot_subnet.id
+  value = aws_subnet.spot_public_subnet.id
 }
 
 output "security_group_ssh_id" {

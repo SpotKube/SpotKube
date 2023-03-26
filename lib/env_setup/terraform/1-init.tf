@@ -7,7 +7,7 @@ resource "aws_vpc" "spot_vpc" {
   }
 }
 
-resource "aws_subnet" "spot_subnet" {
+resource "aws_subnet" "spot_public_subnet" {
   # creates a subnet
   cidr_block        = cidrsubnet(aws_vpc.spot_vpc.cidr_block, 3, 1)
   vpc_id            = aws_vpc.spot_vpc.id
@@ -19,7 +19,7 @@ resource "aws_subnet" "spot_subnet" {
 
 # Output aws pod network cidr
 output "pod_network_cidr" {
-  value = aws_subnet.spot_subnet.cidr_block
+  value = aws_subnet.spot_public_subnet.cidr_block
 }
 
 # Attach an internet gateway to the VPC
@@ -54,7 +54,7 @@ resource "aws_route_table" "public_rt" {
 # Resource: aws_route_table_association
 # assiociate any public subnets with the route table.
 resource "aws_route_table_association" "public_1_rt_a" {
-  subnet_id      = aws_subnet.spot_subnet.id
+  subnet_id      = aws_subnet.spot_public_subnet.id
   route_table_id = aws_route_table.public_rt.id
 }
 
