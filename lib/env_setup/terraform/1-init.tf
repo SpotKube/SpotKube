@@ -9,7 +9,7 @@ resource "aws_vpc" "spot_vpc" {
 
 resource "aws_subnet" "spot_public_subnet" {
   # creates a subnet
-  cidr_block        = cidrsubnet(aws_vpc.spot_vpc.cidr_block, 3, 1)
+  cidr_block        = cidrsubnet(aws_vpc.spot_vpc.cidr_block, 8, 1)
   vpc_id            = aws_vpc.spot_vpc.id
   availability_zone = var.availability_zone
   tags = {
