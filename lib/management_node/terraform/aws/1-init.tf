@@ -26,3 +26,34 @@ resource "aws_subnet" "spot_private_subnet" {
     Name = "spotkube"
   }
 }
+
+# Create eip for nat gateway
+resource "aws_eip" "nat_eip" {
+  vpc = true
+}
+
+# Create nat gateway
+resource "aws_nat_gateway" "spotkube_nat" {
+  allocation_id = aws_eip.nat_eip.id
+  subnet_id     = data.terraform_remote_state.env_setup.outputs.public_subnet_id
+
+  tags = {
+    Name = "spotkube_nat"
+  }
+}
+
+# Create a route table for nat gateway
+resource "aws_route_table" "public_rt_nat" {
+  vpc_id = data.terraform_remote_state.env_setup.outputs.vpc_id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.spotkube_nat.id
+  }
+}
+
+resource "aws_route_table_association" "public_rt_nat_a" {
+  subnet_id = aws_subnet.spot_private_subnet.id
+  route_table_id = aws_route_table.public_rt_nat.id
+}
+
