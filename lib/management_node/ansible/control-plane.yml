@@ -4,7 +4,7 @@
   tasks:
     - name: Get variable from file
       set_fact:
-        pod_network_cidr: "{{ lookup('file', '../terraform_output.json') | from_json | json_query('pod_network_cidr.value') }}"
+        pod_network_cidr: "10.0.2.0/24"
         
     - name: initialize the cluster
       shell: kubeadm init --pod-network-cidr={{ pod_network_cidr }} >> cluster_initialized.txt
