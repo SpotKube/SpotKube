@@ -57,3 +57,19 @@ resource "aws_route_table_association" "public_rt_nat_a" {
   route_table_id = aws_route_table.public_rt_nat.id
 }
 
+resource "aws_security_group" "ingress_kubeapi" {
+  name_prefix = "allow-kubeapi-sg"
+  vpc_id = data.terraform_remote_state.env_setup.outputs.vpc_id
+
+  ingress {
+    from_port   = 6443
+    to_port     = 6443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "Kube api Ingress"
+  }
+}
+
