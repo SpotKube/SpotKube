@@ -16,3 +16,7 @@ variable "pub_id_file_path" {
   type        = string
   description = "This contains the public key file path"
 }
+
+variable "availability_zone" {
+  default = "us-east-1a"
+}
