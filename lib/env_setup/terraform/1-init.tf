@@ -31,7 +31,6 @@ resource "aws_internet_gateway" "spotkube_ig" {
   }
 }
 
-
 # Create a route table for a public subnet
 resource "aws_route_table" "public_rt" {
   vpc_id = aws_vpc.spot_vpc.id
