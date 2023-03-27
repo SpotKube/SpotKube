@@ -5,7 +5,7 @@ output "vpc_id" {
 output "vpc_cidr_block" {
   value = aws_vpc.spot_vpc.cidr_block
 }
-output "subnet_id" {
+output "public_subnet_id" {
   value = aws_subnet.spot_public_subnet.id
 }
 
