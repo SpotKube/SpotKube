@@ -5,7 +5,7 @@ terraform {
       version = "~> 4.0"
     }
   }
-  
+
   backend "s3" {
     bucket = "spotkube-terraform-state-bucket"
     key    = "spot_allocation-terraform.tfstate"

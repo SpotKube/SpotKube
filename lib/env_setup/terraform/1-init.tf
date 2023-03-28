@@ -7,10 +7,10 @@ resource "aws_vpc" "spot_vpc" {
   }
 }
 
-resource "aws_subnet" "spot_subnet" {
+resource "aws_subnet" "spot_public_subnet" {
   # creates a subnet
-  cidr_block        = "${cidrsubnet(aws_vpc.spot_vpc.cidr_block, 3, 1)}"
-  vpc_id            = "${aws_vpc.spot_vpc.id}"
+  cidr_block        = cidrsubnet(aws_vpc.spot_vpc.cidr_block, 8, 1)
+  vpc_id            = aws_vpc.spot_vpc.id
   availability_zone = var.availability_zone
   tags = {
     Name = "spotkube"
@@ -19,7 +19,7 @@ resource "aws_subnet" "spot_subnet" {
 
 # Output aws pod network cidr
 output "pod_network_cidr" {
-  value = aws_subnet.spot_subnet.cidr_block
+  value = aws_subnet.spot_public_subnet.cidr_block
 }
 
 # Attach an internet gateway to the VPC
@@ -30,7 +30,6 @@ resource "aws_internet_gateway" "spotkube_ig" {
     Name = "spotkube_Internet-Gateway"
   }
 }
-
 
 # Create a route table for a public subnet
 resource "aws_route_table" "public_rt" {
@@ -54,14 +53,14 @@ resource "aws_route_table" "public_rt" {
 # Resource: aws_route_table_association
 # assiociate any public subnets with the route table.
 resource "aws_route_table_association" "public_1_rt_a" {
-  subnet_id      = aws_subnet.spot_subnet.id
+  subnet_id      = aws_subnet.spot_public_subnet.id
   route_table_id = aws_route_table.public_rt.id
 }
 
 # Create security groups to allow specific traffic
 resource "aws_security_group" "ingress_ssh" {
   name   = "allow-ssh-sg"
-  vpc_id = "${aws_vpc.spot_vpc.id}"
+  vpc_id = aws_vpc.spot_vpc.id
 
   ingress {
     cidr_blocks = [
@@ -78,5 +77,37 @@ resource "aws_security_group" "ingress_ssh" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "ingress_http" {
+  name_prefix = "allow-http-sg"
+  vpc_id = aws_vpc.spot_vpc.id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "HTTP Ingress"
+  }
+}
+
+resource "aws_security_group" "ingress_https" {
+  name_prefix = "allow-https-sg"
+  vpc_id = aws_vpc.spot_vpc.id
+  
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "HTTPS Ingress"
   }
 }
