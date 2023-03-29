@@ -1,0 +1,19 @@
+{
+    "fixedCost": {
+        "serverCost": [],
+        "networkDeviceCost": [],
+        "softwareLicenseCost": [],
+        "spaceCost":,
+        "nonElectricCost":,
+        "Dit": 36,
+        "Df": 600,
+        "Du": 120
+    },
+    "variableCost": {
+        "electricityUnitCost":,
+        "Eidle":,
+        "Erunning":,
+        "internetCost":,
+        "laborCost":
+    }
+}
