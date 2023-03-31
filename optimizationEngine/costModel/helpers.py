@@ -1,5 +1,6 @@
 import json
 import yaml
+import os
 
 def readJson(file):
     with open(file, "r") as jsonFile:
@@ -15,6 +16,8 @@ def readYml(file):
             print(exc)
             
 def getPrivateNodeCount():
-    data = readYml("/home/due/Documents/ACA/Sem 7/Research/SpotKube/.config/user_config.yml")
+    dir_path = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(dir_path, '../../.config/user_config.yml')
+    data = readYml(file_path)
     nodeCount = data['privateResources']['nodeCount']
     return nodeCount

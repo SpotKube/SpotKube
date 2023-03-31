@@ -2,29 +2,29 @@ version: 1.0
 
 services:
   - name: service1
-      maxRPS: 10000
-      minRPS: 100
-      private: False
+    maxRPS: 10000
+    minRPS: 100
+    private: False
 
   - name: service2
-      maxRPS: 50000
-      minRPS: 100
-      private: False
+    maxRPS: 50000
+    minRPS: 100
+    private: False
 
   - name: service3
-      maxRPS: 50000
-      minRPS: 100
-      private: True
+    maxRPS: 50000
+    minRPS: 100
+    private: True
 
   - name: service4
-      maxRPS: 50000
-      minRPS: 100
-      private: True
+    maxRPS: 50000
+    minRPS: 100
+    private: True
 
 privateResources:
-    nodeCount: 10
-    nodeCPU: 4
-    nodeMemory: 8
+      nodeCount: 10
+      nodeCPU: 4
+      nodeMemory: 8
 
     
 

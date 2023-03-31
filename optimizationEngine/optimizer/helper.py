@@ -2,15 +2,22 @@ from collections import defaultdict
 
 import json
 import yaml
+import os
 
-def calculateResources():
+def calculateResources(flag):
     pods = defaultdict(dict)
-    with open("/home/due/Documents/ACA/Sem 7/Research/SpotKube/.config/config.yml", "r") as stream:
+    dir_path = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(dir_path, '../../.config/config.yml')
+    with open(file_path, "r") as stream:
         try:
             data = yaml.safe_load(stream)
             maxCPU = data['resources']['pods']['maxCPU']
             maxMemory = data['resources']['pods']['maxMemory']
-            services = [{'name':service['name'], 'pods': service['minRPS']['pods']} for service in data['services']]
+            # services = [{'name':service['name'], 'pods': service['minRPS']['pods']} for service in data['services'] and service['private'] == private]
+            services = []
+            for service in data['services']:
+                if service['private'] == flag:
+                    services.append({'name':service['name'], 'pods': service['minRPS']['pods']})
         except yaml.YAMLError as exc:
             print(exc)
     
@@ -25,5 +32,3 @@ def readJson(file):
     with open(file, "r") as jsonFile:
         data = json.load(jsonFile)
     return data
-
-calculateResources()
