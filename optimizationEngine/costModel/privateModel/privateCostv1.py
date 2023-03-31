@@ -1,4 +1,4 @@
-from costModel import helpers
+from .. import helpers
 # cost function
 
 def fixedCost():
@@ -26,10 +26,14 @@ def variableCost():
     
     return variable_cost
 
-def costPerNode(node_count):
+def costPerNode():
     # considered all the nodes are homogeneous
-    # calculate the both the fixed cost and the variable cost for all the servers per hour and devide it by the desired node count
+    # calculated both the fixed cost and the variable cost for all the servers per hour and devide it by the desired node count
     # node count need to be decided beforehand
+    node_count = helpers.getPrivateNodeCount()
     cost = fixedCost()/node_count + variableCost()/node_count
     return cost
-    
+
+def cost(nodes):
+    total_cost = len(nodes) * costPerNode()
+    return total_cost
