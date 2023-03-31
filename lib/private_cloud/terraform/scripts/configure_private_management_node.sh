@@ -3,6 +3,7 @@ set -e
 
 logger "Starting user_data script"
 
+scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr hosts ubuntu@$management_node_public_ip:~/ansible
 
 sudo apt update
 #Python3
