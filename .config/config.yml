@@ -1,0 +1,33 @@
+version: 1.0
+
+services:
+  - name: service1
+    maxRPS: 
+      rps: 10000
+      cpu: // these values will be updated by the prediction model
+      memory:
+      pods:
+    minRPS:
+      rps: 100
+      cpu:
+      memory:
+      pods: 4 // this value need to be updated by the pod calculator
+
+  - name: service2
+    maxRPS:
+      rps: 50000
+      cpu:
+      memory:
+      pods:
+    minRPS:
+      rps: 100
+      cpu:
+      memory:
+      pods: 6
+
+resources:
+  pods:
+    maxCPU: 0.4
+    maxMemory: 0.6
+
+
