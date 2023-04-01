@@ -3,6 +3,7 @@ import datetime
 from fbprophet import Prophet
 import pandas as pd
 import json as json
+import yaml
 
 
 results = []
@@ -48,14 +49,25 @@ def interpolate(df):
     
     return round(predicted_price, 3)
 
-def updateJson(file, instance, price):
+def updateJson(file, instance, cpu, mem):
     with open(file, "r") as jsonFile:
         data = json.load(jsonFile)
 
-    data[instance]["cost"] = price
-    data[instance]["date"] = str(datetime.datetime.now().date())
+    data[instance]["cpu"] = cpu
+    data[instance]["memory"] = mem
 
     with open(file, "w") as jsonFile:
         json.dump(data, jsonFile)
     
+def readYml(file):
+    with open(file, "r") as stream:
+        try:
+            data = yaml.safe_load(stream)
+            return data   
+        except yaml.YAMLError as exc:
+            print(exc)
 
+def readJson(file):
+    with open(file, "r") as jsonFile:
+        data = json.load(jsonFile)
+    return data

@@ -4,9 +4,11 @@ import json
 import yaml
 import os
 
+
+dir_path = os.path.dirname(os.path.abspath(__file__))
+
 def calculateResources(flag):
     pods = defaultdict(dict)
-    dir_path = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(dir_path, '../../.config/config.yml')
     with open(file_path, "r") as stream:
         try:
@@ -32,3 +34,26 @@ def readJson(file):
     with open(file, "r") as jsonFile:
         data = json.load(jsonFile)
     return data
+
+def returnTf(nodes, flag):
+    tf = defaultdict(dict)
+    if (flag):
+        file_path = os.path.join(dir_path, '../.privateConfig.json')
+        instances = readJson(file_path)
+        for i in range(len(nodes)):
+            tf[f'node-{i+1}'] = {
+                'region': 'us-east-1',
+                'instance_type': nodes[i],
+                'price': instances[nodes[i]]["cost"],
+            }
+    else:
+        file_path = os.path.join(dir_path, '../.spotConfig.json')
+        instances = readJson(file_path)
+        for i in range(len(nodes)):
+            tf[f'spot-{i+1}'] = {
+                'region': 'us-east-1',
+                'instance_type': nodes[i],
+                'spot_price': instances[nodes[i]]["cost"],
+            }
+    print(tf)
+    return tf
