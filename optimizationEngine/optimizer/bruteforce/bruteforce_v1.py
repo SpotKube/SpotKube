@@ -39,3 +39,4 @@ def optimize(instances, costFunc, flag):
     else:
         print("Optimal solution: {} (Cost: ${})".format(optimal_nodes, optimal_cost))
 
+    return optimal_nodes

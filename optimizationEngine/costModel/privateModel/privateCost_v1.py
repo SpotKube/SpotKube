@@ -1,9 +1,12 @@
-import helpers
+import helpers as costutils
 import os
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(dir_path, '../../../.config/privateCost.json')
-data = helpers.readJson(file_path)
+data = costutils.readJson(file_path)
+
+config_path = os.path.join(dir_path, '../../.privateConfig.json')
+config = costutils.readJson(config_path)
 
 def fixedCost():
     server_cost = sum(data['fixedCost']['serverCost'])
@@ -32,10 +35,15 @@ def costPerNode():
     # considered all the nodes are homogeneous
     # calculated both the fixed cost and the variable cost for all the servers per hour and devide it by the desired node count
     # node count need to be decided beforehand
-    node_count = helpers.getPrivateNodeCount()
+    node_count = costutils.getPrivateNodeCount()
     cost = fixedCost()/node_count + variableCost()/node_count
-    return cost
+    costutils.updateJson(config_path, list(config)[0], round(cost, 3))
+    return round(cost, 3)
 
 def cost(nodes):
-    total_cost = len(nodes) * costPerNode()
+    current_cost = config[list(config)[0]]['cost']
+    if (current_cost == 0 or current_cost == None):
+        total_cost = costPerNode() * len(nodes)
+    else:
+        total_cost = current_cost * len(nodes)
     return total_cost

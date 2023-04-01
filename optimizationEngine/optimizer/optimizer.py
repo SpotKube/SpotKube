@@ -12,7 +12,7 @@ import helper
 from publicModel import publicCost_v1
 from privateModel import privateCost_v1
 
-# Define the available node types and their prices
+
 dir_path = os.path.dirname(os.path.abspath(__file__))
 spot_path = os.path.join(dir_path, '../.spotConfig.json')
 private_path = os.path.join(dir_path, '../.privateConfig.json')
@@ -21,8 +21,11 @@ private = helper.readJson(private_path)
 
 def main():
     optimizer = optimizerStrategy.OptimizerStrategy(bruteforce_v1.optimize)
-    optimizer.optimize(spot, publicCost_v1, False)
-    optimizer.optimize(private, privateCost_v1, True)
+    spotNodes = optimizer.optimize(spot, publicCost_v1, False)
+    privateNodes = optimizer.optimize(private, privateCost_v1, True)
+    
+    helper.returnTf(spotNodes, False)
+    helper.returnTf(privateNodes, True)
     
 if __name__ == "__main__":
     main()
