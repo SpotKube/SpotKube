@@ -2,3 +2,15 @@
 .terraform/
 .terraform.lock.hcl
 .env
+
+#vscode
+.vscode
+
+#config
+.config
+
+# idea
+.idea
+
+#pycache
+__pycache__
