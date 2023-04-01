@@ -39,21 +39,37 @@ def returnTf(nodes, flag):
     tf = defaultdict(dict)
     if (flag):
         file_path = os.path.join(dir_path, '../.privateConfig.json')
+        output_path = os.path.join(dir_path, '../output/private.tfvars')
         instances = readJson(file_path)
         for i in range(len(nodes)):
-            tf[f'node-{i+1}'] = {
+            tf['private_instances'][f'node-{i+1}'] = {
                 'region': 'us-east-1',
                 'instance_type': nodes[i],
                 'price': instances[nodes[i]]["cost"],
             }
     else:
         file_path = os.path.join(dir_path, '../.spotConfig.json')
+        output_path = os.path.join(dir_path, '../output/spot.tfvars')
         instances = readJson(file_path)
         for i in range(len(nodes)):
-            tf[f'spot-{i+1}'] = {
+            tf['spot_instances'][f'spot-{i+1}'] = {
                 'region': 'us-east-1',
                 'instance_type': nodes[i],
                 'spot_price': instances[nodes[i]]["cost"],
             }
-    print(tf)
+    
+    writeTf(output_path, tf)
     return tf
+
+def writeTf(file, tf):
+    with open(file, "w") as f:
+        for key, value in tf.items():
+            f.write(f"{key} = {{\n")
+            for inner_key, inner_value in value.items():
+                f.write(f"  \"{inner_key}\" = {{\n")
+                for ik, iv in inner_value.items():
+                    f.write(f"      {ik} = \"{iv}\"\n")
+                f.write("},\n")
+            f.write("}\n")
+
+                
