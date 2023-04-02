@@ -2,7 +2,7 @@ import helpers as costutils
 import os
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
-file_path = os.path.join(dir_path, '../../../.config/privateCost.json')
+file_path = os.path.join(dir_path, '../../../../.config/privateCost.json')
 data = costutils.readJson(file_path)
 
 config_path = os.path.join(dir_path, '../../.privateConfig.json')
