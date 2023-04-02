@@ -17,9 +17,7 @@ def optimize(instances, flag, costFunc):
     - costFunc (func): Function to calculate the cost of each node combination
     
     Method:
-    - Considered mapping the total required resources with the node resources.
-    But this method won't be a idle, since we are deploying services as pods
-    we need to consider pods as it it. This will be addressed in v2
+    -
     
     Returns:
     - optimal_nodes (list)): the set of compute nodes that minimizes the cost while satisfying the resource requirements
@@ -28,26 +26,35 @@ def optimize(instances, flag, costFunc):
     # Define the total number of pods to deploy
     workload, max_pod_cpu, max_pod_memory = helper.calculateResources(flag)
     total_services = len(workload)
+    total_pods = sum(service['pods'] for service in workload.values())
+    total_memory_pods = sum(service['memory'] for service in workload.values())
+    total_cpu_pods = sum(service['cpu'] for service in workload.values())
     # Evaluate the cost function for each combination of nodes and select the optimal one
     optimal_cost = float('inf')
     optimal_nodes = None
-    for nodes in (nodes for r in range(1, 2 * total_services + 1) # r ranges from 1 to len(node_types) * total_pods + 1
+    for nodes in (nodes for r in range(1, 2 * total_services + 1) # r ranges from 1 to len(node_types) * total_services + 1
                         for nodes in itertools.product(node_types.keys(), repeat=r)):
-        # Calculate the total memory and CPU requirements of the nodes and pods
-        total_memory_nodes = total_cpu_nodes = 0
-        total_memory_pods = sum(pod['memory'] for pod in workload.values())
-        total_cpu_pods = sum(pod['cpu'] for pod in workload.values())
+        # Calculate the total memory and CPU requirements of the nodes
+        total_memory_nodes = 0
+        total_cpu_nodes = 0
         for node in nodes:
             total_memory_nodes += node_types[node]['memory']
             total_cpu_nodes += node_types[node]['cpu']
 
         # Check if the selected nodes can deploy all the pods
         if total_memory_nodes >= total_memory_pods and total_cpu_nodes >= total_cpu_pods:
-            # Calculate the cost of the selected nodes
-            cost = costFunc.cost(nodes)
-            if cost < optimal_cost:
-                optimal_cost = cost
-                optimal_nodes = nodes
+            remaining_pods = total_pods
+            for node in nodes:
+                pod_mem = node_types[node]['memory'] // max_pod_memory
+                pod_cpu = node_types[node]['cpu'] // max_pod_cpu
+                remaining_pods -= min(pod_mem, pod_cpu)
+                
+            if (remaining_pods <= 0):
+                # Calculate the cost of the selected nodes
+                cost = costFunc.cost(nodes)
+                if cost < optimal_cost:
+                    optimal_cost = cost
+                    optimal_nodes = nodes
 
     # Print the optimal solution
     print(f"Services need to be deployed {workload}")
