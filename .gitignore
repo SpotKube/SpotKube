@@ -3,3 +3,15 @@
 .terraform.lock.hcl
 .env
 clouds.yaml
+
+#vscode
+.vscode
+
+#config
+.config
+
+# idea
+.idea
+
+#pycache
+__pycache__

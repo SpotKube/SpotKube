@@ -1,0 +1,61 @@
+version: 1.0
+
+services:
+  - name: service1
+    private: False
+    maxRPS: 
+      rps: 10000
+      cpu: // these values will be updated by the prediction model
+      memory:
+      pods:
+    minRPS:
+      rps: 100
+      cpu:
+      memory:
+      pods: 6
+
+  - name: service2
+    private: False
+    maxRPS:
+      rps: 50000
+      cpu:
+      memory:
+      pods:
+    minRPS:
+      rps: 100
+      cpu:
+      memory:
+      pods: 6
+
+  - name: service3
+    private: True
+    maxRPS:
+      rps: 50000
+      cpu:
+      memory:
+      pods:
+    minRPS:
+      rps: 100
+      cpu:
+      memory:
+      pods: 6
+
+  - name: service4
+    private: True
+    maxRPS:
+      rps: 50000
+      cpu:
+      memory:
+      pods:
+    minRPS:
+      rps: 100
+      cpu:
+      memory:
+      pods: 6
+
+resources:
+  pods:
+    maxCPU: 0.4
+    maxMemory: 0.6
+
+
