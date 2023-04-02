@@ -1,4 +1,4 @@
-spot_instances = {
+private_instances = {
   "node-1" = {
       region = "us-east-1"
       instance_type = "node1"
