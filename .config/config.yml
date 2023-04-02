@@ -12,7 +12,8 @@ services:
       rps: 100
       cpu:
       memory:
-      pods: 6
+      pods: 2
+    helmChartPath: "/home/pasindu/projects/fyp/microservices/microservices-python/src/auth/auth-chart"
 
   - name: service2
     private: False
@@ -25,33 +26,34 @@ services:
       rps: 100
       cpu:
       memory:
-      pods: 6
+      pods: 1
+    helmChartPath: "/home/pasindu/projects/fyp/microservices/microservices-python/src/converter/converter-chart"
 
-  - name: service3
-    private: True
-    maxRPS:
-      rps: 50000
-      cpu:
-      memory:
-      pods:
-    minRPS:
-      rps: 100
-      cpu:
-      memory:
-      pods: 6
+  # - name: service3
+  #   private: True
+  #   maxRPS:
+  #     rps: 50000
+  #     cpu:
+  #     memory:
+  #     pods:
+  #   minRPS:
+  #     rps: 100
+  #     cpu:
+  #     memory:
+  #     pods: 6
 
-  - name: service4
-    private: True
-    maxRPS:
-      rps: 50000
-      cpu:
-      memory:
-      pods:
-    minRPS:
-      rps: 100
-      cpu:
-      memory:
-      pods: 6
+  # - name: service4
+  #   private: True
+  #   maxRPS:
+  #     rps: 50000
+  #     cpu:
+  #     memory:
+  #     pods:
+  #   minRPS:
+  #     rps: 100
+  #     cpu:
+  #     memory:
+  #     pods: 6
 
 resources:
   pods:
