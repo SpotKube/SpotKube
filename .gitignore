@@ -2,6 +2,7 @@
 .terraform/
 .terraform.lock.hcl
 .env
+clouds.yaml
 
 #vscode
 .vscode
