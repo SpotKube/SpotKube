@@ -71,18 +71,7 @@ resource "openstack_compute_instance_v2" "private_management" {
   flavor_id       = data.openstack_compute_flavor_v2.flavor.id
   key_pair        = var.keypair
   security_groups = [openstack_compute_secgroup_v2.ssh_access_group.name, "default"]
-
-  network {
-    name = "${openstack_networking_network_v2.private_network.name}"
-  }
-}
-
-resource "openstack_compute_instance_v2" "private_master" {
-  name            = "Private_Master"  #Instance name
-  image_id        = data.openstack_images_image_v2.image.id
-  flavor_id       = data.openstack_compute_flavor_v2.flavor.id
-  key_pair        = var.keypair
-  security_groups = [openstack_compute_secgroup_v2.ssh_access_group.name, "default"]
+  depends_on = ["openstack_networking_subnet_v2.private_subnet"]
 
   network {
     name = "${openstack_networking_network_v2.private_network.name}"
@@ -93,17 +82,8 @@ resource "openstack_networking_floatingip_v2" "floating_ip1" {
   pool = "public"
 }
 
-resource "openstack_networking_floatingip_v2" "floating_ip2" {
-  pool = "public"
-}
-
 resource "openstack_compute_floatingip_associate_v2" "private_management_floating_ip" {
   floating_ip = openstack_networking_floatingip_v2.floating_ip1.address
   instance_id = openstack_compute_instance_v2.private_management.id
-}
-
-resource "openstack_compute_floatingip_associate_v2" "private_master_floating_ip" {
-  floating_ip = openstack_networking_floatingip_v2.floating_ip2.address
-  instance_id = openstack_compute_instance_v2.private_master.id
 }
 

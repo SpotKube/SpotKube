@@ -31,6 +31,6 @@ openstack keypair create --public-key ~/.ssh/id_spotkube.pub admin
 
 ### Add cloud.yaml file
 
-`mkdir ~/.config/openstack`
+`mkdir ~/.config/openstack/`
 
 Download the `cloud.yaml` file from horizon and copy into the above created directory.
