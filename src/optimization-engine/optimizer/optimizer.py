@@ -1,7 +1,7 @@
 import os
 import sys
 
-dirs = ['optimizer', 'costModel']
+dirs = ['optimizer', 'cost-model']
 for i in dirs:
     package_path = os.path.abspath(i)
     sys.path.append(package_path)
@@ -19,7 +19,7 @@ spot = helper.readJson(spot_path)
 private = helper.readJson(private_path)
 
 def main():
-    optimizer = optimizerStrategy.OptimizerStrategy(bruteforce_v1.optimize)
+    optimizer = optimizerStrategy.OptimizerStrategy(bruteforce_v2.optimize)
     spotNodes = optimizer.optimize(spot, False, publicCost_v1)
     privateNodes = optimizer.optimize(private, True, privateCost_v1)
     
