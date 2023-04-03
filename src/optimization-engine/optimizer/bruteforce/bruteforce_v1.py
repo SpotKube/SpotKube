@@ -25,13 +25,16 @@ def optimize(instances, flag, costFunc):
     - optimal_nodes (list)): the set of compute nodes that minimizes the cost while satisfying the resource requirements
     """
     node_types = dict(sorted(instances.items(), key=sort_node_types))
-    # Define the total number of pods to deploy
     workload, max_pod_cpu, max_pod_memory = helper.calculateResources(flag)
+    private_node_count = helper.getPrivateNodeCount()
     total_services = len(workload)
+    max_r = 2 * total_services
+    if (flag and max_r > private_node_count):
+        max_r = private_node_count
     # Evaluate the cost function for each combination of nodes and select the optimal one
     optimal_cost = float('inf')
     optimal_nodes = None
-    for nodes in (nodes for r in range(1, 2 * total_services + 1) # r ranges from 1 to len(node_types) * total_pods + 1
+    for nodes in (nodes for r in range(1, max_r + 1) # r ranges from 1 to len(node_types) * total_pods + 1
                         for nodes in itertools.product(node_types.keys(), repeat=r)):
         # Calculate the total memory and CPU requirements of the nodes and pods
         total_memory_nodes = total_cpu_nodes = 0
