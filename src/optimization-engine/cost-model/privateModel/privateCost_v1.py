@@ -41,9 +41,11 @@ def costPerNode():
     return round(cost, 3)
 
 def cost(nodes):
-    current_cost = config[list(config)[0]]['cost']
-    if (current_cost == 0 or current_cost == None):
-        total_cost = costPerNode() * len(nodes)
-    else:
-        total_cost = current_cost * len(nodes)
+    total_cost = 0
+    if (nodes):
+        current_cost = config[list(config)[0]]['cost']
+        if (current_cost == 0 or current_cost == None):
+            total_cost = costPerNode() * len(nodes)
+        else:
+            total_cost = current_cost * len(nodes)
     return total_cost
