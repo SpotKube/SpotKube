@@ -10,25 +10,38 @@ terraform output -json > terraform_output.json
 management_node_floating_ip=$(jq -r '.private_management_floating_ip.value' terraform_output.json)
 
 host_ip=10.8.100.7
-# SSH to the private host
-ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" spotkube@$host_ip <<EOF
 
-  sh ./scripts/configure_private_management_node.sh
+# Copy required files to the private host
+scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr ~/.ssh/id_spotkube spotkube@$host_ip:~/.ssh/
+scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr ./scripts/configure_private_management_node.sh spotkube@$host_ip:~/
 
+# SSH to the private host and then ssh to the management node and run the configure_management_node.sh script
+ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" -T spotkube@$host_ip <<EOF
+
+# mkdir ~/management_node
+# mv ~/configure_private_management_node.sh ~/management_node/
+
+# # copy configure_management_node.sh to the management node
+# scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr ~/management_node/configure_private_management_node.sh ubuntu@$management_node_floating_ip:~/
+
+ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" -T ubuntu@$management_node_floating_ip <<DEL1
+touch ~/resolv.conf
+echo "nameserver 8.8.8.8" > ~/resolv.conf
+sudo cp ~/resolv.conf /etc/resolv.conf
+DEL1
+
+ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" -T ubuntu@$management_node_floating_ip <<FED1
+sudo sed -i '1i127.0.0.1 private-management' /etc/hosts
+
+mkdir ~/scripts
+mv ~/configure_private_management_node.sh ~/scripts/
+sh ~/scripts/configure_private_management_node.sh
+
+echo "Configure management node done"
+touch ~/management_node_done.txt
+
+FED1
 EOF
 
 
-# # Copy the Ansible hosts file, terraform output and kube_cluster files to the management node
-# scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr hosts terraform_output.json ../../kube_cluster/ scripts/configure_management_node.sh ubuntu@$management_node_public_ip:~/ansible
-# scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr ~/.ssh/id_spotkube.pub ~/.ssh/id_spotkube ubuntu@$management_node_public_ip:~/.ssh
 
-# # Connect to the remote server
-# ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" ubuntu@$management_node_public_ip <<EOF
-
-# cd ansible
-# sh configure_management_node.sh
-# cp kube_cluster/.ansible.cfg ~/.ansible.cfg
-# ansible-playbook -i hosts kube_cluster/initial.yml
-# ansible-playbook -i hosts kube_cluster/kube-depndencies.yml
-# ansible-playbook -i hosts kube_cluster/control-plane.yml
-# EOF
