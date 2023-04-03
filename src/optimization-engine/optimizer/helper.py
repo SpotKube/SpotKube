@@ -75,4 +75,17 @@ def writeTf(file, tf):
                 f.write("},\n")
             f.write("}\n")
 
-                
+def readYml(file):
+    with open(file, "r") as stream:
+        try:
+            data = yaml.safe_load(stream)
+            return data   
+        except yaml.YAMLError as exc:
+            print(exc)
+            
+def getPrivateNodeCount():
+    dir_path = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(dir_path, '../../.config/user_config.yml')
+    data = readYml(file_path)
+    node_count = data['privateResources']['nodeCount']
+    return node_count
