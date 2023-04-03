@@ -96,8 +96,8 @@ then
     exit
 fi
 
-# Jump to load-testing directory
-pushd $ROOT_DIR/src/$SERVICE_NAME/load-testing
+# Jump to load_testing directory
+pushd $ROOT_DIR/src/$SERVICE_NAME/load_testing
 
 print_info "Running locust for $SERVICE_NAME"
 
