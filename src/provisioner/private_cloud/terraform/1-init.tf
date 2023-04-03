@@ -71,7 +71,7 @@ resource "openstack_compute_instance_v2" "private_management" {
   flavor_id       = data.openstack_compute_flavor_v2.flavor.id
   key_pair        = var.keypair
   security_groups = [openstack_compute_secgroup_v2.ssh_access_group.name, "default"]
-  depends_on = ["openstack_networking_subnet_v2.private_subnet"]
+  depends_on = [openstack_networking_subnet_v2.private_subnet]
 
   network {
     name = "${openstack_networking_network_v2.private_network.name}"
