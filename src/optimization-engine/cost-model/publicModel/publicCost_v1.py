@@ -6,7 +6,9 @@ file_path = os.path.join(dir_path, '../../.spotConfig.json')
 instances = readJson(file_path)
 
 def cost(nodes):
-    cost = sum(instances[node]['cost'] for node in nodes)
+    cost = 0
+    if (nodes):
+        cost = sum(instances[node]['cost'] for node in nodes)
     return cost
 
     

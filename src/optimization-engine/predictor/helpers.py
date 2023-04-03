@@ -4,8 +4,10 @@ from fbprophet import Prophet
 import pandas as pd
 import json as json
 import yaml
+import os
 
 
+dir_path = os.path.dirname(os.path.abspath(__file__))
 results = []
 
 def history(client, instance, region_):
@@ -49,13 +51,18 @@ def interpolate(df):
     
     return round(predicted_price, 3)
 
-def updateJson(file, instance, cpu, mem):
+def updateJson(file, instance, cost=None, cpu=None, mem=None):
     with open(file, "r") as jsonFile:
         data = json.load(jsonFile)
 
-    data[instance]["cpu"] = cpu
-    data[instance]["memory"] = mem
-
+    if(cpu):
+        data[instance]["cpu"] = cpu
+    if(mem):
+        data[instance]["memory"] = mem
+    if(cost):
+        data[instance]["cost"] = cost
+        data[instance]["date"] = str(datetime.datetime.now().date())
+        
     with open(file, "w") as jsonFile:
         json.dump(data, jsonFile)
     
@@ -71,3 +78,11 @@ def readJson(file):
     with open(file, "r") as jsonFile:
         data = json.load(jsonFile)
     return data
+
+def getSpotInstances():
+    file_path = os.path.join(dir_path, '../.spotConfig.json')
+    spot_data = readJson(file_path)
+    instances = list(spot_data.keys())
+    return instances
+        
+    

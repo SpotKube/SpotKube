@@ -9,7 +9,7 @@ dir_path = os.path.dirname(os.path.abspath(__file__))
 
 def calculateResources(flag):
     pods = defaultdict(dict)
-    file_path = os.path.join(dir_path, '../../.config/config.yml')
+    file_path = os.path.join(dir_path, '../../../.config/config.yml')
     with open(file_path, "r") as stream:
         try:
             data = yaml.safe_load(stream)
@@ -24,10 +24,12 @@ def calculateResources(flag):
             print(exc)
     
     for service in services:
+        pods[service['name']]['pods'] = service['pods']
         pods[service['name']]['memory'] = round(int(service['pods']) * maxMemory, 2)
         pods[service['name']]['cpu'] = round(int(service['pods']) * maxCPU, 2)
+        
     
-    return pods
+    return pods, maxCPU, maxMemory
 
 
 def readJson(file):
@@ -37,28 +39,29 @@ def readJson(file):
 
 def returnTf(nodes, flag):
     tf = defaultdict(dict)
-    if (flag):
-        file_path = os.path.join(dir_path, '../.privateConfig.json')
-        output_path = os.path.join(dir_path, '../output/private.tfvars')
-        instances = readJson(file_path)
-        for i in range(len(nodes)):
-            tf['private_instances'][f'node-{i+1}'] = {
-                'region': 'us-east-1',
-                'instance_type': nodes[i],
-                'price': instances[nodes[i]]["cost"],
-            }
-    else:
-        file_path = os.path.join(dir_path, '../.spotConfig.json')
-        output_path = os.path.join(dir_path, '../output/spot.tfvars')
-        instances = readJson(file_path)
-        for i in range(len(nodes)):
-            tf['spot_instances'][f'spot-{i+1}'] = {
-                'region': 'us-east-1',
-                'instance_type': nodes[i],
-                'spot_price': instances[nodes[i]]["cost"],
-            }
-    
-    writeTf(output_path, tf)
+    if (nodes and len(nodes) > 0):
+        if (flag):
+            file_path = os.path.join(dir_path, '../.privateConfig.json')
+            output_path = os.path.join(dir_path, '../output/private.tfvars')
+            instances = readJson(file_path)
+            for i in range(len(nodes)):
+                tf['private_instances'][f'node-{i+1}'] = {
+                    'region': 'us-east-1',
+                    'instance_type': nodes[i],
+                    'price': instances[nodes[i]]["cost"],
+                }
+        else:
+            file_path = os.path.join(dir_path, '../.spotConfig.json')
+            output_path = os.path.join(dir_path, '../output/spot.tfvars')
+            instances = readJson(file_path)
+            for i in range(len(nodes)):
+                tf['spot_instances'][f'spot-{i+1}'] = {
+                    'region': 'us-east-1',
+                    'instance_type': nodes[i],
+                    'spot_price': instances[nodes[i]]["cost"],
+                }
+        
+        writeTf(output_path, tf)
     return tf
 
 def writeTf(file, tf):
@@ -72,4 +75,17 @@ def writeTf(file, tf):
                 f.write("},\n")
             f.write("}\n")
 
-                
+def readYml(file):
+    with open(file, "r") as stream:
+        try:
+            data = yaml.safe_load(stream)
+            return data   
+        except yaml.YAMLError as exc:
+            print(exc)
+            
+def getPrivateNodeCount():
+    dir_path = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(dir_path, '../../.config/user_config.yml')
+    data = readYml(file_path)
+    node_count = data['privateResources']['nodeCount']
+    return node_count
