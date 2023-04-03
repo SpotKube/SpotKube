@@ -13,7 +13,7 @@ def optimize(instances, flag, costFunc=None):
     - instances (dict): a dictionary of resource availability for each compute node
     - flag (bool): to identify private vs spot services
     Returns:
-    - optimal_nodes (list)): the set of compute nodes that minimizes the cost while satisfying the resource requirements
+    - optimal_nodes (list): the set of compute nodes that minimizes the cost while satisfying the resource requirements
     """
     workload, max_pod_cpu, max_pod_memory = helper.calculateResources(flag)
     remaining_cpu = sum(pod['cpu'] for pod in workload.values())
@@ -38,4 +38,10 @@ def optimize(instances, flag, costFunc=None):
         if remaining_cpu == 0 and remaining_memory == 0:
             break
 
+    optimal_cost = costFunc.cost(optimal_nodes)
+    if optimal_nodes is None:
+        print("Unable to find a valid solution.")
+    else:
+        print("Optimal solution: {} (Cost: ${})".format(optimal_nodes, optimal_cost))
+        
     return optimal_nodes
