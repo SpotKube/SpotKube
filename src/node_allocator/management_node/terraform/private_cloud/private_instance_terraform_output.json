@@ -1,0 +1,12 @@
+{
+  "private_master_floating_ip": {
+    "sensitive": false,
+    "type": "string",
+    "value": "172.24.4.85"
+  },
+  "private_master_ip": {
+    "sensitive": false,
+    "type": "string",
+    "value": "10.0.1.111"
+  }
+}

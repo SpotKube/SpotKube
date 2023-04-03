@@ -4,5 +4,5 @@ output "private_master_ip" {
 }
 
 output "private_master_floating_ip" {
- value = openstack_networking_floatingip_v2.fip1.address
+ value = openstack_networking_floatingip_v2.floating_ip1.address
 }
