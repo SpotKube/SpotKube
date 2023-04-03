@@ -10,7 +10,7 @@ for i in dirs:
 from privateModel import privateCost_v1
   
 dir_path = os.path.dirname(os.path.abspath(__file__))
-file_path = os.path.join(dir_path, '../../.config/user_config.yml')
+file_path = os.path.join(dir_path, '../../../.config/user_config.yml')
 data = predictorutils.readYml(file_path)
 
 private_config = os.path.join(dir_path, '../.privateConfig.json')
@@ -19,8 +19,5 @@ config = predictorutils.readJson(private_config)
 def updatePrivateConfig():
     nodeCPU = data['privateResources']['nodeCPU']
     nodeMemory = data['privateResources']['nodeMemory']
-    print(nodeCPU, nodeMemory)
-    predictorutils.updateJson(private_config, list(config)[0], nodeCPU, nodeMemory)
+    predictorutils.updateJson(private_config, list(config)[0], cpu = nodeCPU, mem = nodeMemory)
     # privateCost_v1.costPerNode() // There is an import error when calculating cost of private node.
-
-updatePrivateConfig()
