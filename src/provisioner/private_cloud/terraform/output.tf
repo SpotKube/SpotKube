@@ -19,5 +19,5 @@ output "private_subnet_name" {
 
 # Private security group name - ssh access
 output "private_ssh_security_group_name" {
-  value = openstack_networking_secgroup_v2.private_ssh_security_group.name
+  value = openstack_compute_secgroup_v2.ssh_access_group.name
 }

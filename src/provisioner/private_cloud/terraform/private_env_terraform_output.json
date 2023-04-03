@@ -8,5 +8,20 @@
     "sensitive": false,
     "type": "string",
     "value": "10.0.1.142"
+  },
+  "private_network_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "private_network"
+  },
+  "private_ssh_security_group_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "ssh_access_group"
+  },
+  "private_subnet_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "private_subnet"
   }
 }
