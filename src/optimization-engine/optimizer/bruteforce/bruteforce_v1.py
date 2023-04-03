@@ -19,7 +19,7 @@ def optimize(instances, flag, costFunc):
     Method:
     - Considered mapping the total required resources with the node resources.
     But this method won't be a idle, since we are deploying services as pods
-    we need to consider pods as it it. This will be addressed in v2
+    we need to consider pods as it is. This will be addressed in v2
     
     Returns:
     - optimal_nodes (list)): the set of compute nodes that minimizes the cost while satisfying the resource requirements
