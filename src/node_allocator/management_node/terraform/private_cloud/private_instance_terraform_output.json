@@ -8,5 +8,33 @@
     "sensitive": false,
     "type": "string",
     "value": "10.0.1.111"
+  },
+  "private_workers": {
+    "sensitive": false,
+    "type": [
+      "tuple",
+      [
+        [
+          "object",
+          {
+            "private_ip": "string"
+          }
+        ],
+        [
+          "object",
+          {
+            "private_ip": "string"
+          }
+        ]
+      ]
+    ],
+    "value": [
+      {
+        "private_ip": "10.0.1.106"
+      },
+      {
+        "private_ip": "10.0.1.8"
+      }
+    ]
   }
 }
