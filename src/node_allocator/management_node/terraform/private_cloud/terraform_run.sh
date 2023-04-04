@@ -1,8 +1,8 @@
 #! /bin/bash
 
 # terraform destroy -auto-approve
-terraform init
-terraform apply -auto-approve
+# terraform init
+terraform apply -auto-approve -var-file="private.tfvars"
 sleep 60 # Wait for 60 seconds to ensure the instances are fully provisioned
 terraform output -json > private_instance_terraform_output.json
 
