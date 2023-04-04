@@ -13,5 +13,9 @@ output "private_workers" {
   }]
 }
 
+output "private_management_floating_ip" {
+  value = data.terraform_remote_state.private_cloud_env_setup.outputs.private_management_floating_ip
+}
+
 
  

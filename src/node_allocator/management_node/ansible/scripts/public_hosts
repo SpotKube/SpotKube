@@ -1,0 +1,4 @@
+[control_plane]
+10.0.1.111 ansible_connection=ssh ansible_user=ubuntu
+
+[workers]

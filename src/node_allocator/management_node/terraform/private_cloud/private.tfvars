@@ -4,7 +4,7 @@ private_instances = {
       instance_type = "node1"
       price = "190.004"
   },
-    "node-2" = {
+    "node-3" = {
         region = "us-east-1"
         instance_type = "node1"
         price = "190.004"
