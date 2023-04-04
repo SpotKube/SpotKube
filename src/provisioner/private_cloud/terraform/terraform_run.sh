@@ -37,6 +37,9 @@ mkdir ~/scripts
 mv ~/configure_private_management_node.sh ~/scripts/
 sh ~/scripts/configure_private_management_node.sh
 
+# Generate new SSH key for ansible to use
+ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa
+
 echo "Configure management node done"
 touch ~/management_node_done.txt
 

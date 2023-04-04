@@ -13,3 +13,18 @@ EOF
 for worker_ip in $worker_ips; do
   echo "$worker_ip ansible_connection=ssh ansible_user=ubuntu" >> public_hosts
 done
+
+# Add the Ansible variables to the hosts file
+cat >> hosts << EOF
+
+[control_plane:vars]
+ansible_connection=ssh
+ansible_user=ubuntu
+ansible_ssh_private_key_file=~/.ssh/id_spotkube
+
+[workers:vars]
+ansible_connection=ssh
+ansible_user=ubuntu
+ansible_ssh_private_key_file=~/.ssh/id_spotkube
+
+EOF
