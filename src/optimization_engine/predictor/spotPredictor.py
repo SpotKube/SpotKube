@@ -3,7 +3,7 @@ import os
 import boto3
 import sys
 
-dirs = ['optimizer', 'cost-model']
+dirs = ['optimizer', 'cost_model']
 for i in dirs:
     package_path = os.path.abspath(i)
     sys.path.append(package_path)

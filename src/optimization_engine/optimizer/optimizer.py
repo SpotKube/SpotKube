@@ -1,7 +1,7 @@
 import os
 import sys
 
-dirs = ['optimizer', 'cost-model']
+dirs = ['optimizer', 'cost_model']
 for i in dirs:
     package_path = os.path.abspath(i)
     sys.path.append(package_path)
@@ -11,7 +11,7 @@ from privateModel import privateCost_v1
 import optimizerStrategy
 import helper
 from bruteforce import bruteforce_v1, bruteforce_v2
-from greedy import greedy_v1
+from greedy import greedy_v1, greedy_v2, greedy_v3
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 spot_path = os.path.join(dir_path, '../.spotConfig.json')
@@ -20,7 +20,7 @@ spot = helper.readJson(spot_path)
 private = helper.readJson(private_path)
 
 def main():
-    optimizer = optimizerStrategy.OptimizerStrategy(greedy_v1.optimize)
+    optimizer = optimizerStrategy.OptimizerStrategy(bruteforce_v2.optimize)
     spotNodes = optimizer.optimize(spot, False, publicCost_v1)
     privateNodes = optimizer.optimize(private, True, privateCost_v1)
     
