@@ -85,7 +85,7 @@ def readYml(file):
             
 def getPrivateNodeCount():
     dir_path = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(dir_path, '../../.config/user_config.yml')
+    file_path = os.path.join(dir_path, '../../../.config/config.yml')
     data = readYml(file_path)
-    node_count = data['privateResources']['nodeCount']
+    node_count = data['resources']['privateResources']['nodeCount']
     return node_count
