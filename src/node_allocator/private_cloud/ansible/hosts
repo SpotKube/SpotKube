@@ -1,6 +1,0 @@
-[control_plane]
-10.0.2.120 ansible_connection=ssh ansible_user=ubuntu
-
-[workers]
-10.0.2.177 ansible_connection=ssh ansible_user=ubuntu
-10.0.2.40 ansible_connection=ssh ansible_user=ubuntu

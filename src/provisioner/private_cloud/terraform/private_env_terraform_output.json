@@ -1,0 +1,27 @@
+{
+  "private_management_floating_ip": {
+    "sensitive": false,
+    "type": "string",
+    "value": "172.24.4.114"
+  },
+  "private_management_ip": {
+    "sensitive": false,
+    "type": "string",
+    "value": "10.0.1.134"
+  },
+  "private_network_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "private_network"
+  },
+  "private_ssh_security_group_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "ssh_access_group"
+  },
+  "private_subnet_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "private_subnet"
+  }
+}

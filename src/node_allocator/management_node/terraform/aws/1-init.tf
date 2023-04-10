@@ -19,7 +19,7 @@ resource "aws_key_pair" "key" {
 
 resource "aws_subnet" "spot_private_subnet" {
   # creates a subnet
-  cidr_block        = cidrsubnet(data.terraform_remote_state.env_setup.outputs.vpc_cidr_block, 8, 2)
+  cidr_block        = cidrsubnet(data.terraform_remote_state.env_setup.outputs.vpc_cidr_block, 8, 1)
   vpc_id            = data.terraform_remote_state.env_setup.outputs.vpc_id
   availability_zone = var.availability_zone
   tags = {
