@@ -6,7 +6,8 @@ import numpy as np
 
 def fetch_cpu_metrics(service, host, start, end, api_token):
     url = f"{host}/api/ds/query"
-    expr = "sum(rate(container_cpu_usage_seconds_total{container=\""+service+"\"}[10m])) by (name) *100"
+    expr = "sum(rate(container_cpu_usage_seconds_total{container=\""+service+"\"}[5m])) by (container) /sum(container_spec_cpu_quota{container=\""+service+"\"}/container_spec_cpu_period{container=\""+service+"\"}) by (container)"
+    # expr = "sum(rate(container_cpu_usage_seconds_total{container=\""+service+"\"}[10m])) by (name) *100"
     body = {
         "queries": [
             {
@@ -34,7 +35,7 @@ def fetch_cpu_metrics(service, host, start, end, api_token):
 
 def fetch_memory_metrics(service, host, start, end, api_token):
     url = f"{host}/api/ds/query"
-    expr = "sum(rate(container_memory_usage_bytes{container=\""+service+"\"}[10m])) by (name) *100"
+    expr = "sum(container_memory_rss{container=\""+service+"\"}) by (name) /1000000000"
     body = {
         "queries": [
             {
