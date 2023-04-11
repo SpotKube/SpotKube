@@ -5,6 +5,11 @@ source ../../scripts/common.sh
 # Import configs
 source ../../../.config/load_test.conf
 
+# Path to the scripts directory
+scripts_path=$(pwd)
+# Path to the load_testing directory
+load_testing_path=$(dirname $scripts_path)
+
 SERVICE_NAME=""
 ROOT_DIR=""
 HOST_URL=""
@@ -103,7 +108,10 @@ print_info "Running locust for $SERVICE_NAME"
 
 start_time=$(date +%s%3N)
 # Run locust
-locust -f test.py --host $HOST_URL --users $NUMBER_OF_USERS --spawn-rate $SPAWN_RATE --run-time $RUN_TIME --headless
+locust -f test.py --csv=results --host $HOST_URL --users $NUMBER_OF_USERS --spawn-rate $SPAWN_RATE --run-time $RUN_TIME --headless
+
+print_info "Moving results to outputs directory"
+mv ./results* $load_testing_path/outputs/
 
 print_info "Sleep for 1 min"
 sleep 60
