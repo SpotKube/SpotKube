@@ -3,7 +3,7 @@
 # Import common functions
 source ../../scripts/common.sh
 # Import configs
-source ../../../.config/load-test.conf
+source ../../../.config/load_test.conf
 
 SERVICE_NAME=""
 ROOT_DIR=""
@@ -104,6 +104,9 @@ print_info "Running locust for $SERVICE_NAME"
 start_time=$(date +%s%3N)
 # Run locust
 locust -f test.py --host $HOST_URL --users $NUMBER_OF_USERS --spawn-rate $SPAWN_RATE --run-time $RUN_TIME --headless
+
+print_info "Sleep for 1 min"
+sleep 60
 end_time=$(date +%s%3N)
 
 popd
