@@ -1,13 +1,110 @@
 #! /bin/bash
 
-# terraform destroy -auto-approve
-terraform init -reconfigure
+# Import common functions
+source ../../../scripts/common.sh
+
+# Help function
+function help() {
+    print_info "Usage:"
+    echo "  -d, --destroy                       Destroy the private cloud environment"
+    echo "  -db, --destroy_build                Destroy and build the private cloud environment"
+    echo "  -r, --reconfigure                   Reconfigure the private cloud environment"
+    echo "  -c, --configure                     Configure the private cloud environment"
+}
+
+print_title "Provisioning private cloud environment"
+
+# ---------------------------------- Check if required software is installed ---------------------------------------- #
+
+# Check if Terraform is installed
+if ! command -v terraform &> /dev/null
+then
+    echo "Terraform is not installed. Please install it first."
+    exit 1
+fi
+
+# Check if Terraform is installed
+if ! command -v ansible &> /dev/null
+then
+    echo "Ansible is not installed. Please install it first."
+    exit 1
+fi
+
+# ------------------------------------- Parse command-line arguments ------------------------------------------------ #
+
+# Initialize variables
+destroy=false
+reconfigure=false
+destroy_build=false
+configure_only=false
+
+# Parse command-line arguments
+while [[ $# -gt 0 ]]
+do
+    key="$1"
+
+    case $key in
+        -d|--destroy)
+        destroy=true
+        ;;
+        -r|--reconfigure)
+        reconfigure=true
+        ;;
+        -db|--destroy_build)
+        destroy_build=true
+        ;;
+        -c|--configure)
+        configure_only=true
+        ;;
+        *)
+        echo "Invalid argument: $1"
+        help
+        exit 1
+        ;;
+    esac
+
+    shift
+done
+
+# ------------------------------------- Terraform actions ----------------------------------------------------------- #
+
+# If destroy flag is set, destroy the private cloud environment
+if $destroy
+then
+    # terraform destroy -auto-approve
+    echo "Destroying the private cloud environment"
+    exit 1
+fi
+
+# If reconfigure flag is set, run "terraform init -reconfigure", otherwise just run "terraform init"
+if $reconfigure
+then
+    terraform init -reconfigure
+else
+    terraform init
+fi
+
+# If destroy_build flag is set, destroy the private cloud environment and then build it
+if $destroy_build
+then
+    terraform destroy -auto-approve
+    terraform init -reconfigure
+fi
+
 terraform apply -auto-approve
 sleep 60 # Wait for 60 seconds to ensure the instances are fully provisioned
 terraform output -json > private_env_terraform_output.json
 
 # Read the management node floating IP from terraform output
 management_node_floating_ip=$(jq -r '.private_management_floating_ip.value' private_env_terraform_output.json)
+
+# ------------------------------------ Configuring the private cloud ------------------------------------------------ #
+
+# If configure_only flag is set, configure the private cloud environment else exit
+if ! $configure_only
+then
+    exit 0
+fi
 
 host_ip=10.8.100.7
 
