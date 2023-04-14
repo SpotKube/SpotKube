@@ -68,44 +68,42 @@ done
 
 # ------------------------------------- Terraform actions ----------------------------------------------------------- #
 
-# If destroy flag is set, destroy the private cloud environment
-if $destroy
+# If configure_only flag is set, only configure the private cloud environment
+if ! $configure_only
 then
-    # terraform destroy -auto-approve
-    echo "Destroying the private cloud environment"
-    exit 1
-fi
+    # If destroy flag is set, destroy the private cloud environment
+    if $destroy
+    then
+        # terraform destroy -auto-approve
+        echo "Destroying the private cloud environment"
+        exit 1
+    fi
 
-# If reconfigure flag is set, run "terraform init -reconfigure", otherwise just run "terraform init"
-if $reconfigure
-then
-    terraform init -reconfigure
-else
-    terraform init
-fi
+    # If reconfigure flag is set, run "terraform init -reconfigure", otherwise just run "terraform init"
+    if $reconfigure
+    then
+        terraform init -reconfigure
+    else
+        terraform init
+    fi
 
-# If destroy_build flag is set, destroy the private cloud environment and then build it
-if $destroy_build
-then
-    terraform destroy -auto-approve
-    terraform init -reconfigure
-fi
+    # If destroy_build flag is set, destroy the private cloud environment and then build it
+    if $destroy_build
+    then
+        terraform destroy -auto-approve
+        terraform init -reconfigure
+    fi
 
-terraform apply -auto-approve
-sleep 60 # Wait for 60 seconds to ensure the instances are fully provisioned
-terraform output -json > private_env_terraform_output.json
+    terraform apply -auto-approve
+    sleep 60 # Wait for 60 seconds to ensure the instances are fully provisioned
+    terraform output -json > private_env_terraform_output.json
+fi
 
 # Read the management node floating IP from terraform output
 management_node_floating_ip=$(jq -r '.private_management_floating_ip.value' private_env_terraform_output.json)
+print_info "Management node floating IP: $management_node_floating_ip"
 
 # ------------------------------------ Configuring the private cloud ------------------------------------------------ #
-
-# If configure_only flag is set, configure the private cloud environment else exit
-if ! $configure_only
-then
-    exit 0
-fi
-
 host_ip=10.8.100.7
 
 # Copy required files to the private host
@@ -120,12 +118,6 @@ mv ~/configure_private_management_node.sh ~/management_node/
 
 # copy configure_management_node.sh to the management node
 scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr ~/management_node/configure_private_management_node.sh ubuntu@$management_node_floating_ip:~/
-
-ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" -T ubuntu@$management_node_floating_ip <<DEL1
-touch ~/resolv.conf
-echo "nameserver 8.8.8.8" > ~/resolv.conf
-sudo cp --remove-destination ~/resolv.conf /etc/resolv.conf
-DEL1
 
 ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" -T ubuntu@$management_node_floating_ip <<FED1
 sudo sed -i '1i127.0.0.1 private-management' /etc/hosts
