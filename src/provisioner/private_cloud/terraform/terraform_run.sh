@@ -2,7 +2,6 @@
 
 # Import common functions
 source ../../../scripts/common.sh
-source "../../../../.config/provisioner.conf"
 
 # Help function
 function help() {
@@ -14,6 +13,62 @@ function help() {
 }
 
 print_title "Provisioning private cloud environment"
+
+# ------------------------------ Check if required files exists --------------------------------------- #
+CONF_FILE_ERROR=false
+
+# Check if provisioner.conf exists
+if [[ ! -f "../../../../.config/provisioner.conf" ]]; then
+    print_error "provisioner.conf does not exist"
+    CONF_FILE_ERROR=true
+    exit 1
+else
+    source "../../../../.config/provisioner.conf"
+fi
+
+# Check if PRIVATE_INSTANCE_SSH_KEY_PATH is set and exists
+if [[ -z "$PRIVATE_INSTANCE_SSH_KEY_PATH" ]]; then
+    print_error "PRIVATE_INSTANCE_SSH_KEY_PATH is not set in provisioner.conf"
+    CONF_FILE_ERROR=true
+elif [[ ! -f "$PRIVATE_INSTANCE_SSH_KEY_PATH" ]]; then
+    print_error "PRIVATE_INSTANCE_SSH_KEY_PATH ($PRIVATE_INSTANCE_SSH_KEY_PATH) does not exist"
+    CONF_FILE_ERROR=true
+fi
+
+# Check if PRIVATE_HOST_IP is set
+if [[ -z "$PRIVATE_HOST_IP" ]]; then
+    print_error "PRIVATE_HOST_IP is not set in provisioner.conf"
+    CONF_FILE_ERROR=true
+fi
+
+# Check if PRIVATE_HOST_USER is set
+if [[ -z "$PRIVATE_HOST_USER" ]]; then
+    print_error "PRIVATE_HOST_USER is not set in provisioner.conf"
+    CONF_FILE_ERROR=true
+fi
+
+# Check if PRIVATE_HOST_SSH_KEY_PATH is set and exists
+if [[ -z "$PRIVATE_HOST_SSH_KEY_PATH" ]]; then
+    print_error "PRIVATE_HOST_SSH_KEY_PATH is not set in provisioner.conf"
+    CONF_FILE_ERROR=true
+elif [[ ! -f "$PRIVATE_HOST_SSH_KEY_PATH" ]]; then
+    print_error "PRIVATE_HOST_SSH_KEY_PATH ($PRIVATE_HOST_SSH_KEY_PATH) does not exist"
+    CONF_FILE_ERROR=true
+fi
+
+# Check if OPENSTACK_CLOUD_YAML_PATH is set and exists
+if [[ -z "$OPENSTACK_CLOUD_YAML_PATH" ]]; then
+    print_error "OPENSTACK_CLOUD_YAML_PATH is not set in provisioner.conf"
+    CONF_FILE_ERROR=true
+elif [[ ! -f "$OPENSTACK_CLOUD_YAML_PATH" ]]; then
+    print_error "OPENSTACK_CLOUD_YAML_PATH ($OPENSTACK_CLOUD_YAML_PATH) does not exist"
+    CONF_FILE_ERROR=true
+fi
+
+if $CONF_FILE_ERROR 
+then
+    exit 1
+fi
 
 # ---------------------------------- Check if required software is installed ---------------------------------------- #
 
