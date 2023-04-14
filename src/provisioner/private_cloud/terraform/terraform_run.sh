@@ -2,6 +2,7 @@
 
 # Import common functions
 source ../../../scripts/common.sh
+source "../../../../.config/provisioner.conf"
 
 # Help function
 function help() {
@@ -104,22 +105,26 @@ management_node_floating_ip=$(jq -r '.private_management_floating_ip.value' priv
 print_info "Management node floating IP: $management_node_floating_ip"
 
 # ------------------------------------ Configuring the private cloud ------------------------------------------------ #
-host_ip=10.8.100.7
+<<COMMENT
+Due to a limitation in the security rules of the private cloud that prevents the configuration file from being 
+sent directly to the management node. As a workaround, the file is first sent to the host and then forwarded to the 
+management node.
+COMMENT
 
 # Copy required files to the private host
-scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr ~/.ssh/id_spotkube spotkube@$host_ip:~/.ssh/
-scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr ./scripts/configure_private_management_node.sh spotkube@$host_ip:~/
+scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr $PRIVATE_INSTANCE_SSH_KEY_PATH $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/.ssh/
+scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr ./scripts/configure_private_management_node.sh $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/
 
 # SSH to the private host and then ssh to the management node and run the configure_management_node.sh script
-ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" -T spotkube@$host_ip <<EOF
+ssh -o StrictHostKeyChecking=no -i "$PRIVATE_HOST_SSH_KEY_PATH" -T $PRIVATE_HOST_USER@$PRIVATE_HOST_IP <<EOF
 
 mkdir ~/management_node
 mv ~/configure_private_management_node.sh ~/management_node/
 
 # copy configure_management_node.sh to the management node
-scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr ~/management_node/configure_private_management_node.sh ubuntu@$management_node_floating_ip:~/
+scp -o StrictHostKeyChecking=no -i $PRIVATE_INSTANCE_SSH_KEY_PATH -vr ~/management_node/configure_private_management_node.sh $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/
 
-ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" -T ubuntu@$management_node_floating_ip <<FED1
+ssh -o StrictHostKeyChecking=no -i "$PRIVATE_INSTANCE_SSH_KEY_PATH" -T $PRIVATE_INSTANCE_USER@$management_node_floating_ip <<FED1
 sudo sed -i '1i127.0.0.1 private-management' /etc/hosts
 
 mkdir ~/scripts
