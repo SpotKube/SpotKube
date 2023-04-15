@@ -18,10 +18,10 @@ scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr ../../../../node_alloc
 ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" -T spotkube@$host_ip <<EOF
 
 # # copy node_allocator to the management node
-scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr ~/node_allocator ubuntu@$management_node_floating_ip:~/
-scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr ~/.ssh/id_spotkube ubuntu@$management_node_floating_ip:~/.ssh/
+scp -o StrictHostKeyChecking=no -i $PRIVATE_INSTANCE_SSH_KEY_PATH -vr ~/node_allocator ubuntu@$management_node_floating_ip:~/
+scp -o StrictHostKeyChecking=no -i $PRIVATE_INSTANCE_SSH_KEY_PATH -vr $PRIVATE_INSTANCE_SSH_KEY_PATH ubuntu@$management_node_floating_ip:~/.ssh/
 
-ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" -T ubuntu@$management_node_floating_ip <<FED1
+ssh -o StrictHostKeyChecking=no -i "$PRIVATE_INSTANCE_SSH_KEY_PATH" -T ubuntu@$management_node_floating_ip <<FED1
 
 cd ~/node_allocator/management_node/ansible/scripts
 rm hosts private_hosts
