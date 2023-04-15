@@ -39,7 +39,7 @@ which handles the scheduling.
 6. The elastic scaler dynamically notifies the optimization engine about the 
 current configuration, enabling it to adjust the system as needed.
 
-For more detailed instructions on how to use SpotKube, please refer to the [user guide](https://github.com/SpotKube/SpotKube).
+For more detailed instructions on how to use SpotKube, please refer to the [user guide](documentation/user_guide.md).
 
 ## Contributing
 
