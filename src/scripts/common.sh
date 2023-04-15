@@ -20,6 +20,11 @@ function print_info() {
     echo -e "\033[1;34mINFO: $1\033[0m"
 }
 
+# Function to echo white normal messages
+function print() {
+    echo -e "\033[0;37m$1\033[0m"
+}
+
 # Function to echo blue color large text
 function print_title() {
     echo -e "\033[1;36m$1\033[0m"
