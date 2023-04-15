@@ -12,6 +12,7 @@ function help() {
     echo "  -c, --configure                     Configure the aws cloud environment"
 }
 
+echo
 print_title "Provisioning public cloud environment"
 
 # ------------------------------------- Check if required files exists ---------------------------------------------- #

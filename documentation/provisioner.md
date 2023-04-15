@@ -52,6 +52,5 @@ The Provisioner component has the following dependencies:
 
 - Terraform: Provisioner uses Terraform to provision the necessary resources in the cloud environment.
 - Ansible: Ansible is used to configure the instances that are provisioned by Terraform.
-License
 
-This project is licensed under the MIT License.
+

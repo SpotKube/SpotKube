@@ -12,6 +12,7 @@ function help() {
     echo "  -c, --configure                     Configure the private cloud environment"
 }
 
+echo
 print_title "Provisioning private cloud environment"
 
 # ------------------------------ Check if required files exists --------------------------------------- #
