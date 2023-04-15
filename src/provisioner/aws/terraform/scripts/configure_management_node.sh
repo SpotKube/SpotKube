@@ -1,13 +1,11 @@
 #! /bin/bash
 set -e
 
-logger "Starting user_data script"
-
 # Install Ansible
 sudo apt update
 
 #Python3
-sudo apt install -y python3-dev python3-pip
+sudo apt install -y python3-pip
 sudo pip3 install --upgrade pip
 
 sudo apt install -y software-properties-common
@@ -26,7 +24,7 @@ wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/
 gpg --no-default-keyring --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg --fingerprint
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 sudo apt update
-sudo apt install -y terraform
+sudo apt install -y terraform jq
 
 # Install zip
 sudo apt install -y unzip
@@ -44,4 +42,3 @@ pushd ~./ssh
 ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa <<<y >/dev/null 2>&1
 popd
 
-logger "End user_data script"

@@ -65,13 +65,6 @@ then
     exit 1
 fi
 
-# Check if jq is installed
-if ! command -v jq &> /dev/null
-then
-    echo "Jq is not installed. Please install it first."
-    exit 1
-fi
-
 # ------------------------------------- Parse command-line arguments ------------------------------------------------ #
 
 # Initialize variables
@@ -135,28 +128,60 @@ then
         terraform init -reconfigure
     fi
 
-    terraform apply -auto-approve -var "aws_shared_config_file_path=$AWS_SHARED_CONFIG_FILE_PATH" -var "aws_shared_credentials_file_path=$AWS_SHARED_CREDENTIALS_FILE_PATH"
+    terraform apply -auto-approve
     sleep 60 # Wait for 60 seconds to ensure the instances are fully provisioned
     terraform output -json > private_env_terraform_output.json
 fi
 
 # Read control_plane_ip and worker_ips from input.json using jq
+control_plane_ip=$(jq -r '.control_plane_ip.value[0]' terraform_output.json)
+worker_ips=$(jq -r '.worker_ips.value | join(" ")' terraform_output.json)
 management_node_public_ip=$(jq -r '.management_node_public_ip.value' terraform_output.json)
 
-print_info "AWS Management node public IP: $management_node_public_ip"
+print_info "Management node floating IP: $management_node_floating_ip"
 
-# ------------------------------------ Configuring the public cloud ------------------------------------------------ #
+# ------------------------------------ Configuring the private cloud ------------------------------------------------ #
+
+
+
+# Write the Ansible hosts file
+cat > hosts << EOF
+[control_plane]
+$control_plane_ip 
+
+[workers]
+EOF
+
+for worker_ip in $worker_ips; do
+  echo "$worker_ip" >> hosts
+done
+
+# Add the Ansible variables to the hosts file
+cat >> hosts << EOF
+
+[control_plane:vars]
+ansible_connection=ssh
+ansible_user=ubuntu
+ansible_ssh_private_key_file=~/.ssh/id_spotkube
+
+[workers:vars]
+ansible_connection=ssh
+ansible_user=ubuntu
+ansible_ssh_private_key_file=~/.ssh/id_spotkube
+
+EOF
 
 # Copy the Ansible hosts file, terraform output and kube_cluster files to the management node
-scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr scripts/configure_management_node.sh ubuntu@$management_node_public_ip:~/
+scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr hosts terraform_output.json ../../kube_cluster/ scripts/configure_management_node.sh ubuntu@$management_node_public_ip:~/ansible
 scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr ~/.ssh/id_spotkube.pub ~/.ssh/id_spotkube ubuntu@$management_node_public_ip:~/.ssh
 
 # Connect to the remote server
 ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" ubuntu@$management_node_public_ip <<EOF
+
+cd ansible
 sh configure_management_node.sh
+cp kube_cluster/.ansible.cfg ~/.ansible.cfg
+ansible-playbook -i hosts kube_cluster/initial.yml
+ansible-playbook -i hosts kube_cluster/kube-depndencies.yml
+ansible-playbook -i hosts kube_cluster/control-plane.yml
 EOF
-
-# Copy the aws shared config and credentials files to the management node
-scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr $AWS_SHARED_CONFIG_FILE_PATH ubuntu@$management_node_public_ip:~/.aws/config
-scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr $AWS_SHARED_CREDENTIALS_FILE_PATH ubuntu@$management_node_public_ip:~/.aws/credentials
-

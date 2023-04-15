@@ -12,5 +12,17 @@ variable "pub_id_file_path" {
   description = "This contains the public key file path"
 }
 
+variable "aws_shared_config_file_path" {
+  # default = "/home/pasindu/.aws/config"
+  type        = string
+  description = "This contains the aws config file path"
+}
+
+variable "aws_shared_credentials_file_path" {
+  # default = "/home/pasindu/.aws/credentials"
+  type        = string
+  description = "This contains the aws credentials file path"
+}
+
 
 
