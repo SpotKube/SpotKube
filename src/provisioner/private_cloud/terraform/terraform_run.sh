@@ -8,14 +8,25 @@ function help() {
     print_info "Usage:"
     echo "  -d, --destroy                       Destroy the private cloud environment"
     echo "  -db, --destroy_build                Destroy and build the private cloud environment"
-    echo "  -r, --reconfigure                   Reconfigure the private cloud environment"
+    echo "  -r, --init_reconfigure                   Reconfigure the private cloud environment"
     echo "  -c, --configure                     Configure the private cloud environment"
 }
+
+# --------------------------------------------------- Logging ------------------------------------------------------- #
+# Set the provisioner log file path
+LOG_FILE="../../../../logs/private_provisioner.log"
+
+
+# Redirect stdout to the log file
+exec 3>&1 1> >(tee -a "${LOG_FILE}" >&3) 2>&1
+
+# Set the trap to log the date and time of each command
+trap "date -Is" DEBUG
 
 echo
 print_title "Provisioning private cloud environment"
 
-# ------------------------------ Check if required files exists --------------------------------------- #
+# ------------------------------------- Check if required files exists ---------------------------------------------- #
 CONF_FILE_ERROR=false
 
 # Check if provisioner.conf exists
@@ -131,7 +142,7 @@ then
     # If destroy flag is set, destroy the private cloud environment
     if $destroy
     then
-        # terraform destroy -auto-approve
+        terraform destroy -auto-approve
         echo "Destroying the private cloud environment"
         exit 1
     fi
@@ -179,6 +190,7 @@ mv ~/configure_private_management_node.sh ~/management_node/
 
 # copy configure_management_node.sh to the management node
 scp -o StrictHostKeyChecking=no -i $PRIVATE_INSTANCE_SSH_KEY_PATH -vr ~/management_node/configure_private_management_node.sh $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/
+scp -o StrictHostKeyChecking=no -i $PRIVATE_INSTANCE_SSH_KEY_PATH -vr $PRIVATE_INSTANCE_SSH_KEY_PATH $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/.ssh
 
 ssh -o StrictHostKeyChecking=no -i "$PRIVATE_INSTANCE_SSH_KEY_PATH" -T $PRIVATE_INSTANCE_USER@$management_node_floating_ip <<FED1
 sudo sed -i '1i127.0.0.1 private-management' /etc/hosts
