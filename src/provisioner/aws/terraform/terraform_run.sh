@@ -3,7 +3,8 @@
 # Import common functions
 source ../../../scripts/common.sh
 
-# Help function
+# ------------------------------------------------ Help function ---------------------------------------------------- #
+
 function help() {
     print_info "Usage:"
     echo "  -d, --destroy                       Destroy the aws cloud environment"
@@ -11,6 +12,17 @@ function help() {
     echo "  -r, --reconfigure                   Reconfigure the aws cloud environment"
     echo "  -c, --configure                     Configure the aws cloud environment"
 }
+
+# --------------------------------------------------- Logging ------------------------------------------------------- #
+# Set the provisioner log file path
+LOG_FILE="../../../../logs/private_provisioner.log"
+
+
+# Redirect stdout to the log file
+exec 3>&1 1> >(tee -a "${LOG_FILE}" >&3) 2>&1
+
+# Set the trap to log the date and time of each command
+trap "date -Is" DEBUG
 
 echo
 print_title "Provisioning public cloud environment"

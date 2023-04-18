@@ -27,7 +27,7 @@ function run_provisioner_options {
     echo
     print "Please choose your action:"
     print "1) Configure"
-    print "2) Reconfigure"
+    print "2) Init Reconfigure"
     print "3) Destroy"
     print "4) Destroy and Build"
     read -p "Enter your choice: " ch
