@@ -12,3 +12,7 @@ clouds.yaml
 
 #pycache
 __pycache__
+
+private_env_terraform_output.json
+
+logs/
