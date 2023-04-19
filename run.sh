@@ -26,23 +26,27 @@ function run_analytical_model {
 function run_provisioner_options {
     echo
     print "Please choose your action:"
-    print "1) Configure"
-    print "2) Init Reconfigure"
-    print "3) Destroy"
-    print "4) Destroy and Build"
+    print "1) Initialize"
+    print "2) Configure"
+    print "3) Init Reconfigure"
+    print "4) Destroy"
+    print "5) Destroy and Build"
     read -p "Enter your choice: " ch
     case $ch in
-        3)
+        4)
             ./terraform_run.sh -d
             ;;
-        4)
+        5)
             ./terraform_run.sh -db
             ;;
-        2)
+        3)
             ./terraform_run.sh -r
             ;;
-        1)
+        2)
             ./terraform_run.sh -c
+            ;;
+        1)
+            ./terraform_run.sh -i
             ;;
         *)
             print_error "Invalid choice. Please try again."

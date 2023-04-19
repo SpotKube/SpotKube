@@ -6,9 +6,10 @@ source ../../../scripts/common.sh
 # Help function
 function help() {
     print_info "Usage:"
+    echo "  -i, --init                          Initialize the private cloud environment"
     echo "  -d, --destroy                       Destroy the private cloud environment"
     echo "  -db, --destroy_build                Destroy and build the private cloud environment"
-    echo "  -r, --init_reconfigure                   Reconfigure the private cloud environment"
+    echo "  -r, --init_reconfigure              Reconfigure the private cloud environment"
     echo "  -c, --configure                     Configure the private cloud environment"
 }
 
@@ -105,6 +106,7 @@ destroy=false
 reconfigure=false
 destroy_build=false
 configure_only=false
+initialize=false
 
 # Parse command-line arguments
 while [[ $# -gt 0 ]]
@@ -123,6 +125,9 @@ do
         ;;
         -c|--configure)
         configure_only=true
+        ;;
+        -i|--init)
+        initialize=true
         ;;
         *)
         echo "Invalid argument: $1"
@@ -147,19 +152,17 @@ then
         exit 1
     fi
 
-    # If reconfigure flag is set, run "terraform init -reconfigure", otherwise just run "terraform init"
-    if $reconfigure
+    # If reconfigure flag is set and destroy_build is not set, run "terraform init -reconfigure", otherwise just run "terraform init"
+    if $reconfigure 
     then
         terraform init -reconfigure
-    else
-        terraform init
-    fi
-
-    # If destroy_build flag is set, destroy the private cloud environment and then build it
-    if $destroy_build
+    elif $destroy_build
     then
         terraform destroy -auto-approve
         terraform init -reconfigure
+    elif $initialize
+    then
+        terraform init
     fi
 
     terraform apply -auto-approve
@@ -171,6 +174,14 @@ fi
 management_node_floating_ip=$(jq -r '.private_management_floating_ip.value' private_env_terraform_output.json)
 print_info "Management node floating IP: $management_node_floating_ip"
 
+# Get private instance SSH key name
+
+# Use the 'basename' command to get the filename without the directory path
+PRIVATE_INSTANCE_SSH_KEY_NAME=$(basename "$PRIVATE_INSTANCE_SSH_KEY_PATH")
+
+# Print the value of PRIVATE_INSTANCE_SSH_KEY_NAME
+echo "PRIVATE_INSTANCE_SSH_KEY_NAME: $PRIVATE_INSTANCE_SSH_KEY_NAME"
+
 # ------------------------------------ Configuring the private cloud ------------------------------------------------ #
 <<COMMENT
 Due to a limitation in the security rules of the private cloud that prevents the configuration file from being 
@@ -179,34 +190,40 @@ management node.
 COMMENT
 
 # Copy required files to the private host
+print_info "Coping required files to the private host"
 scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr $PRIVATE_INSTANCE_SSH_KEY_PATH $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/.ssh/
 scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr ./scripts/configure_private_management_node.sh $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/
+
 
 # SSH to the private host and then ssh to the management node and run the configure_management_node.sh script
 ssh -o StrictHostKeyChecking=no -i "$PRIVATE_HOST_SSH_KEY_PATH" -T $PRIVATE_HOST_USER@$PRIVATE_HOST_IP <<EOF
 
-mkdir ~/management_node
+mkdir -p ~/management_node
 mv ~/configure_private_management_node.sh ~/management_node/
 
 # copy configure_management_node.sh to the management node
-scp -o StrictHostKeyChecking=no -i $PRIVATE_INSTANCE_SSH_KEY_PATH -vr ~/management_node/configure_private_management_node.sh $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/
-scp -o StrictHostKeyChecking=no -i $PRIVATE_INSTANCE_SSH_KEY_PATH -vr $PRIVATE_INSTANCE_SSH_KEY_PATH $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/.ssh
+echo "Coping required files to the management node"
+scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr ~/management_node/configure_private_management_node.sh $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/
+scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/.ssh
 
-ssh -o StrictHostKeyChecking=no -i "$PRIVATE_INSTANCE_SSH_KEY_PATH" -T $PRIVATE_INSTANCE_USER@$management_node_floating_ip <<FED1
+ssh -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -T $PRIVATE_INSTANCE_USER@$management_node_floating_ip <<FED1
 sudo sed -i '1i127.0.0.1 private-management' /etc/hosts
 
-mkdir ~/scripts
+mkdir -p ~/scripts
 mv ~/configure_private_management_node.sh ~/scripts/
+echo "Configuring the management node"
 sh ~/scripts/configure_private_management_node.sh
 
-# Generate new SSH key for ansible to use
-ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa
+# Check if the key file already exists
+if [ ! -f "~/.ssh/id_rsa" ]; then
+    # Generate a new SSH key with the given name and no passphrase
+    ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa
+    echo "New SSH key generated: ~/.ssh/id_rsa"
+else
+    echo "SSH key already exists: ~/.ssh/id_rsa"
+fi
 
 echo "Configure management node done"
-touch ~/management_node_done.txt
 
 FED1
 EOF
-
-
-

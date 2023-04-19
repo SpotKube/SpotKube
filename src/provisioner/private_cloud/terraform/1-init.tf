@@ -67,7 +67,7 @@ resource "openstack_compute_secgroup_v2" "ssh_access_group" {
 
 # Create an instance
 resource "openstack_compute_instance_v2" "private_management" {
-  name            = "Private_Management1"  #Instance name
+  name            = "Private_Management"  #Instance name
   image_id        = data.openstack_images_image_v2.image.id
   flavor_id       = data.openstack_compute_flavor_v2.flavor.id
   key_pair        = var.keypair
