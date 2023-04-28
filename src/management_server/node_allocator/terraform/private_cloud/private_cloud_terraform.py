@@ -1,37 +1,69 @@
-import os
+import subprocess
 import time
 import json
-from python_terraform import *
-import ansible.playbook
-import ansible.constants
+import os
 
-async def provision_private_cloud():
-    terraform = Terraform()
-    print("Hey Terraform")
-    # Set the path to the Terraform configuration files
-    terraform_dir = os.path.join(os.path.dirname(__file__), ".")
+current_dir = os.getcwd()
+terraform_dir = os.path.join(current_dir, "node_allocator", "terraform", "private_cloud")
+    
+async def destroy_private_cloud():
+    # Destroy resources
+    # subprocess.run(["pwd"], cwd=terraform_dir)
+    subprocess.run(["terraform", "destroy", "-auto-approve", "-var-file=private.tfvars"], cwd=terraform_dir)
+    
 
-    # Load the Terraform variables from the configuration file
-    tf_vars_file = os.path.join(terraform_dir, "private.tfvars")
-    tf_vars = terraform.read_vars(tf_vars_file)
+async def destroy_and_provision_private_cloud():
+     # Destroy resources
+    subprocess.run(["terraform", "destroy", "-auto-approve", "-var-file=private.tfvars"], cwd=terraform_dir)
+    
+    # Initialize Terraform
+    subprocess.run(["terraform", "init"])
+    
+    # Apply changes
+    subprocess.run(["terraform", "apply", "-auto-approve", "-var-file=private.tfvars"], cwd=terraform_dir)
+    
+    # Wait for instances to be provisioned
+    time.sleep(60)
+    
+    # Save Terraform output to a JSON file
+    output = subprocess.check_output(["terraform", "output", "-json"]).decode("utf-8")
+    with open("private_instance_terraform_output.json", "w") as f:
+        f.write(output)
+    
+    # Read the management node floating IP from the Terraform output
+    with open("private_instance_terraform_output.json", "r") as f:
+        data = json.load(f)
+        management_node_floating_ip = data["private_management_floating_ip"]["value"]
+        
+    return {"management_node_floating_ip": management_node_floating_ip}
 
-    # Initialize the Terraform configuration
-    tf = terraform.Terraform(working_dir=terraform_dir)
-    print("Initializing Terraform")
-    # tf.init()
+# Initialize Terraform and apply changes
+async def provision_private_cloud():    
+    # Initialize Terraform
+    subprocess.run(["terraform", "init"], cwd=terraform_dir)
+    
+    return await apply_terraform()
 
-    # # Apply the Terraform configuration
-    # tf.apply(
-    #     skip_plan=True,
-    #     var_file=tf_vars_file,
-    #     auto_approve=True,
-    # )
+# Apply changes
+async def apply_private_cloud():
+    return await apply_terraform()
 
-    # # Wait for 60 seconds to ensure the instances are fully provisioned
-    #  # Wait for 60 seconds to ensure the instances are fully provisioned
-    # await asyncio.sleep(60)
-
-    # # Save the Terraform output to a JSON file
-    # output = tf.output(json=True)
-    # with open("private_instance_terraform_output.json", "w") as f:
-    #     json.dump(output, f)
+# Private function to apply changes
+async def apply_terraform():
+    # Apply changes
+    subprocess.run(["terraform", "apply", "-auto-approve", "-var-file=private.tfvars"], cwd=terraform_dir)
+    
+    # Wait for instances to be provisioned
+    time.sleep(60)
+    
+    # Save Terraform output to a JSON file
+    output = subprocess.check_output(["terraform", "output", "-json"]).decode("utf-8")
+    with open("private_instance_terraform_output.json", "w") as f:
+        f.write(output)
+    
+    # Read the management node floating IP from the Terraform output
+    with open("private_instance_terraform_output.json", "r") as f:
+        data = json.load(f)
+        management_node_floating_ip = data["private_management_floating_ip"]["value"]
+        
+    return {"management_node_floating_ip": management_node_floating_ip}
