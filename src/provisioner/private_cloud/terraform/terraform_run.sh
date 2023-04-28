@@ -209,11 +209,12 @@ scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr "
 ssh -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -T $PRIVATE_INSTANCE_USER@$management_node_floating_ip <<FED1
 sudo sed -i '1i127.0.0.1 private-management' /etc/hosts
 
-mkdir ~/.config/openstack
+mkdir -p ~/.config/openstack
 mv ~/clouds.yaml ~/.config/openstack/
 
 mkdir -p ~/scripts
 mv ~/configure_private_management_node.sh ~/scripts/
+
 echo "Configuring the management node"
 sh ~/scripts/configure_private_management_node.sh
 

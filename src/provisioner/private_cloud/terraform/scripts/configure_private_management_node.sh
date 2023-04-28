@@ -6,7 +6,6 @@ sudo apt update
 sudo apt install -y python3-pip
 sudo pip3 install --upgrade pip
 sudo apt install -y python3-venv
-pip install "uvicorn[standard]"
 
 # Install ansible
 sudo apt install -y software-properties-common
