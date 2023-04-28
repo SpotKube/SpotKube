@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from .service import provision_private_cloud
+from .terraform.private_cloud.private_cloud_terraform import provision_private_cloud
 
 node_allocator_router = APIRouter(
     prefix="/node_allocator",

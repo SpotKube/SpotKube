@@ -102,6 +102,7 @@ python-keystoneclient==5.1.0
 python-multipart==0.0.6
 python-novaclient==18.3.0
 python-openstackclient==6.2.0
+python-terraform==0.10.1
 pytz==2022.7.1
 pyxdg==0.28
 PyYAML==6.0
