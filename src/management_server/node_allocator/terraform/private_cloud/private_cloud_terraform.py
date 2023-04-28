@@ -3,44 +3,17 @@ import time
 import json
 import os
 import re
-
-import logging
-
+from utils import get_logger, format_terraform_error_message, rn_subprocess_cmd
 
 current_dir = os.getcwd()
 terraform_dir = os.path.join(current_dir, "node_allocator", "terraform", "private_cloud")
 
-# Set up the logger
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-file_handler = logging.FileHandler(f"{terraform_dir}/terraform.log")
-file_handler.setLevel(logging.DEBUG)
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
-
-def format_terraform_error_message(error_message):
-    # Replace escape characters with their printable equivalents
-    error_message = error_message.replace('\n\n\n', '\n')
-    error_message = error_message.replace('\n\n', '\n')
-    error_message = error_message.replace('\u001b[1m', '')
-    error_message = error_message.replace('\u001b[0m', '')
-    error_message = error_message.replace('│\n \n', '')
-    error_message = error_message.replace('╷\n\n', '')
-    formatted_message = re.sub(r'\x1b\[\d+m', '', error_message)
-    return str(formatted_message)
-
-def run_command(command, cwd):
-    result = subprocess.run(command, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    if result.returncode != 0:
-        error = result.stderr.decode('utf-8')
-        raise Exception(error if error  else "Internal Server Error")
-    return result.stdout.decode('utf-8')
+logger = get_logger(terraform_dir)
     
 async def destroy_private_cloud():
     try:
         # Destroy resources
-        output = run_command(["terraform", "destroy", "-auto-approve", "-var-file=private.tfvars"], cwd=terraform_dir)
+        output = rn_subprocess_cmd(["terraform", "destroy", "-auto-approve", "-var-file=private.tfvars"], cwd=terraform_dir)
         print(output)
         logger.info("Private cloud destroyed")
         return {"message": "Private cloud destroyed"}
@@ -65,13 +38,13 @@ async def destroy_private_cloud():
 async def destroy_and_provision_private_cloud():
     try:
         # Destroy resources
-        run_command(["terraform", "destroy", "-auto-approve", "-var-file=private.tfvars"], cwd=terraform_dir)
+        rn_subprocess_cmd(["terraform", "destroy", "-auto-approve", "-var-file=private.tfvars"], cwd=terraform_dir)
         
         # Initialize Terraform
-        run_command(["terraform", "init"])
+        rn_subprocess_cmd(["terraform", "init"])
         
         # Apply changes
-        run_command(["terraform", "apply", "-auto-approve", "-var-file=private.tfvars"], cwd=terraform_dir)
+        rn_subprocess_cmd(["terraform", "apply", "-auto-approve", "-var-file=private.tfvars"], cwd=terraform_dir)
         
         # Wait for instances to be provisioned
         time.sleep(60)
