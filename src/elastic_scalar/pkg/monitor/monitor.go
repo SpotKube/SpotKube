@@ -2,18 +2,19 @@ package monitor
 
 import (
 	"fmt"
-	// "github.com/robfig/cron/v3"
+
 	"github.com/SpotKube/SpotKube/src/elastic_scalar/pkg/kube"
+	"github.com/robfig/cron/v3"
 )
 
 func Watch() {
 	fmt.Println("starting monitor")
-	kube.GetNodeCpuUsage()
-	// c := cron.New()
-	// c.AddFunc("* * * * *", hello)
-	// go c.Start()
+	c := cron.New()
+	c.AddFunc("* * * * *", monitor)
+	go c.Start()
 }
 
-// func hello() {
-// 	fmt.Println("hello")
-// }
+func monitor() {
+	nodesCpuUsage := kube.GetNodeCpuUsage()
+
+}
