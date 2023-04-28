@@ -5,7 +5,7 @@ sudo apt update
 #Python3
 sudo apt install -y python3-pip
 sudo pip3 install --upgrade pip
-python3 -m pip install --user virtualenv
+sudo apt install -y python3-venv
 pip install "uvicorn[standard]"
 
 # Install ansible
