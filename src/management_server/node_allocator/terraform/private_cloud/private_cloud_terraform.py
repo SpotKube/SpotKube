@@ -8,7 +8,7 @@ from utils import get_logger, format_terraform_error_message, rn_subprocess_cmd
 current_dir = os.getcwd()
 terraform_dir = os.path.join(current_dir, "node_allocator", "terraform", "private_cloud")
 
-logger = get_logger(terraform_dir)
+logger = get_logger(terraform_dir, log_file="private_cloud_terraform.log")
     
 async def destroy_private_cloud():
     try:
@@ -21,10 +21,9 @@ async def destroy_private_cloud():
     except subprocess.CalledProcessError as e:
         # Log the error message and return it
         error_message = e.output.decode("utf-8")
-        error_message = format_terraform_error_message(str(e))
-        logger.exception(error_message)
-        with open(f"{terraform_dir}/terraform_error_output.txt", "w") as f:
-            f.write(error_message)
+        print(error_message)
+        error_message = format_terraform_error_message(error_message)
+        logger.error(error_message)
         return {"error_message": error_message}
     
     except  Exception as e:
