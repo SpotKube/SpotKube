@@ -135,7 +135,8 @@ then
     if $destroy
     then
         # terraform destroy -auto-approve
-        echo "Destroying the private cloud environment"
+        echo "Destroying the public cloud environment"
+        terraform destroy -auto-approve -var "aws_shared_config_file_path=$AWS_SHARED_CONFIG_FILE_PATH" -var "aws_shared_credentials_file_path=$AWS_SHARED_CREDENTIALS_FILE_PATH" -var "pub_id_file_path=$PUBLIC_INSTANCE_SSH_KEY_PATH"
         exit 1
     fi
 
