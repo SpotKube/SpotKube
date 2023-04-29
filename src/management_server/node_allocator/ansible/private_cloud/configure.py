@@ -53,15 +53,12 @@ async def configure_private_nodes():
     
     # Run the initial playbook
     run_subprocess_popen_cmd(["ansible-playbook", "-i", "hosts", "initial.yml"], cwd=ansible_dir)
-    print(output)
     
     # Run the kube-dependencies playbook
     run_subprocess_popen_cmd(["ansible-playbook", "-i", "hosts", "kube-dependencies.yml"], cwd=ansible_dir)
-    print(output)
     
     # Run the control-plane playbook
     run_subprocess_popen_cmd(["ansible-playbook", "-i", "hosts", "control-plane.yml"], cwd=ansible_dir)
-    print(output)
     
     return {"message": "Nodes configured", "status": "success"}
 

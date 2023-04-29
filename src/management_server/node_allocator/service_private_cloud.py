@@ -21,3 +21,7 @@ async def service_apply_private_cloud():
 # Configure private cloud
 async def service_configure_private_cloud():
     return await configure_private_nodes()
+
+# Write terraform output to a file
+async def service_write_terraform_output():
+    return await write_terraform_output()

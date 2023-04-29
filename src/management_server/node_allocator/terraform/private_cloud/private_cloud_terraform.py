@@ -137,3 +137,25 @@ async def apply_terraform():
         logger.error(error_message)
         return {"error_message": error_message, "status": "failed"}
     
+# Private function to apply changes
+async def write_terraform_output():
+    try:
+        output = run_subprocess_cmd(["terraform", "output", "-json"], cwd=terraform_dir)
+        
+        with open(f"{terraform_dir}/private_instance_terraform_output.json", "w") as f:
+            f.write(output)
+            
+    except subprocess.CalledProcessError as e:
+        # Log the error message and return it
+        error_message = e.output.decode("utf-8")
+        print(error_message)
+        error_message = format_terraform_error_message(str(error_message))
+        logger.error(error_message)
+        return {"error_message": error_message, "status": "failed"}
+    
+    except  Exception as error:
+        print(error)
+        error_message = format_terraform_error_message(str(error))
+        logger.error(error_message)
+        return {"error_message": error_message, "status": "failed"}
+    
