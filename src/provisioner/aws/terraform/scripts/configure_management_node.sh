@@ -29,16 +29,14 @@ sudo apt install -y terraform jq
 # Install zip
 sudo apt install -y unzip
 
-sudo su ubuntu
-cd
-
 # Install AWS CLI
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+rm -rf aws
 unzip awscliv2.zip
-sudo ./aws/install
+sudo ./aws/install --update
 
 # Generate key pair
-pushd ~./ssh
 ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa <<<y >/dev/null 2>&1
-popd
 
+# Create directory if not exists
+mkdir -p ~/.aws
