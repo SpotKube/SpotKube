@@ -193,7 +193,7 @@ COMMENT
 print_info "Coping required files to the private host"
 
 scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr \
-$PRIVATE_INSTANCE_SSH_KEY_PATH $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/.ssh/
+$PRIVATE_INSTANCE_SSH_KEY_PATH "$PRIVATE_INSTANCE_SSH_KEY_PATH.pub" $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/.ssh/
 
 scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr ./scripts/configure_private_management_node.sh \
 $OPENSTACK_CLOUD_YAML_PATH $AWS_SHARED_CONFIG_FILE_PATH $AWS_SHARED_CREDENTIALS_FILE_PATH ~/.config/spotkube/ \
@@ -214,6 +214,9 @@ scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr ~
 
 scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr \
 $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:"~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/.ssh
+
+scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr \
+$PRIVATE_HOST_USER@$PRIVATE_HOST_IP:"~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME.pub" $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/.ssh
 
 ssh -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -T $PRIVATE_INSTANCE_USER@$management_node_floating_ip <<FED1
 sudo sed -i '1i127.0.0.1 private-management' /etc/hosts

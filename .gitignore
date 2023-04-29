@@ -15,7 +15,9 @@ __pycache__
 
 private_env_terraform_output.json
 
+
 logs/
+*.log
 
 testing.sh
 

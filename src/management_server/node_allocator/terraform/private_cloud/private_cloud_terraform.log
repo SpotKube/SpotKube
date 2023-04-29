@@ -1,0 +1,4 @@
+2023-04-29 16:57:31,309 - utils - INFO - Private cloud changes applied
+2023-04-29 16:57:47,858 - utils - INFO - Private cloud changes applied
+2023-04-29 17:03:31,296 - utils - ERROR - [Errno 2] No such file or directory: 'echo HY'
+2023-04-29 17:07:10,411 - utils - ERROR - [Errno 2] No such file or directory: 'echo HY'

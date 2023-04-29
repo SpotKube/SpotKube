@@ -13,8 +13,8 @@ terraform_dir = os.path.join(current_dir, "node_allocator", "terraform", "privat
 async def generate_private_cloud_hosts_file():
     # Read control_plane_ip and worker_ips from input.json using jq
     with open(f"{terraform_dir}/private_instance_terraform_output.json") as f:
-        output = json.load(f)
-        print(output)
+        json.load(f)
+
         control_plane_ip = output['private_master_ip']['value']
         worker_ips = [worker['private_ip'] for worker in output['private_workers']['value']]
         
@@ -54,16 +54,13 @@ async def configure_private_nodes():
     await generate_private_cloud_hosts_file()
     
     # Run the initial playbook
-    output = run_subprocess_popen_cmd(["ansible-playbook", "-i", "hosts", "initial.yml"], cwd=ansible_dir)
-    print(output)
+    run_subprocess_popen_cmd(["ansible-playbook", "-i", "hosts", "initial.yml"], cwd=ansible_dir)
     
     # Run the kube-dependencies playbook
-    output = run_subprocess_popen_cmd(["ansible-playbook", "-i", "hosts", "kube-dependencies.yml"], cwd=ansible_dir)
-    print(output)
+    run_subprocess_popen_cmd(["ansible-playbook", "-i", "hosts", "kube-dependencies.yml"], cwd=ansible_dir)
     
     # Run the control-plane playbook
-    output = run_subprocess_popen_cmd(["ansible-playbook", "-i", "hosts", "control-plane.yml"], cwd=ansible_dir)
-    print(output)
+    run_subprocess_popen_cmd(["ansible-playbook", "-i", "hosts", "control-plane.yml"], cwd=ansible_dir)
     
     return {"message": "Nodes configured", "status": "success"}
 

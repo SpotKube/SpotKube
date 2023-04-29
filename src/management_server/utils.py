@@ -24,15 +24,12 @@ def format_terraform_error_message(error_message):
     formatted_message = re.sub(r'\x1b\[\d+m', '', error_message)
     return str(formatted_message)
 
-def run_subprocess_cmd(command, cwd, logger):
+def run_subprocess_cmd(command, cwd):
     result = subprocess.run(command, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output = result.stdout.decode('utf-8')
     print(output)
     if result.returncode != 0:
         error = result.stderr.decode('utf-8')
-        print(error)
-        error_message = format_terraform_error_message(error)
-        logger.error(error_message)
         raise Exception(error if error  else "Internal Server Error")
     return output
     
