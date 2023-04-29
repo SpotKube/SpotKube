@@ -5,6 +5,7 @@ sudo apt update
 #Python3
 sudo apt install -y python3-pip
 sudo pip3 install --upgrade pip
+sudo apt install -y python3-venv
 
 # Install ansible
 sudo apt install -y software-properties-common
