@@ -144,7 +144,7 @@ async def write_terraform_output():
         
         with open(f"{terraform_dir}/private_instance_terraform_output.json", "w") as f:
             f.write(output)
-            
+        return {"message": "Terraform output written to file", "status": "success"}
     except subprocess.CalledProcessError as e:
         # Log the error message and return it
         error_message = e.output.decode("utf-8")
