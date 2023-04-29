@@ -52,11 +52,11 @@ def configure_private_nodes():
     print(output)
     
     # Run the kube-dependencies playbook
-    output = run_subprocess_cmd(["ansible-playbook", "-i", "hosts", "kube-dependencies.yml"], cwd=ansible_dir)
+    output = run_subprocess_cmd(["ansible-playbook", "-i", "hosts", "kube_dependencies.yml"], cwd=ansible_dir)
     print(output)
     
     # Run the control-plane playbook
-    output = run_subprocess_cmd(["ansible-playbook", "-i", "hosts", "control-plane.yml"], cwd=ansible_dir)
+    output = run_subprocess_cmd(["ansible-playbook", "-i", "hosts", "control_plane.yml"], cwd=ansible_dir)
     print(output)
     
     return {"message": "Nodes configured", "status": "success"}
