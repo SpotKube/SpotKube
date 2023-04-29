@@ -14,17 +14,21 @@ async def root():
 
 @na_private_router.get("/destroy")
 async def route_provision_private_cloud():
-    return await destroy_private_cloud()
+    return await service_destroy_private_cloud()
 
 @na_private_router.get("/destroy_and_provision")
-async def route_provision_private_cloud():
-    return await destroy_and_provision_private_cloud()
+async def route_destroy_provision_private_cloud():
+    return await service_destroy_and_provision_private_cloud()
 
 @na_private_router.get("/provision")
 async def route_provision_private_cloud():
-    return await provision_private_cloud()
+    return await service_provision_private_cloud()
 
 @na_private_router.get("/apply")
 async def route_apply_private_cloud():
-    return await apply_private_cloud()
+    return await service_apply_private_cloud()
+
+@na_private_router.get("/configure")
+async def route_configure_private_cloud():
+    return await service_configure_private_cloud()
     

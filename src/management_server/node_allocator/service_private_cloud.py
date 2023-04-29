@@ -1,4 +1,5 @@
 from .terraform.private_cloud.private_cloud_terraform import *
+from .ansible.configure import *
 
 # Destroy private cloud
 async def service_destroy_private_cloud():
@@ -16,3 +17,7 @@ async def service_provision_private_cloud():
 # Apply changes to private cloud
 async def service_apply_private_cloud():
     return await apply_private_cloud()
+
+# Configure private cloud
+async def service_configure_private_cloud():
+    return await configure_private_nodes()
