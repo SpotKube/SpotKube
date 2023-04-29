@@ -27,7 +27,7 @@ data "openstack_images_image_v2" "image" {
 
 ## Get flavor id
 data "openstack_compute_flavor_v2" "flavor" {
-  name = "m1.small" # flavor to be used
+  name = "m1.medium" # flavor to be used
 }
 
 # Get public network
