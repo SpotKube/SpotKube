@@ -14,6 +14,7 @@ async def generate_private_cloud_hosts_file():
     # Read control_plane_ip and worker_ips from input.json using jq
     with open(f"{terraform_dir}/private_instance_terraform_output.json") as f:
         output = json.load(f)
+        print(output)
         control_plane_ip = output['private_master_ip']['value']
         worker_ips = [worker['private_ip'] for worker in output['private_workers']['value']]
         
