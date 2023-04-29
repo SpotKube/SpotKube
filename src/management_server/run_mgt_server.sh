@@ -3,6 +3,6 @@
 virtualenv env
 source env/bin/activate
 
-pip install -r requirements1.txt
+pip install -r requirements.txt
 
 uvicorn main:app --reload

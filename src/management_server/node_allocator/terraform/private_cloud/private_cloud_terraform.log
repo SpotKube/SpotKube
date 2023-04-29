@@ -1,9 +1,0 @@
-2023-04-29 16:57:31,309 - utils - INFO - Private cloud changes applied
-2023-04-29 16:57:47,858 - utils - INFO - Private cloud changes applied
-2023-04-29 17:03:31,296 - utils - ERROR - [Errno 2] No such file or directory: 'echo HY'
-2023-04-29 17:07:10,411 - utils - ERROR - [Errno 2] No such file or directory: 'echo HY'
-2023-04-29 17:26:29,560 - utils - ERROR - run_subprocess_cmd() got an unexpected keyword argument 'logger1'
-2023-04-29 17:27:11,689 - utils - ERROR - run_subprocess_cmd() got an unexpected keyword argument 'logger1'
-2023-04-29 17:36:00,631 - utils - ERROR - name 'output' is not defined
-2023-04-29 17:36:00,632 - utils - INFO - Private cloud changes applied
-2023-04-29 17:38:40,878 - utils - INFO - Private cloud changes applied

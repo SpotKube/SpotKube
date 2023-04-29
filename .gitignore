@@ -23,3 +23,6 @@ testing.sh
 
 # Python env
 env/
+
+src/management_server/node_allocator/ansible/private_cloud/hosts
+hosts

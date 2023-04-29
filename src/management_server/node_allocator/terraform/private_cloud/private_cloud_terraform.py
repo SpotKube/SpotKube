@@ -1,14 +1,13 @@
 import subprocess
 import time
-import json
 import os
-import re
 from utils import get_logger, format_terraform_error_message, run_subprocess_cmd
 
 current_dir = os.getcwd()
 terraform_dir = os.path.join(current_dir, "node_allocator", "terraform", "private_cloud")
+logger_dir = os.path.join(current_dir, "logs")
 
-logger = get_logger(path=terraform_dir, log_file="private_cloud_terraform.log")
+logger = get_logger(path=logger_dir, log_file="private_cloud_terraform.log")
     
 # Destroy private cloud
 async def destroy_private_cloud():
