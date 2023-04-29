@@ -17,7 +17,7 @@ function help() {
 
 # --------------------------------------------------- Logging ------------------------------------------------------- #
 # Set the provisioner log file path
-LOG_FILE="../../../../logs/private_provisioner.log"
+LOG_FILE="../../../../logs/public_provisioner.log"
 
 
 # Redirect stdout to the log file
@@ -128,10 +128,10 @@ do
 done
 
 # ------------------------------------- Terraform actions ----------------------------------------------------------- #
-# If configure_only flag is set, only configure the private cloud environment
+# If configure_only flag is set, only configure the public cloud environment
 if ! $configure_only
 then
-    # If destroy flag is set, destroy the private cloud environment
+    # If destroy flag is set, destroy the public cloud environment
     if $destroy
     then
         # terraform destroy -auto-approve
@@ -148,7 +148,7 @@ then
         terraform init
     fi
 
-    # If destroy_build flag is set, destroy the private cloud environment and then build it
+    # If destroy_build flag is set, destroy the public cloud environment and then build it
     if $destroy_build
     then
         terraform destroy -auto-approve -var "aws_shared_config_file_path=$AWS_SHARED_CONFIG_FILE_PATH" -var "aws_shared_credentials_file_path=$AWS_SHARED_CREDENTIALS_FILE_PATH" -var "pub_id_file_path=$PUBLIC_INSTANCE_SSH_KEY_PATH"
