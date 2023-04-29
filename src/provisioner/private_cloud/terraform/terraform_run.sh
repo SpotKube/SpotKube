@@ -199,6 +199,32 @@ scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr ./scripts/conf
 $OPENSTACK_CLOUD_YAML_PATH $AWS_SHARED_CONFIG_FILE_PATH $AWS_SHARED_CREDENTIALS_FILE_PATH ~/.config/spotkube/ \
 $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/
 
+ssh -o StrictHostKeyChecking=no -i "$PRIVATE_HOST_SSH_KEY_PATH" -T $PRIVATE_HOST_USER@$PRIVATE_HOST_IP "mkdir -p ~/helm_charts"
+
+# ------- Copying helm charts to the private host ------- #
+# Read helm chart paths from user_config.yml
+HELM_CHARTS=()
+while IFS= read -r line
+do
+    if [[ "$line" == *"helmChartPath"* ]]; then
+        chart_path=$(echo "$line" | cut -d: -f2- | tr -d '[:space:]' | tr -d '"' | tr -d ',')
+        if [[ -d "$chart_path" ]]; then
+            HELM_CHARTS+=("$chart_path")
+        fi
+    fi
+    echo "$line"
+    echo "chart_path: $chart_path"
+done < ~/.config/spotkube/user_config.yml
+
+# Print out the list of helm chart paths
+echo "HELM_CHARTS: ${HELM_CHARTS[@]}"
+
+# Copy helm charts to remote server
+for chart in "${HELM_CHARTS[@]}"
+do
+    echo "Copying $chart to $PRIVATE_HOST_USER@$PRIVATE_HOST_IP"
+    scp -o StrictHostKeyChecking=no -i "$PRIVATE_HOST_SSH_KEY_PATH" -vr "$chart" "$PRIVATE_HOST_USER@$PRIVATE_HOST_IP":~/helm_charts/
+done
 
 # SSH to the private host and then ssh to the management node and run the configure_management_node.sh script
 ssh -o StrictHostKeyChecking=no -i "$PRIVATE_HOST_SSH_KEY_PATH" -T $PRIVATE_HOST_USER@$PRIVATE_HOST_IP <<EOF
@@ -210,7 +236,8 @@ mv ~/configure_private_management_node.sh ~/management_node/
 echo "Coping required files to the management node"
 
 scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr ~/config ~/credentials \
-~/management_node/configure_private_management_node.sh ~/clouds.yaml ~/spotkube/ $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/
+~/management_node/configure_private_management_node.sh ~/clouds.yaml ~/spotkube/ ~/helm_charts/ \
+$PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/
 
 scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr \
 $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:"~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/.ssh
@@ -224,9 +251,7 @@ sudo sed -i '1i127.0.0.1 private-management' /etc/hosts
 mkdir -p ~/scripts
 mv ~/configure_private_management_node.sh ~/scripts/
 
-echo "Configuring the management node"
 sh ~/scripts/configure_private_management_node.sh
-
 echo "Configure management node done"
 
 FED1
