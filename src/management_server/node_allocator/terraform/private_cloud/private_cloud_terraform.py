@@ -118,7 +118,7 @@ async def apply_terraform():
         time.sleep(60)
         
         # Save Terraform output to a JSON file
-        run_subprocess_cmd(["terraform", "output", "-json"], cwd=terraform_dir)
+        output = run_subprocess_cmd(["terraform", "output", "-json"], cwd=terraform_dir)
         
         with open(f"{terraform_dir}/private_instance_terraform_output.json", "w") as f:
             f.write(output)

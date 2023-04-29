@@ -1,9 +1,9 @@
 [control_plane]
-10.0.1.96
+10.0.1.136
 
 [workers]
-10.0.1.162
-10.0.1.134
+10.0.1.164
+10.0.1.252
 
 [control_plane:vars]
 ansible_connection=ssh

@@ -13,8 +13,8 @@ terraform_dir = os.path.join(current_dir, "node_allocator", "terraform", "privat
 async def generate_private_cloud_hosts_file():
     # Read control_plane_ip and worker_ips from input.json using jq
     with open(f"{terraform_dir}/private_instance_terraform_output.json") as f:
-        json.load(f)
-
+        output = json.load(f)
+        print(output)
         control_plane_ip = output['private_master_ip']['value']
         worker_ips = [worker['private_ip'] for worker in output['private_workers']['value']]
         
@@ -27,8 +27,6 @@ async def generate_private_cloud_hosts_file():
             if line.startswith("PRIVATE_INSTANCE_SSH_KEY_PATH="):
                 key_path = line.strip().split("=")[1]
                 key_name = key_path.split("/")[-1].replace("'", "")
-
-    print(key_name)
 
     # Write the Ansible hosts file
     with open(f'{ansible_dir}/hosts', 'w') as f:
@@ -55,12 +53,15 @@ async def configure_private_nodes():
     
     # Run the initial playbook
     run_subprocess_popen_cmd(["ansible-playbook", "-i", "hosts", "initial.yml"], cwd=ansible_dir)
+    print(output)
     
     # Run the kube-dependencies playbook
     run_subprocess_popen_cmd(["ansible-playbook", "-i", "hosts", "kube-dependencies.yml"], cwd=ansible_dir)
+    print(output)
     
     # Run the control-plane playbook
     run_subprocess_popen_cmd(["ansible-playbook", "-i", "hosts", "control-plane.yml"], cwd=ansible_dir)
+    print(output)
     
     return {"message": "Nodes configured", "status": "success"}
 
