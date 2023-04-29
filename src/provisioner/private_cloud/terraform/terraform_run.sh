@@ -15,11 +15,11 @@ function help() {
 
 # --------------------------------------------------- Logging ------------------------------------------------------- #
 # Set the provisioner log file path
-LOG_FILE="../../../../logs/private_provisioner.log"
+LOG_FILE="private_provisioner.log"
 
 
 # Redirect stdout to the log file
-exec 3>&1 1> >(tee -a "${LOG_FILE}" >&3) 2>&1
+exec 3>&1 1> >(tee >(sed 's/\x1B\[[0-9;]*[JKmsu]//g' >>"${LOG_FILE}") >&3) 2>&1
 
 # Set the trap to log the date and time of each command
 trap "date -Is" DEBUG
@@ -191,8 +191,13 @@ COMMENT
 
 # Copy required files to the private host
 print_info "Coping required files to the private host"
-scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr $PRIVATE_INSTANCE_SSH_KEY_PATH $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/.ssh/
-scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr ./scripts/configure_private_management_node.sh $OPENSTACK_CLOUD_YAML_PATH $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/
+
+scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr \
+$PRIVATE_INSTANCE_SSH_KEY_PATH $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/.ssh/
+
+scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr ./scripts/configure_private_management_node.sh \
+$OPENSTACK_CLOUD_YAML_PATH $AWS_SHARED_CONFIG_FILE_PATH $AWS_SHARED_CREDENTIALS_FILE_PATH \
+$PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/
 
 
 # SSH to the private host and then ssh to the management node and run the configure_management_node.sh script
@@ -203,8 +208,12 @@ mv ~/configure_private_management_node.sh ~/management_node/
 
 # copy configure_management_node.sh to the management node
 echo "Coping required files to the management node"
-scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr ~/management_node/configure_private_management_node.sh ~/clouds.yaml $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/
-scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/.ssh
+
+scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr ~/config ~/credentials \
+~/management_node/configure_private_management_node.sh ~/clouds.yaml $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/
+
+scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr \
+$PRIVATE_HOST_USER@$PRIVATE_HOST_IP:"~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/.ssh
 
 ssh -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -T $PRIVATE_INSTANCE_USER@$management_node_floating_ip <<FED1
 sudo sed -i '1i127.0.0.1 private-management' /etc/hosts
@@ -212,22 +221,26 @@ sudo sed -i '1i127.0.0.1 private-management' /etc/hosts
 mkdir -p ~/.config/openstack
 mv ~/clouds.yaml ~/.config/openstack/
 
-mkdir -p ~/scripts
-mv ~/configure_private_management_node.sh ~/scripts/
+mkdir -p ~/.aws
+mv ~/config ~/.aws/
+mv ~/credentials ~/.aws/
 
-echo "Configuring the management node"
-sh ~/scripts/configure_private_management_node.sh
+# mkdir -p ~/scripts
+# mv ~/configure_private_management_node.sh ~/scripts/
 
-# Check if the key file already exists
-if [ ! -f "~/.ssh/id_rsa" ]; then
-    # Generate a new SSH key with the given name and no passphrase
-    ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa
-    echo "New SSH key generated: ~/.ssh/id_rsa"
-else
-    echo "SSH key already exists: ~/.ssh/id_rsa"
-fi
+# echo "Configuring the management node"
+# sh ~/scripts/configure_private_management_node.sh
 
-echo "Configure management node done"
+# # Check if the key file already exists
+# if [ ! -f "~/.ssh/id_rsa" ]; then
+#     # Generate a new SSH key with the given name and no passphrase
+#     ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa
+#     echo "New SSH key generated: ~/.ssh/id_rsa"
+# else
+#     echo "SSH key already exists: ~/.ssh/id_rsa"
+# fi
+
+# echo "Configure management node done"
 
 FED1
 EOF

@@ -1,0 +1,914 @@
+2023-04-29T09:34:10+05:30
+
+2023-04-29T09:34:10+05:30
+[1;36mProvisioning private cloud environment[0m
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+[1;34mINFO: Management node floating IP: 172.24.4.53[0m
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+PRIVATE_INSTANCE_SSH_KEY_NAME: id_spotkube
+2023-04-29T09:34:10+05:30
+2023-04-29T09:34:10+05:30
+[1;34mINFO: Coping required files to the private host[0m
+2023-04-29T09:34:10+05:30
+Executing: program /usr/bin/ssh host 10.8.100.7, user spotkube, command sftp
+OpenSSH_9.3p1, OpenSSL 3.0.8 7 Feb 2023
+debug1: Reading configuration data /etc/ssh/ssh_config
+debug1: Connecting to 10.8.100.7 [10.8.100.7] port 22.
+debug1: Connection established.
+debug1: identity file /home/pasindu/.ssh/id_spotkube type 0
+debug1: identity file /home/pasindu/.ssh/id_spotkube-cert type -1
+debug1: Local version string SSH-2.0-OpenSSH_9.3
+debug1: Remote protocol version 2.0, remote software version OpenSSH_8.9p1 Ubuntu-3ubuntu0.1
+debug1: compat_banner: match: OpenSSH_8.9p1 Ubuntu-3ubuntu0.1 pat OpenSSH* compat 0x04000000
+debug1: Authenticating to 10.8.100.7:22 as 'spotkube'
+debug1: load_hostkeys: fopen /home/pasindu/.ssh/known_hosts2: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or directory
+debug1: SSH2_MSG_KEXINIT sent
+debug1: SSH2_MSG_KEXINIT received
+debug1: kex: algorithm: sntrup761x25519-sha512@openssh.com
+debug1: kex: host key algorithm: ssh-ed25519
+debug1: kex: server->client cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug1: kex: client->server cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug1: expecting SSH2_MSG_KEX_ECDH_REPLY
+debug1: SSH2_MSG_KEX_ECDH_REPLY received
+debug1: Server host key: ssh-ed25519 SHA256:Mh5EOlcDRaYC0J7yZelpFKr9UL7s6Oba/kQMc2oHlo4
+debug1: load_hostkeys: fopen /home/pasindu/.ssh/known_hosts2: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or directory
+debug1: Host '10.8.100.7' is known and matches the ED25519 host key.
+debug1: Found key in /home/pasindu/.ssh/known_hosts:1
+debug1: rekey out after 134217728 blocks
+debug1: SSH2_MSG_NEWKEYS sent
+debug1: expecting SSH2_MSG_NEWKEYS
+debug1: SSH2_MSG_NEWKEYS received
+debug1: rekey in after 134217728 blocks
+debug1: Will attempt key: /home/pasindu/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+debug1: SSH2_MSG_EXT_INFO received
+debug1: kex_input_ext_info: server-sig-algs=<ssh-ed25519,sk-ssh-ed25519@openssh.com,ssh-rsa,rsa-sha2-256,rsa-sha2-512,ssh-dss,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,webauthn-sk-ecdsa-sha2-nistp256@openssh.com>
+debug1: kex_input_ext_info: publickey-hostbound@openssh.com=<0>
+debug1: SSH2_MSG_SERVICE_ACCEPT received
+debug1: Authentications that can continue: publickey,password
+debug1: Next authentication method: publickey
+debug1: Offering public key: /home/pasindu/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+debug1: Server accepts key: /home/pasindu/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+Authenticated to 10.8.100.7 ([10.8.100.7]:22) using "publickey".
+debug1: channel 0: new session [client-session] (inactive timeout: 0)
+debug1: Requesting no-more-sessions@openssh.com
+debug1: Entering interactive session.
+debug1: pledge: filesystem
+debug1: client_input_global_request: rtype hostkeys-00@openssh.com want_reply 0
+debug1: client_input_hostkeys: searching /home/pasindu/.ssh/known_hosts for 10.8.100.7 / (none)
+debug1: client_input_hostkeys: searching /home/pasindu/.ssh/known_hosts2 for 10.8.100.7 / (none)
+debug1: client_input_hostkeys: hostkeys file /home/pasindu/.ssh/known_hosts2 does not exist
+debug1: client_input_hostkeys: no new or deprecated keys from server
+debug1: Remote: /home/spotkube/.ssh/authorized_keys:2: key options: agent-forwarding port-forwarding pty user-rc x11-forwarding
+debug1: Remote: /home/spotkube/.ssh/authorized_keys:2: key options: agent-forwarding port-forwarding pty user-rc x11-forwarding
+debug1: Sending subsystem: sftp
+debug1: pledge: fork
+scp: dest open ".ssh/id_spotkube": Permission denied
+scp: failed to upload file /home/pasindu/.ssh/id_spotkube to ~/.ssh/
+debug1: client_input_channel_req: channel 0 rtype exit-status reply 0
+debug1: channel 0: free: client-session, nchannels 1
+Transferred: sent 4640, received 4608 bytes, in 1.5 seconds
+Bytes per second: sent 3087.9, received 3066.6
+debug1: Exit status 0
+2023-04-29T09:34:14+05:30
+Executing: program /usr/bin/ssh host 10.8.100.7, user spotkube, command sftp
+OpenSSH_9.3p1, OpenSSL 3.0.8 7 Feb 2023
+debug1: Reading configuration data /etc/ssh/ssh_config
+debug1: Connecting to 10.8.100.7 [10.8.100.7] port 22.
+debug1: Connection established.
+debug1: identity file /home/pasindu/.ssh/id_spotkube type 0
+debug1: identity file /home/pasindu/.ssh/id_spotkube-cert type -1
+debug1: Local version string SSH-2.0-OpenSSH_9.3
+debug1: Remote protocol version 2.0, remote software version OpenSSH_8.9p1 Ubuntu-3ubuntu0.1
+debug1: compat_banner: match: OpenSSH_8.9p1 Ubuntu-3ubuntu0.1 pat OpenSSH* compat 0x04000000
+debug1: Authenticating to 10.8.100.7:22 as 'spotkube'
+debug1: load_hostkeys: fopen /home/pasindu/.ssh/known_hosts2: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or directory
+debug1: SSH2_MSG_KEXINIT sent
+debug1: SSH2_MSG_KEXINIT received
+debug1: kex: algorithm: sntrup761x25519-sha512@openssh.com
+debug1: kex: host key algorithm: ssh-ed25519
+debug1: kex: server->client cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug1: kex: client->server cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug1: expecting SSH2_MSG_KEX_ECDH_REPLY
+debug1: SSH2_MSG_KEX_ECDH_REPLY received
+debug1: Server host key: ssh-ed25519 SHA256:Mh5EOlcDRaYC0J7yZelpFKr9UL7s6Oba/kQMc2oHlo4
+debug1: load_hostkeys: fopen /home/pasindu/.ssh/known_hosts2: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or directory
+debug1: Host '10.8.100.7' is known and matches the ED25519 host key.
+debug1: Found key in /home/pasindu/.ssh/known_hosts:1
+debug1: rekey out after 134217728 blocks
+debug1: SSH2_MSG_NEWKEYS sent
+debug1: expecting SSH2_MSG_NEWKEYS
+debug1: SSH2_MSG_NEWKEYS received
+debug1: rekey in after 134217728 blocks
+debug1: Will attempt key: /home/pasindu/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+debug1: SSH2_MSG_EXT_INFO received
+debug1: kex_input_ext_info: server-sig-algs=<ssh-ed25519,sk-ssh-ed25519@openssh.com,ssh-rsa,rsa-sha2-256,rsa-sha2-512,ssh-dss,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,webauthn-sk-ecdsa-sha2-nistp256@openssh.com>
+debug1: kex_input_ext_info: publickey-hostbound@openssh.com=<0>
+debug1: SSH2_MSG_SERVICE_ACCEPT received
+debug1: Authentications that can continue: publickey,password
+debug1: Next authentication method: publickey
+debug1: Offering public key: /home/pasindu/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+debug1: Server accepts key: /home/pasindu/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+Authenticated to 10.8.100.7 ([10.8.100.7]:22) using "publickey".
+debug1: channel 0: new session [client-session] (inactive timeout: 0)
+debug1: Requesting no-more-sessions@openssh.com
+debug1: Entering interactive session.
+debug1: pledge: filesystem
+debug1: client_input_global_request: rtype hostkeys-00@openssh.com want_reply 0
+debug1: client_input_hostkeys: searching /home/pasindu/.ssh/known_hosts for 10.8.100.7 / (none)
+debug1: client_input_hostkeys: searching /home/pasindu/.ssh/known_hosts2 for 10.8.100.7 / (none)
+debug1: client_input_hostkeys: hostkeys file /home/pasindu/.ssh/known_hosts2 does not exist
+debug1: client_input_hostkeys: no new or deprecated keys from server
+debug1: Remote: /home/spotkube/.ssh/authorized_keys:2: key options: agent-forwarding port-forwarding pty user-rc x11-forwarding
+debug1: Remote: /home/spotkube/.ssh/authorized_keys:2: key options: agent-forwarding port-forwarding pty user-rc x11-forwarding
+debug1: Sending subsystem: sftp
+debug1: pledge: fork
+scp: debug1: truncating at 959
+scp: debug1: truncating at 860
+scp: debug1: truncating at 43
+scp: debug1: truncating at 116
+debug1: client_input_channel_req: channel 0 rtype exit-status reply 0
+debug1: channel 0: free: client-session, nchannels 1
+Transferred: sent 7472, received 5496 bytes, in 4.8 seconds
+Bytes per second: sent 1566.3, received 1152.1
+debug1: Exit status 0
+2023-04-29T09:34:20+05:30
+Welcome to Ubuntu 22.04.1 LTS (GNU/Linux 5.19.0-38-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+213 updates can be applied immediately.
+To see these additional updates run: apt list --upgradable
+
+*** System restart required ***
+Coping required files to the management node
+Executing: program /usr/bin/ssh host 172.24.4.53, user ubuntu, command scp -v -r -d -t ~/
+OpenSSH_8.9p1 Ubuntu-3ubuntu0.1, OpenSSL 3.0.2 15 Mar 2022
+debug1: Reading configuration data /etc/ssh/ssh_config
+debug1: /etc/ssh/ssh_config line 19: include /etc/ssh/ssh_config.d/*.conf matched no files
+debug1: /etc/ssh/ssh_config line 21: Applying options for *
+debug1: Connecting to 172.24.4.53 [172.24.4.53] port 22.
+debug1: Connection established.
+debug1: identity file /home/spotkube/.ssh/id_spotkube type 0
+debug1: identity file /home/spotkube/.ssh/id_spotkube-cert type -1
+debug1: Local version string SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.1
+debug1: Remote protocol version 2.0, remote software version OpenSSH_8.9p1 Ubuntu-3ubuntu0.1
+debug1: compat_banner: match: OpenSSH_8.9p1 Ubuntu-3ubuntu0.1 pat OpenSSH* compat 0x04000000
+debug1: Authenticating to 172.24.4.53:22 as 'ubuntu'
+debug1: load_hostkeys: fopen /home/spotkube/.ssh/known_hosts2: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or directory
+debug1: SSH2_MSG_KEXINIT sent
+debug1: SSH2_MSG_KEXINIT received
+debug1: kex: algorithm: curve25519-sha256
+debug1: kex: host key algorithm: ssh-ed25519
+debug1: kex: server->client cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug1: kex: client->server cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug1: expecting SSH2_MSG_KEX_ECDH_REPLY
+debug1: SSH2_MSG_KEX_ECDH_REPLY received
+debug1: Server host key: ssh-ed25519 SHA256:RhWhBvGeqSguny5XOn96jsmcdjM1T+1N7NaTPIZsGi4
+debug1: load_hostkeys: fopen /home/spotkube/.ssh/known_hosts2: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or directory
+debug1: Host '172.24.4.53' is known and matches the ED25519 host key.
+debug1: Found key in /home/spotkube/.ssh/known_hosts:15
+debug1: rekey out after 134217728 blocks
+debug1: SSH2_MSG_NEWKEYS sent
+debug1: expecting SSH2_MSG_NEWKEYS
+debug1: SSH2_MSG_NEWKEYS received
+debug1: rekey in after 134217728 blocks
+debug1: Will attempt key: /home/spotkube/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+debug1: SSH2_MSG_EXT_INFO received
+debug1: kex_input_ext_info: server-sig-algs=<ssh-ed25519,sk-ssh-ed25519@openssh.com,ssh-rsa,rsa-sha2-256,rsa-sha2-512,ssh-dss,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,webauthn-sk-ecdsa-sha2-nistp256@openssh.com>
+debug1: kex_input_ext_info: publickey-hostbound@openssh.com=<0>
+debug1: SSH2_MSG_SERVICE_ACCEPT received
+debug1: Authentications that can continue: publickey
+debug1: Next authentication method: publickey
+debug1: Offering public key: /home/spotkube/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+debug1: Server accepts key: /home/spotkube/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+Authenticated to 172.24.4.53 ([172.24.4.53]:22) using "publickey".
+debug1: channel 0: new [client-session]
+debug1: Requesting no-more-sessions@openssh.com
+debug1: Entering interactive session.
+debug1: pledge: filesystem
+debug1: client_input_global_request: rtype hostkeys-00@openssh.com want_reply 0
+debug1: client_input_hostkeys: searching /home/spotkube/.ssh/known_hosts for 172.24.4.53 / (none)
+debug1: client_input_hostkeys: searching /home/spotkube/.ssh/known_hosts2 for 172.24.4.53 / (none)
+debug1: client_input_hostkeys: hostkeys file /home/spotkube/.ssh/known_hosts2 does not exist
+debug1: client_input_hostkeys: no new or deprecated keys from server
+debug1: Remote: /home/ubuntu/.ssh/authorized_keys:1: key options: agent-forwarding port-forwarding pty user-rc x11-forwarding
+debug1: Remote: /home/ubuntu/.ssh/authorized_keys:1: key options: agent-forwarding port-forwarding pty user-rc x11-forwarding
+debug1: Sending environment.
+debug1: channel 0: setting env LANG = "en_US.UTF-8"
+debug1: channel 0: setting env LC_NUMERIC = "si_LK"
+debug1: channel 0: setting env LC_TIME = "si_LK"
+debug1: channel 0: setting env LC_MONETARY = "si_LK"
+debug1: channel 0: setting env LC_PAPER = "si_LK"
+debug1: channel 0: setting env LC_NAME = "si_LK"
+debug1: channel 0: setting env LC_ADDRESS = "si_LK"
+debug1: channel 0: setting env LC_TELEPHONE = "si_LK"
+debug1: channel 0: setting env LC_MEASUREMENT = "si_LK"
+debug1: channel 0: setting env LC_IDENTIFICATION = "si_LK"
+debug1: Sending command: scp -v -r -d -t ~/
+ ~/config: No such file or directory
+scp: debug1: fd 3 clearing O_NONBLOCK
+Sending file modes: C0600 116 credentials
+Sink: \001scp:  ~/config: No such file or directory
+Sink: C0600 116 credentials
+scp: debug1: fd 6 clearing O_NONBLOCK
+scp: debug1: fd 0 clearing O_NONBLOCK
+scp: debug1: fd 3 clearing O_NONBLOCK
+Sending file modes: C0644 959 configure_private_management_node.sh
+Sink: C0644 959 configure_private_management_node.sh
+scp: debug1: fd 6 clearing O_NONBLOCK
+scp: debug1: fd 0 clearing O_NONBLOCK
+scp: debug1: fd 3 clearing O_NONBLOCK
+Sending file modes: C0644 860 clouds.yaml
+Sink: C0644 860 clouds.yaml
+scp: debug1: fd 6 clearing O_NONBLOCK
+scp: debug1: fd 0 clearing O_NONBLOCK
+debug1: client_input_channel_req: channel 0 rtype exit-status reply 0
+debug1: channel 0: free: client-session, nchannels 1
+Transferred: sent 6104, received 3720 bytes, in 0.6 seconds
+Bytes per second: sent 10162.4, received 6193.3
+debug1: Exit status 1
+Executing: program /usr/bin/ssh host 10.8.100.7, user spotkube, command scp -v -r -f ~/.ssh/id_spotkube
+Executing: 2nd program /usr/bin/ssh host 172.24.4.53, user ubuntu, command scp -v -r -t ~/.ssh
+OpenSSH_8.9p1 Ubuntu-3ubuntu0.1, OpenSSL 3.0.2 15 Mar 2022
+OpenSSH_8.9p1 Ubuntu-3ubuntu0.1, OpenSSL 3.0.2 15 Mar 2022
+debug1: Reading configuration data /etc/ssh/ssh_config
+debug1: Reading configuration data /etc/ssh/ssh_config
+debug1: /etc/ssh/ssh_config line 19: include /etc/ssh/ssh_config.d/*.conf matched no files
+debug1: /etc/ssh/ssh_config line 19: include /etc/ssh/ssh_config.d/*.conf matched no files
+debug1: /etc/ssh/ssh_config line 21: Applying options for *
+debug1: /etc/ssh/ssh_config line 21: Applying options for *
+debug1: Connecting to 10.8.100.7 [10.8.100.7] port 22.
+debug1: Connecting to 172.24.4.53 [172.24.4.53] port 22.
+debug1: Connection established.
+debug1: identity file /home/spotkube/.ssh/id_spotkube type 0
+debug1: identity file /home/spotkube/.ssh/id_spotkube-cert type -1
+debug1: Local version string SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.1
+debug1: Connection established.
+debug1: identity file /home/spotkube/.ssh/id_spotkube type 0
+debug1: identity file /home/spotkube/.ssh/id_spotkube-cert type -1
+debug1: Local version string SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.1
+debug1: Remote protocol version 2.0, remote software version OpenSSH_8.9p1 Ubuntu-3ubuntu0.1
+debug1: compat_banner: match: OpenSSH_8.9p1 Ubuntu-3ubuntu0.1 pat OpenSSH* compat 0x04000000
+debug1: Authenticating to 10.8.100.7:22 as 'spotkube'
+debug1: load_hostkeys: fopen /home/spotkube/.ssh/known_hosts2: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or directory
+debug1: SSH2_MSG_KEXINIT sent
+debug1: SSH2_MSG_KEXINIT received
+debug1: kex: algorithm: curve25519-sha256
+debug1: kex: host key algorithm: ssh-ed25519
+debug1: kex: server->client cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug1: kex: client->server cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug1: expecting SSH2_MSG_KEX_ECDH_REPLY
+debug1: Remote protocol version 2.0, remote software version OpenSSH_8.9p1 Ubuntu-3ubuntu0.1
+debug1: compat_banner: match: OpenSSH_8.9p1 Ubuntu-3ubuntu0.1 pat OpenSSH* compat 0x04000000
+debug1: Authenticating to 172.24.4.53:22 as 'ubuntu'
+debug1: load_hostkeys: fopen /home/spotkube/.ssh/known_hosts2: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or directory
+debug1: SSH2_MSG_KEXINIT sent
+debug1: SSH2_MSG_KEXINIT received
+debug1: kex: algorithm: curve25519-sha256
+debug1: kex: host key algorithm: ssh-ed25519
+debug1: kex: server->client cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug1: kex: client->server cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug1: expecting SSH2_MSG_KEX_ECDH_REPLY
+debug1: SSH2_MSG_KEX_ECDH_REPLY received
+debug1: Server host key: ssh-ed25519 SHA256:Mh5EOlcDRaYC0J7yZelpFKr9UL7s6Oba/kQMc2oHlo4
+debug1: load_hostkeys: fopen /home/spotkube/.ssh/known_hosts2: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or directory
+debug1: Host '10.8.100.7' is known and matches the ED25519 host key.
+debug1: Found key in /home/spotkube/.ssh/known_hosts:10
+debug1: SSH2_MSG_KEX_ECDH_REPLY received
+debug1: Server host key: ssh-ed25519 SHA256:RhWhBvGeqSguny5XOn96jsmcdjM1T+1N7NaTPIZsGi4
+debug1: load_hostkeys: fopen /home/spotkube/.ssh/known_hosts2: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or directory
+debug1: Host '172.24.4.53' is known and matches the ED25519 host key.
+debug1: Found key in /home/spotkube/.ssh/known_hosts:15
+debug1: rekey out after 134217728 blocks
+debug1: SSH2_MSG_NEWKEYS sent
+debug1: expecting SSH2_MSG_NEWKEYS
+debug1: SSH2_MSG_NEWKEYS received
+debug1: rekey in after 134217728 blocks
+debug1: Will attempt key: /home/spotkube/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+debug1: SSH2_MSG_EXT_INFO received
+debug1: kex_input_ext_info: server-sig-algs=<ssh-ed25519,sk-ssh-ed25519@openssh.com,ssh-rsa,rsa-sha2-256,rsa-sha2-512,ssh-dss,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,webauthn-sk-ecdsa-sha2-nistp256@openssh.com>
+debug1: kex_input_ext_info: publickey-hostbound@openssh.com=<0>
+debug1: rekey out after 134217728 blocks
+debug1: SSH2_MSG_NEWKEYS sent
+debug1: expecting SSH2_MSG_NEWKEYS
+debug1: SSH2_MSG_NEWKEYS received
+debug1: rekey in after 134217728 blocks
+debug1: Will attempt key: /home/spotkube/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+debug1: SSH2_MSG_EXT_INFO received
+debug1: kex_input_ext_info: server-sig-algs=<ssh-ed25519,sk-ssh-ed25519@openssh.com,ssh-rsa,rsa-sha2-256,rsa-sha2-512,ssh-dss,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,webauthn-sk-ecdsa-sha2-nistp256@openssh.com>
+debug1: kex_input_ext_info: publickey-hostbound@openssh.com=<0>
+debug1: SSH2_MSG_SERVICE_ACCEPT received
+debug1: SSH2_MSG_SERVICE_ACCEPT received
+debug1: Authentications that can continue: publickey,password
+debug1: Next authentication method: publickey
+debug1: Offering public key: /home/spotkube/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+debug1: Authentications that can continue: publickey
+debug1: Next authentication method: publickey
+debug1: Offering public key: /home/spotkube/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+debug1: Server accepts key: /home/spotkube/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+debug1: Server accepts key: /home/spotkube/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+Authenticated to 172.24.4.53 ([172.24.4.53]:22) using "publickey".
+debug1: channel 0: new [client-session]
+debug1: Requesting no-more-sessions@openssh.com
+debug1: Entering interactive session.
+debug1: pledge: filesystem
+Authenticated to 10.8.100.7 ([10.8.100.7]:22) using "publickey".
+debug1: channel 0: new [client-session]
+debug1: Requesting no-more-sessions@openssh.com
+debug1: Entering interactive session.
+debug1: pledge: filesystem
+debug1: client_input_global_request: rtype hostkeys-00@openssh.com want_reply 0
+debug1: client_input_hostkeys: searching /home/spotkube/.ssh/known_hosts for 172.24.4.53 / (none)
+debug1: client_input_hostkeys: searching /home/spotkube/.ssh/known_hosts2 for 172.24.4.53 / (none)
+debug1: client_input_hostkeys: hostkeys file /home/spotkube/.ssh/known_hosts2 does not exist
+debug1: client_input_hostkeys: no new or deprecated keys from server
+debug1: Remote: /home/ubuntu/.ssh/authorized_keys:1: key options: agent-forwarding port-forwarding pty user-rc x11-forwarding
+debug1: client_input_global_request: rtype hostkeys-00@openssh.com want_reply 0
+debug1: client_input_hostkeys: searching /home/spotkube/.ssh/known_hosts for 10.8.100.7 / (none)
+debug1: client_input_hostkeys: searching /home/spotkube/.ssh/known_hosts2 for 10.8.100.7 / (none)
+debug1: client_input_hostkeys: hostkeys file /home/spotkube/.ssh/known_hosts2 does not exist
+debug1: client_input_hostkeys: host key found matching a different name/address, skipping UserKnownHostsFile update
+debug1: Remote: /home/spotkube/.ssh/authorized_keys:2: key options: agent-forwarding port-forwarding pty user-rc x11-forwarding
+debug1: Remote: /home/ubuntu/.ssh/authorized_keys:1: key options: agent-forwarding port-forwarding pty user-rc x11-forwarding
+debug1: Sending environment.
+debug1: channel 0: setting env LANG = "en_US.UTF-8"
+debug1: channel 0: setting env LC_NUMERIC = "si_LK"
+debug1: channel 0: setting env LC_TIME = "si_LK"
+debug1: channel 0: setting env LC_MONETARY = "si_LK"
+debug1: channel 0: setting env LC_PAPER = "si_LK"
+debug1: channel 0: setting env LC_NAME = "si_LK"
+debug1: channel 0: setting env LC_ADDRESS = "si_LK"
+debug1: channel 0: setting env LC_TELEPHONE = "si_LK"
+debug1: channel 0: setting env LC_MEASUREMENT = "si_LK"
+debug1: channel 0: setting env LC_IDENTIFICATION = "si_LK"
+debug1: Sending command: scp -v -r -t ~/.ssh
+debug1: Remote: /home/spotkube/.ssh/authorized_keys:2: key options: agent-forwarding port-forwarding pty user-rc x11-forwarding
+debug1: Sending environment.
+debug1: channel 0: setting env LANG = "en_US.UTF-8"
+debug1: channel 0: setting env LC_NUMERIC = "si_LK"
+debug1: channel 0: setting env LC_TIME = "si_LK"
+debug1: channel 0: setting env LC_MONETARY = "si_LK"
+debug1: channel 0: setting env LC_PAPER = "si_LK"
+debug1: channel 0: setting env LC_NAME = "si_LK"
+debug1: channel 0: setting env LC_ADDRESS = "si_LK"
+debug1: channel 0: setting env LC_TELEPHONE = "si_LK"
+debug1: channel 0: setting env LC_MEASUREMENT = "si_LK"
+debug1: channel 0: setting env LC_IDENTIFICATION = "si_LK"
+debug1: Sending command: scp -v -r -f ~/.ssh/id_spotkube
+scp: debug1: fd 3 clearing O_NONBLOCK
+Sending file modes: C0400 2610 id_spotkube
+Sink: C0400 2610 id_spotkube
+debug1: client_input_channel_req: channel 0 rtype exit-status reply 0
+debug1: client_input_channel_req: channel 0 rtype eow@openssh.com reply 0
+debug1: channel 0: free: client-session, nchannels 1
+Transferred: sent 3900, received 3316 bytes, in 0.1 seconds
+Bytes per second: sent 26217.8, received 22291.9
+debug1: Exit status 1
+debug1: client_input_channel_req: channel 0 rtype exit-status reply 0
+debug1: channel 0: free: client-session, nchannels 1
+Transferred: sent 3860, received 3268 bytes, in 0.2 seconds
+Bytes per second: sent 25515.0, received 21601.8
+debug1: Exit status 1
+Welcome to Ubuntu 22.04.2 LTS (GNU/Linux 5.15.0-69-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Sat Apr 29 04:04:23 UTC 2023
+
+  System load:  0.0                Processes:             100
+  Usage of /:   17.5% of 19.20GB   Users logged in:       1
+  Memory usage: 24%                IPv4 address for ens3: 10.0.1.60
+  Swap usage:   0%
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+ * Introducing Expanded Security Maintenance for Applications.
+   Receive updates to over 25,000 software packages with your
+   Ubuntu Pro subscription. Free for personal use.
+
+     https://ubuntu.com/pro
+
+Expanded Security Maintenance for Applications is not enabled.
+
+5 updates can be applied immediately.
+To see these additional updates run: apt list --upgradable
+
+1 additional security update can be applied with ESM Apps.
+Learn more about enabling ESM Apps service at https://ubuntu.com/esm
+
+
+*** System restart required ***
+mv: cannot stat '/home/ubuntu/config': No such file or directory
+2023-04-29T09:35:24+05:30
+
+2023-04-29T09:35:24+05:30
+[1;36mProvisioning private cloud environment[0m
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+[1;34mINFO: Management node floating IP: 172.24.4.53[0m
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+PRIVATE_INSTANCE_SSH_KEY_NAME: id_spotkube
+2023-04-29T09:35:24+05:30
+2023-04-29T09:35:24+05:30
+[1;34mINFO: Coping required files to the private host[0m
+2023-04-29T09:35:24+05:30
+Executing: program /usr/bin/ssh host 10.8.100.7, user spotkube, command sftp
+OpenSSH_9.3p1, OpenSSL 3.0.8 7 Feb 2023
+debug1: Reading configuration data /etc/ssh/ssh_config
+debug1: Connecting to 10.8.100.7 [10.8.100.7] port 22.
+debug1: Connection established.
+debug1: identity file /home/pasindu/.ssh/id_spotkube type 0
+debug1: identity file /home/pasindu/.ssh/id_spotkube-cert type -1
+debug1: Local version string SSH-2.0-OpenSSH_9.3
+debug1: Remote protocol version 2.0, remote software version OpenSSH_8.9p1 Ubuntu-3ubuntu0.1
+debug1: compat_banner: match: OpenSSH_8.9p1 Ubuntu-3ubuntu0.1 pat OpenSSH* compat 0x04000000
+debug1: Authenticating to 10.8.100.7:22 as 'spotkube'
+debug1: load_hostkeys: fopen /home/pasindu/.ssh/known_hosts2: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or directory
+debug1: SSH2_MSG_KEXINIT sent
+debug1: SSH2_MSG_KEXINIT received
+debug1: kex: algorithm: sntrup761x25519-sha512@openssh.com
+debug1: kex: host key algorithm: ssh-ed25519
+debug1: kex: server->client cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug1: kex: client->server cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug1: expecting SSH2_MSG_KEX_ECDH_REPLY
+debug1: SSH2_MSG_KEX_ECDH_REPLY received
+debug1: Server host key: ssh-ed25519 SHA256:Mh5EOlcDRaYC0J7yZelpFKr9UL7s6Oba/kQMc2oHlo4
+debug1: load_hostkeys: fopen /home/pasindu/.ssh/known_hosts2: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or directory
+debug1: Host '10.8.100.7' is known and matches the ED25519 host key.
+debug1: Found key in /home/pasindu/.ssh/known_hosts:1
+debug1: rekey out after 134217728 blocks
+debug1: SSH2_MSG_NEWKEYS sent
+debug1: expecting SSH2_MSG_NEWKEYS
+debug1: SSH2_MSG_NEWKEYS received
+debug1: rekey in after 134217728 blocks
+debug1: Will attempt key: /home/pasindu/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+debug1: SSH2_MSG_EXT_INFO received
+debug1: kex_input_ext_info: server-sig-algs=<ssh-ed25519,sk-ssh-ed25519@openssh.com,ssh-rsa,rsa-sha2-256,rsa-sha2-512,ssh-dss,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,webauthn-sk-ecdsa-sha2-nistp256@openssh.com>
+debug1: kex_input_ext_info: publickey-hostbound@openssh.com=<0>
+debug1: SSH2_MSG_SERVICE_ACCEPT received
+debug1: Authentications that can continue: publickey,password
+debug1: Next authentication method: publickey
+debug1: Offering public key: /home/pasindu/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+debug1: Server accepts key: /home/pasindu/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+Authenticated to 10.8.100.7 ([10.8.100.7]:22) using "publickey".
+debug1: channel 0: new session [client-session] (inactive timeout: 0)
+debug1: Requesting no-more-sessions@openssh.com
+debug1: Entering interactive session.
+debug1: pledge: filesystem
+debug1: client_input_global_request: rtype hostkeys-00@openssh.com want_reply 0
+debug1: client_input_hostkeys: searching /home/pasindu/.ssh/known_hosts for 10.8.100.7 / (none)
+debug1: client_input_hostkeys: searching /home/pasindu/.ssh/known_hosts2 for 10.8.100.7 / (none)
+debug1: client_input_hostkeys: hostkeys file /home/pasindu/.ssh/known_hosts2 does not exist
+debug1: client_input_hostkeys: no new or deprecated keys from server
+debug1: Remote: /home/spotkube/.ssh/authorized_keys:2: key options: agent-forwarding port-forwarding pty user-rc x11-forwarding
+debug1: Remote: /home/spotkube/.ssh/authorized_keys:2: key options: agent-forwarding port-forwarding pty user-rc x11-forwarding
+debug1: Sending subsystem: sftp
+debug1: pledge: fork
+scp: dest open ".ssh/id_spotkube": Permission denied
+scp: failed to upload file /home/pasindu/.ssh/id_spotkube to ~/.ssh/
+debug1: client_input_channel_req: channel 0 rtype exit-status reply 0
+debug1: channel 0: free: client-session, nchannels 1
+Transferred: sent 4640, received 4608 bytes, in 1.6 seconds
+Bytes per second: sent 2921.5, received 2901.3
+debug1: Exit status 0
+2023-04-29T09:35:27+05:30
+Executing: program /usr/bin/ssh host 10.8.100.7, user spotkube, command sftp
+OpenSSH_9.3p1, OpenSSL 3.0.8 7 Feb 2023
+debug1: Reading configuration data /etc/ssh/ssh_config
+debug1: Connecting to 10.8.100.7 [10.8.100.7] port 22.
+debug1: Connection established.
+debug1: identity file /home/pasindu/.ssh/id_spotkube type 0
+debug1: identity file /home/pasindu/.ssh/id_spotkube-cert type -1
+debug1: Local version string SSH-2.0-OpenSSH_9.3
+debug1: Remote protocol version 2.0, remote software version OpenSSH_8.9p1 Ubuntu-3ubuntu0.1
+debug1: compat_banner: match: OpenSSH_8.9p1 Ubuntu-3ubuntu0.1 pat OpenSSH* compat 0x04000000
+debug1: Authenticating to 10.8.100.7:22 as 'spotkube'
+debug1: load_hostkeys: fopen /home/pasindu/.ssh/known_hosts2: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or directory
+debug1: SSH2_MSG_KEXINIT sent
+debug1: SSH2_MSG_KEXINIT received
+debug1: kex: algorithm: sntrup761x25519-sha512@openssh.com
+debug1: kex: host key algorithm: ssh-ed25519
+debug1: kex: server->client cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug1: kex: client->server cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug1: expecting SSH2_MSG_KEX_ECDH_REPLY
+debug1: SSH2_MSG_KEX_ECDH_REPLY received
+debug1: Server host key: ssh-ed25519 SHA256:Mh5EOlcDRaYC0J7yZelpFKr9UL7s6Oba/kQMc2oHlo4
+debug1: load_hostkeys: fopen /home/pasindu/.ssh/known_hosts2: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or directory
+debug1: Host '10.8.100.7' is known and matches the ED25519 host key.
+debug1: Found key in /home/pasindu/.ssh/known_hosts:1
+debug1: rekey out after 134217728 blocks
+debug1: SSH2_MSG_NEWKEYS sent
+debug1: expecting SSH2_MSG_NEWKEYS
+debug1: SSH2_MSG_NEWKEYS received
+debug1: rekey in after 134217728 blocks
+debug1: Will attempt key: /home/pasindu/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+debug1: SSH2_MSG_EXT_INFO received
+debug1: kex_input_ext_info: server-sig-algs=<ssh-ed25519,sk-ssh-ed25519@openssh.com,ssh-rsa,rsa-sha2-256,rsa-sha2-512,ssh-dss,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,webauthn-sk-ecdsa-sha2-nistp256@openssh.com>
+debug1: kex_input_ext_info: publickey-hostbound@openssh.com=<0>
+debug1: SSH2_MSG_SERVICE_ACCEPT received
+debug1: Authentications that can continue: publickey,password
+debug1: Next authentication method: publickey
+debug1: Offering public key: /home/pasindu/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+debug1: Server accepts key: /home/pasindu/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+Authenticated to 10.8.100.7 ([10.8.100.7]:22) using "publickey".
+debug1: channel 0: new session [client-session] (inactive timeout: 0)
+debug1: Requesting no-more-sessions@openssh.com
+debug1: Entering interactive session.
+debug1: pledge: filesystem
+debug1: client_input_global_request: rtype hostkeys-00@openssh.com want_reply 0
+debug1: client_input_hostkeys: searching /home/pasindu/.ssh/known_hosts for 10.8.100.7 / (none)
+debug1: client_input_hostkeys: searching /home/pasindu/.ssh/known_hosts2 for 10.8.100.7 / (none)
+debug1: client_input_hostkeys: hostkeys file /home/pasindu/.ssh/known_hosts2 does not exist
+debug1: client_input_hostkeys: no new or deprecated keys from server
+debug1: Remote: /home/spotkube/.ssh/authorized_keys:2: key options: agent-forwarding port-forwarding pty user-rc x11-forwarding
+debug1: Remote: /home/spotkube/.ssh/authorized_keys:2: key options: agent-forwarding port-forwarding pty user-rc x11-forwarding
+debug1: Sending subsystem: sftp
+debug1: pledge: fork
+scp: debug1: truncating at 959
+scp: debug1: truncating at 860
+scp: debug1: truncating at 43
+scp: debug1: truncating at 116
+debug1: client_input_channel_req: channel 0 rtype exit-status reply 0
+debug1: channel 0: free: client-session, nchannels 1
+Transferred: sent 7472, received 5496 bytes, in 5.1 seconds
+Bytes per second: sent 1456.2, received 1071.1
+debug1: Exit status 0
+2023-04-29T09:35:35+05:30
+Welcome to Ubuntu 22.04.1 LTS (GNU/Linux 5.19.0-38-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+213 updates can be applied immediately.
+To see these additional updates run: apt list --upgradable
+
+*** System restart required ***
+Coping required files to the management node
+Executing: program /usr/bin/ssh host 172.24.4.53, user ubuntu, command scp -v -r -d -t ~/
+OpenSSH_8.9p1 Ubuntu-3ubuntu0.1, OpenSSL 3.0.2 15 Mar 2022
+debug1: Reading configuration data /etc/ssh/ssh_config
+debug1: /etc/ssh/ssh_config line 19: include /etc/ssh/ssh_config.d/*.conf matched no files
+debug1: /etc/ssh/ssh_config line 21: Applying options for *
+debug1: Connecting to 172.24.4.53 [172.24.4.53] port 22.
+debug1: Connection established.
+debug1: identity file /home/spotkube/.ssh/id_spotkube type 0
+debug1: identity file /home/spotkube/.ssh/id_spotkube-cert type -1
+debug1: Local version string SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.1
+debug1: Remote protocol version 2.0, remote software version OpenSSH_8.9p1 Ubuntu-3ubuntu0.1
+debug1: compat_banner: match: OpenSSH_8.9p1 Ubuntu-3ubuntu0.1 pat OpenSSH* compat 0x04000000
+debug1: Authenticating to 172.24.4.53:22 as 'ubuntu'
+debug1: load_hostkeys: fopen /home/spotkube/.ssh/known_hosts2: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or directory
+debug1: SSH2_MSG_KEXINIT sent
+debug1: SSH2_MSG_KEXINIT received
+debug1: kex: algorithm: curve25519-sha256
+debug1: kex: host key algorithm: ssh-ed25519
+debug1: kex: server->client cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug1: kex: client->server cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug1: expecting SSH2_MSG_KEX_ECDH_REPLY
+debug1: SSH2_MSG_KEX_ECDH_REPLY received
+debug1: Server host key: ssh-ed25519 SHA256:RhWhBvGeqSguny5XOn96jsmcdjM1T+1N7NaTPIZsGi4
+debug1: load_hostkeys: fopen /home/spotkube/.ssh/known_hosts2: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or directory
+debug1: Host '172.24.4.53' is known and matches the ED25519 host key.
+debug1: Found key in /home/spotkube/.ssh/known_hosts:15
+debug1: rekey out after 134217728 blocks
+debug1: SSH2_MSG_NEWKEYS sent
+debug1: expecting SSH2_MSG_NEWKEYS
+debug1: SSH2_MSG_NEWKEYS received
+debug1: rekey in after 134217728 blocks
+debug1: Will attempt key: /home/spotkube/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+debug1: SSH2_MSG_EXT_INFO received
+debug1: kex_input_ext_info: server-sig-algs=<ssh-ed25519,sk-ssh-ed25519@openssh.com,ssh-rsa,rsa-sha2-256,rsa-sha2-512,ssh-dss,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,webauthn-sk-ecdsa-sha2-nistp256@openssh.com>
+debug1: kex_input_ext_info: publickey-hostbound@openssh.com=<0>
+debug1: SSH2_MSG_SERVICE_ACCEPT received
+debug1: Authentications that can continue: publickey
+debug1: Next authentication method: publickey
+debug1: Offering public key: /home/spotkube/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+debug1: Server accepts key: /home/spotkube/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+Authenticated to 172.24.4.53 ([172.24.4.53]:22) using "publickey".
+debug1: channel 0: new [client-session]
+debug1: Requesting no-more-sessions@openssh.com
+debug1: Entering interactive session.
+debug1: pledge: filesystem
+debug1: client_input_global_request: rtype hostkeys-00@openssh.com want_reply 0
+debug1: client_input_hostkeys: searching /home/spotkube/.ssh/known_hosts for 172.24.4.53 / (none)
+debug1: client_input_hostkeys: searching /home/spotkube/.ssh/known_hosts2 for 172.24.4.53 / (none)
+debug1: client_input_hostkeys: hostkeys file /home/spotkube/.ssh/known_hosts2 does not exist
+debug1: client_input_hostkeys: no new or deprecated keys from server
+debug1: Remote: /home/ubuntu/.ssh/authorized_keys:1: key options: agent-forwarding port-forwarding pty user-rc x11-forwarding
+debug1: Remote: /home/ubuntu/.ssh/authorized_keys:1: key options: agent-forwarding port-forwarding pty user-rc x11-forwarding
+debug1: Sending environment.
+debug1: channel 0: setting env LANG = "en_US.UTF-8"
+debug1: channel 0: setting env LC_NUMERIC = "si_LK"
+debug1: channel 0: setting env LC_TIME = "si_LK"
+debug1: channel 0: setting env LC_MONETARY = "si_LK"
+debug1: channel 0: setting env LC_PAPER = "si_LK"
+debug1: channel 0: setting env LC_NAME = "si_LK"
+debug1: channel 0: setting env LC_ADDRESS = "si_LK"
+debug1: channel 0: setting env LC_TELEPHONE = "si_LK"
+debug1: channel 0: setting env LC_MEASUREMENT = "si_LK"
+debug1: channel 0: setting env LC_IDENTIFICATION = "si_LK"
+debug1: Sending command: scp -v -r -d -t ~/
+scp: debug1: fd 3 clearing O_NONBLOCK
+Sending file modes: C0600 43 config
+Sink: C0600 43 config
+scp: debug1: fd 6 clearing O_NONBLOCK
+scp: debug1: fd 0 clearing O_NONBLOCK
+scp: debug1: fd 3 clearing O_NONBLOCK
+Sending file modes: C0600 116 credentials
+Sink: C0600 116 credentials
+scp: debug1: fd 6 clearing O_NONBLOCK
+scp: debug1: fd 0 clearing O_NONBLOCK
+scp: debug1: fd 3 clearing O_NONBLOCK
+Sending file modes: C0644 959 configure_private_management_node.sh
+Sink: C0644 959 configure_private_management_node.sh
+scp: debug1: fd 6 clearing O_NONBLOCK
+scp: debug1: fd 0 clearing O_NONBLOCK
+scp: debug1: fd 3 clearing O_NONBLOCK
+Sending file modes: C0644 860 clouds.yaml
+Sink: C0644 860 clouds.yaml
+scp: debug1: fd 6 clearing O_NONBLOCK
+scp: debug1: fd 0 clearing O_NONBLOCK
+debug1: client_input_channel_req: channel 0 rtype exit-status reply 0
+debug1: channel 0: free: client-session, nchannels 1
+Transferred: sent 6160, received 3796 bytes, in 0.6 seconds
+Bytes per second: sent 10521.0, received 6483.4
+debug1: Exit status 0
+Executing: program /usr/bin/ssh host 10.8.100.7, user spotkube, command scp -v -r -f ~/.ssh/id_spotkube
+Executing: 2nd program /usr/bin/ssh host 172.24.4.53, user ubuntu, command scp -v -r -t ~/.ssh
+OpenSSH_8.9p1 Ubuntu-3ubuntu0.1, OpenSSL 3.0.2 15 Mar 2022
+debug1: Reading configuration data /etc/ssh/ssh_config
+debug1: /etc/ssh/ssh_config line 19: include /etc/ssh/ssh_config.d/*.conf matched no files
+debug1: /etc/ssh/ssh_config line 21: Applying options for *
+debug1: Connecting to 10.8.100.7 [10.8.100.7] port 22.
+debug1: Connection established.
+debug1: identity file /home/spotkube/.ssh/id_spotkube type 0
+debug1: identity file /home/spotkube/.ssh/id_spotkube-cert type -1
+debug1: Local version string SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.1
+OpenSSH_8.9p1 Ubuntu-3ubuntu0.1, OpenSSL 3.0.2 15 Mar 2022
+debug1: Reading configuration data /etc/ssh/ssh_config
+debug1: /etc/ssh/ssh_config line 19: include /etc/ssh/ssh_config.d/*.conf matched no files
+debug1: /etc/ssh/ssh_config line 21: Applying options for *
+debug1: Connecting to 172.24.4.53 [172.24.4.53] port 22.
+debug1: Connection established.
+debug1: identity file /home/spotkube/.ssh/id_spotkube type 0
+debug1: identity file /home/spotkube/.ssh/id_spotkube-cert type -1
+debug1: Local version string SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.1
+debug1: Remote protocol version 2.0, remote software version OpenSSH_8.9p1 Ubuntu-3ubuntu0.1
+debug1: compat_banner: match: OpenSSH_8.9p1 Ubuntu-3ubuntu0.1 pat OpenSSH* compat 0x04000000
+debug1: Authenticating to 10.8.100.7:22 as 'spotkube'
+debug1: load_hostkeys: fopen /home/spotkube/.ssh/known_hosts2: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or directory
+debug1: SSH2_MSG_KEXINIT sent
+debug1: SSH2_MSG_KEXINIT received
+debug1: kex: algorithm: curve25519-sha256
+debug1: kex: host key algorithm: ssh-ed25519
+debug1: kex: server->client cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug1: kex: client->server cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug1: expecting SSH2_MSG_KEX_ECDH_REPLY
+debug1: Remote protocol version 2.0, remote software version OpenSSH_8.9p1 Ubuntu-3ubuntu0.1
+debug1: compat_banner: match: OpenSSH_8.9p1 Ubuntu-3ubuntu0.1 pat OpenSSH* compat 0x04000000
+debug1: Authenticating to 172.24.4.53:22 as 'ubuntu'
+debug1: load_hostkeys: fopen /home/spotkube/.ssh/known_hosts2: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or directory
+debug1: SSH2_MSG_KEXINIT sent
+debug1: SSH2_MSG_KEXINIT received
+debug1: kex: algorithm: curve25519-sha256
+debug1: kex: host key algorithm: ssh-ed25519
+debug1: kex: server->client cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug1: kex: client->server cipher: chacha20-poly1305@openssh.com MAC: <implicit> compression: none
+debug1: expecting SSH2_MSG_KEX_ECDH_REPLY
+debug1: SSH2_MSG_KEX_ECDH_REPLY received
+debug1: Server host key: ssh-ed25519 SHA256:Mh5EOlcDRaYC0J7yZelpFKr9UL7s6Oba/kQMc2oHlo4
+debug1: load_hostkeys: fopen /home/spotkube/.ssh/known_hosts2: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or directory
+debug1: Host '10.8.100.7' is known and matches the ED25519 host key.
+debug1: Found key in /home/spotkube/.ssh/known_hosts:10
+debug1: SSH2_MSG_KEX_ECDH_REPLY received
+debug1: Server host key: ssh-ed25519 SHA256:RhWhBvGeqSguny5XOn96jsmcdjM1T+1N7NaTPIZsGi4
+debug1: load_hostkeys: fopen /home/spotkube/.ssh/known_hosts2: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or directory
+debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or directory
+debug1: Host '172.24.4.53' is known and matches the ED25519 host key.
+debug1: Found key in /home/spotkube/.ssh/known_hosts:15
+debug1: rekey out after 134217728 blocks
+debug1: SSH2_MSG_NEWKEYS sent
+debug1: expecting SSH2_MSG_NEWKEYS
+debug1: SSH2_MSG_NEWKEYS received
+debug1: rekey in after 134217728 blocks
+debug1: Will attempt key: /home/spotkube/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+debug1: SSH2_MSG_EXT_INFO received
+debug1: kex_input_ext_info: server-sig-algs=<ssh-ed25519,sk-ssh-ed25519@openssh.com,ssh-rsa,rsa-sha2-256,rsa-sha2-512,ssh-dss,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,webauthn-sk-ecdsa-sha2-nistp256@openssh.com>
+debug1: kex_input_ext_info: publickey-hostbound@openssh.com=<0>
+debug1: rekey out after 134217728 blocks
+debug1: SSH2_MSG_NEWKEYS sent
+debug1: expecting SSH2_MSG_NEWKEYS
+debug1: SSH2_MSG_NEWKEYS received
+debug1: rekey in after 134217728 blocks
+debug1: Will attempt key: /home/spotkube/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+debug1: SSH2_MSG_EXT_INFO received
+debug1: kex_input_ext_info: server-sig-algs=<ssh-ed25519,sk-ssh-ed25519@openssh.com,ssh-rsa,rsa-sha2-256,rsa-sha2-512,ssh-dss,ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,webauthn-sk-ecdsa-sha2-nistp256@openssh.com>
+debug1: kex_input_ext_info: publickey-hostbound@openssh.com=<0>
+debug1: SSH2_MSG_SERVICE_ACCEPT received
+debug1: SSH2_MSG_SERVICE_ACCEPT received
+debug1: Authentications that can continue: publickey,password
+debug1: Next authentication method: publickey
+debug1: Offering public key: /home/spotkube/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+debug1: Server accepts key: /home/spotkube/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+debug1: Authentications that can continue: publickey
+debug1: Next authentication method: publickey
+debug1: Offering public key: /home/spotkube/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+debug1: Server accepts key: /home/spotkube/.ssh/id_spotkube RSA SHA256:9SizzHck87nUIgreRk0MnEbCdmYMM9BNrvJrTXyIfAs explicit
+Authenticated to 172.24.4.53 ([172.24.4.53]:22) using "publickey".
+debug1: channel 0: new [client-session]
+debug1: Requesting no-more-sessions@openssh.com
+debug1: Entering interactive session.
+debug1: pledge: filesystem
+Authenticated to 10.8.100.7 ([10.8.100.7]:22) using "publickey".
+debug1: channel 0: new [client-session]
+debug1: Requesting no-more-sessions@openssh.com
+debug1: Entering interactive session.
+debug1: pledge: filesystem
+debug1: client_input_global_request: rtype hostkeys-00@openssh.com want_reply 0
+debug1: client_input_hostkeys: searching /home/spotkube/.ssh/known_hosts for 10.8.100.7 / (none)
+debug1: client_input_hostkeys: searching /home/spotkube/.ssh/known_hosts2 for 10.8.100.7 / (none)
+debug1: client_input_hostkeys: hostkeys file /home/spotkube/.ssh/known_hosts2 does not exist
+debug1: client_input_hostkeys: host key found matching a different name/address, skipping UserKnownHostsFile update
+debug1: Remote: /home/spotkube/.ssh/authorized_keys:2: key options: agent-forwarding port-forwarding pty user-rc x11-forwarding
+debug1: client_input_global_request: rtype hostkeys-00@openssh.com want_reply 0
+debug1: client_input_hostkeys: searching /home/spotkube/.ssh/known_hosts for 172.24.4.53 / (none)
+debug1: client_input_hostkeys: searching /home/spotkube/.ssh/known_hosts2 for 172.24.4.53 / (none)
+debug1: client_input_hostkeys: hostkeys file /home/spotkube/.ssh/known_hosts2 does not exist
+debug1: client_input_hostkeys: no new or deprecated keys from server
+debug1: Remote: /home/ubuntu/.ssh/authorized_keys:1: key options: agent-forwarding port-forwarding pty user-rc x11-forwarding
+debug1: Remote: /home/spotkube/.ssh/authorized_keys:2: key options: agent-forwarding port-forwarding pty user-rc x11-forwarding
+debug1: Sending environment.
+debug1: channel 0: setting env LANG = "en_US.UTF-8"
+debug1: channel 0: setting env LC_NUMERIC = "si_LK"
+debug1: channel 0: setting env LC_TIME = "si_LK"
+debug1: channel 0: setting env LC_MONETARY = "si_LK"
+debug1: channel 0: setting env LC_PAPER = "si_LK"
+debug1: channel 0: setting env LC_NAME = "si_LK"
+debug1: channel 0: setting env LC_ADDRESS = "si_LK"
+debug1: channel 0: setting env LC_TELEPHONE = "si_LK"
+debug1: channel 0: setting env LC_MEASUREMENT = "si_LK"
+debug1: channel 0: setting env LC_IDENTIFICATION = "si_LK"
+debug1: Sending command: scp -v -r -f ~/.ssh/id_spotkube
+debug1: Remote: /home/ubuntu/.ssh/authorized_keys:1: key options: agent-forwarding port-forwarding pty user-rc x11-forwarding
+debug1: Sending environment.
+debug1: channel 0: setting env LANG = "en_US.UTF-8"
+debug1: channel 0: setting env LC_NUMERIC = "si_LK"
+debug1: channel 0: setting env LC_TIME = "si_LK"
+debug1: channel 0: setting env LC_MONETARY = "si_LK"
+debug1: channel 0: setting env LC_PAPER = "si_LK"
+debug1: channel 0: setting env LC_NAME = "si_LK"
+debug1: channel 0: setting env LC_ADDRESS = "si_LK"
+debug1: channel 0: setting env LC_TELEPHONE = "si_LK"
+debug1: channel 0: setting env LC_MEASUREMENT = "si_LK"
+debug1: channel 0: setting env LC_IDENTIFICATION = "si_LK"
+debug1: Sending command: scp -v -r -t ~/.ssh
+scp: debug1: fd 3 clearing O_NONBLOCK
+Sending file modes: C0400 2610 id_spotkube
+Sink: C0400 2610 id_spotkube
+debug1: client_input_channel_req: channel 0 rtype exit-status reply 0
+debug1: client_input_channel_req: channel 0 rtype eow@openssh.com reply 0
+debug1: channel 0: free: client-session, nchannels 1
+Transferred: sent 3900, received 3344 bytes, in 0.2 seconds
+Bytes per second: sent 25183.2, received 21593.0
+debug1: Exit status 1
+debug1: client_input_channel_req: channel 0 rtype exit-status reply 0
+debug1: channel 0: free: client-session, nchannels 1
+Transferred: sent 3860, received 3268 bytes, in 0.2 seconds
+Bytes per second: sent 24525.3, received 20763.9
+debug1: Exit status 1
+Welcome to Ubuntu 22.04.2 LTS (GNU/Linux 5.15.0-69-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Sat Apr 29 04:05:38 UTC 2023
+
+  System load:  0.0                Processes:             100
+  Usage of /:   17.5% of 19.20GB   Users logged in:       1
+  Memory usage: 24%                IPv4 address for ens3: 10.0.1.60
+  Swap usage:   0%
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+ * Introducing Expanded Security Maintenance for Applications.
+   Receive updates to over 25,000 software packages with your
+   Ubuntu Pro subscription. Free for personal use.
+
+     https://ubuntu.com/pro
+
+Expanded Security Maintenance for Applications is not enabled.
+
+5 updates can be applied immediately.
+To see these additional updates run: apt list --upgradable
+
+1 additional security update can be applied with ESM Apps.
+Learn more about enabling ESM Apps service at https://ubuntu.com/esm
+
+
+*** System restart required ***
