@@ -31,12 +31,12 @@ print_title "Provisioning private cloud environment"
 CONF_FILE_ERROR=false
 
 # Check if provisioner.conf exists
-if [[ ! -f "../../../../.config/provisioner.conf" ]]; then
+if [[ ! -f ~/.config/spotkube/provisioner.conf ]]; then
     print_error "provisioner.conf does not exist"
     CONF_FILE_ERROR=true
     exit 1
 else
-    source "../../../../.config/provisioner.conf"
+    source ~/.config/spotkube/provisioner.conf
 fi
 
 # Check if PRIVATE_INSTANCE_SSH_KEY_PATH is set and exists
@@ -196,7 +196,7 @@ scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr \
 $PRIVATE_INSTANCE_SSH_KEY_PATH $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/.ssh/
 
 scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr ./scripts/configure_private_management_node.sh \
-$OPENSTACK_CLOUD_YAML_PATH $AWS_SHARED_CONFIG_FILE_PATH $AWS_SHARED_CREDENTIALS_FILE_PATH \
+$OPENSTACK_CLOUD_YAML_PATH $AWS_SHARED_CONFIG_FILE_PATH $AWS_SHARED_CREDENTIALS_FILE_PATH ~/.config/spotkube/ \
 $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/
 
 
@@ -210,7 +210,7 @@ mv ~/configure_private_management_node.sh ~/management_node/
 echo "Coping required files to the management node"
 
 scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr ~/config ~/credentials \
-~/management_node/configure_private_management_node.sh ~/clouds.yaml $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/
+~/management_node/configure_private_management_node.sh ~/clouds.yaml ~/spotkube/ $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/
 
 scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr \
 $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:"~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/.ssh
@@ -224,6 +224,7 @@ mv ~/clouds.yaml ~/.config/openstack/
 mkdir -p ~/.aws
 mv ~/config ~/.aws/
 mv ~/credentials ~/.aws/
+mv ~/spotkube/ ~/.config/
 
 # mkdir -p ~/scripts
 # mv ~/configure_private_management_node.sh ~/scripts/
