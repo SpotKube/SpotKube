@@ -92,10 +92,10 @@ then
     exit 1
 fi
 
-# Check if Terraform is installed
-if ! command -v ansible &> /dev/null
+# Check if jq is installed
+if ! command -v jq &> /dev/null
 then
-    echo "Ansible is not installed. Please install it first."
+    echo "Jq is not installed. Please install it first."
     exit 1
 fi
 
@@ -221,30 +221,13 @@ $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:"~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME.pub" 
 ssh -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -T $PRIVATE_INSTANCE_USER@$management_node_floating_ip <<FED1
 sudo sed -i '1i127.0.0.1 private-management' /etc/hosts
 
-mkdir -p ~/.config/openstack
-mv ~/clouds.yaml ~/.config/openstack/
+mkdir -p ~/scripts
+mv ~/configure_private_management_node.sh ~/scripts/
 
-mkdir -p ~/.aws
-mv ~/config ~/.aws/
-mv ~/credentials ~/.aws/
-mv ~/spotkube/ ~/.config/
+echo "Configuring the management node"
+sh ~/scripts/configure_private_management_node.sh
 
-# mkdir -p ~/scripts
-# mv ~/configure_private_management_node.sh ~/scripts/
-
-# echo "Configuring the management node"
-# sh ~/scripts/configure_private_management_node.sh
-
-# # Check if the key file already exists
-# if [ ! -f "~/.ssh/id_rsa" ]; then
-#     # Generate a new SSH key with the given name and no passphrase
-#     ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa
-#     echo "New SSH key generated: ~/.ssh/id_rsa"
-# else
-#     echo "SSH key already exists: ~/.ssh/id_rsa"
-# fi
-
-# echo "Configure management node done"
+echo "Configure management node done"
 
 FED1
 EOF

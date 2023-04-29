@@ -32,7 +32,7 @@ AWS_SHARED_CONFIG_FILE_PATH='/home/user/.aws/config'
 AWS_SHARED_CREDENTIALS_FILE_PATH='/home/user/.aws/credentials'
 ```
 
-To use the Provisioner, fill in the appropriate information for your private and public cloud configurations. You can find the necessary information in your cloud provider's documentation. Once you have filled in the configuration information, save the file and place it in the `.config` folder in the project root directory.
+To use the Provisioner, fill in the appropriate information for your private and public cloud configurations. You can find the necessary information in your cloud provider's documentation. Once you have filled in the configuration information, save the file and place it in the `~/.config/spotkube/` folder.
 
 ## Configuration
 The `provisioner.conf` file contains the following configuration options:

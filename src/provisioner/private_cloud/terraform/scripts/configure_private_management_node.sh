@@ -26,3 +26,20 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://
 sudo apt update
 sudo apt install -y terraform unzip jq
 
+# Check if the key file already exists
+if [ ! -f "~/.ssh/id_rsa" ]; then
+    # Generate a new SSH key with the given name and no passphrase
+    ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa
+    echo "New SSH key generated: ~/.ssh/id_rsa"
+else
+    echo "SSH key already exists: ~/.ssh/id_rsa"
+fi
+
+mkdir -p ~/.config/openstack
+mv ~/clouds.yaml ~/.config/openstack/
+
+mkdir -p ~/.aws
+mv ~/config ~/.aws/
+mv ~/credentials ~/.aws/
+mv ~/spotkube/ ~/.config/
+
