@@ -1,6 +1,16 @@
 [control_plane]
-10.0.2.120 ansible_connection=ssh ansible_user=ubuntu
+10.0.1.96
 
 [workers]
-10.0.2.177 ansible_connection=ssh ansible_user=ubuntu
-10.0.2.40 ansible_connection=ssh ansible_user=ubuntu
+10.0.1.162
+10.0.1.134
+
+[control_plane:vars]
+ansible_connection=ssh
+ansible_user=ubuntu
+ansible_ssh_private_key_file=~/.ssh/id_spotkube
+
+[workers:vars]
+ansible_connection=ssh
+ansible_user=ubuntu
+ansible_ssh_private_key_file=~/.ssh/id_spotkube

@@ -1,5 +1,5 @@
 from .terraform.private_cloud.private_cloud_terraform import *
-from .ansible.configure import *
+from .ansible.private_cloud.configure import *
 
 # Destroy private cloud
 async def service_destroy_private_cloud():

@@ -24,9 +24,27 @@ def format_terraform_error_message(error_message):
     formatted_message = re.sub(r'\x1b\[\d+m', '', error_message)
     return str(formatted_message)
 
-def rn_subprocess_cmd(command, cwd):
+def run_subprocess_cmd(command, cwd):
     result = subprocess.run(command, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output = result.stdout.decode('utf-8')
+    print(output)
     if result.returncode != 0:
         error = result.stderr.decode('utf-8')
+        print(error)
         raise Exception(error if error  else "Internal Server Error")
-    return result.stdout.decode('utf-8')
+    
+    return output
+
+def run_subprocess_popen_cmd(command, cwd):
+    proc = subprocess.Popen(command, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    while proc.poll() is None:
+        line = proc.stdout.readline()
+        print(line.strip())
+
+    output, error = proc.communicate()
+    print(output.strip())
+    if proc.returncode != 0:
+        print(error.strip())
+        raise Exception(error.strip() if error.strip() else "Internal Server Error")
+    
+    return output.strip()

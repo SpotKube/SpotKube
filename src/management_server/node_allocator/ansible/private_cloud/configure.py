@@ -1,11 +1,14 @@
 import subprocess
 import os
 import json
-from utils import get_logger, format_terraform_error_message, rn_subprocess_cmd
+
+from utils import get_logger, format_terraform_error_message, run_subprocess_cmd, run_subprocess_popen_cmd
 
 current_dir = os.getcwd()
 ansible_dir = os.path.join(current_dir, "node_allocator", "ansible", "private_cloud")
 terraform_dir = os.path.join(current_dir, "node_allocator", "terraform", "private_cloud")
+
+
 
 async def generate_private_cloud_hosts_file():
     # Read control_plane_ip and worker_ips from input.json using jq
@@ -43,22 +46,23 @@ async def generate_private_cloud_hosts_file():
         f.write('ansible_user=ubuntu\n')
         f.write(f'ansible_ssh_private_key_file=~/.ssh/{key_name}\n')
         
-def configure_private_nodes():
+    return {"message": "Ansible hosts file generated", "status": "success"}
+        
+async def configure_private_nodes():
     # Generate the Ansible hosts file
-    generate_private_cloud_hosts_file()
+    await generate_private_cloud_hosts_file()
     
     # Run the initial playbook
-    output = rn_subprocess_cmd(["ansible-playbook", "-i", "hosts", "initial.yml"], cwd=ansible_dir)
+    output = run_subprocess_popen_cmd(["ansible-playbook", "-i", "hosts", "initial.yml"], cwd=ansible_dir)
     print(output)
     
     # Run the kube-dependencies playbook
-    output = rn_subprocess_cmd(["ansible-playbook", "-i", "hosts", "kube-dependencies.yml"], cwd=ansible_dir)
+    output = run_subprocess_popen_cmd(["ansible-playbook", "-i", "hosts", "kube-dependencies.yml"], cwd=ansible_dir)
     print(output)
     
     # Run the control-plane playbook
-    output = rn_subprocess_cmd(["ansible-playbook", "-i", "hosts", "control-plane.yml"], cwd=ansible_dir)
+    output = run_subprocess_popen_cmd(["ansible-playbook", "-i", "hosts", "control-plane.yml"], cwd=ansible_dir)
     print(output)
     
     return {"message": "Nodes configured", "status": "success"}
 
-        

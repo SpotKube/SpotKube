@@ -1,7 +1,7 @@
 import subprocess
 import os
 import json
-from utils import get_logger, format_terraform_error_message, rn_subprocess_cmd
+from utils import get_logger, format_terraform_error_message, run_subprocess_cmd
 
 current_dir = os.getcwd()
 ansible_dir = os.path.join(current_dir, "node_allocator", "ansible")
@@ -48,15 +48,15 @@ def configure_private_nodes():
     generate_private_cloud_hosts_file()
     
     # Run the initial playbook
-    output = rn_subprocess_cmd(["ansible-playbook", "-i", "hosts", "initial.yml"], cwd=ansible_dir)
+    output = run_subprocess_cmd(["ansible-playbook", "-i", "hosts", "initial.yml"], cwd=ansible_dir)
     print(output)
     
     # Run the kube-dependencies playbook
-    output = rn_subprocess_cmd(["ansible-playbook", "-i", "hosts", "kube-dependencies.yml"], cwd=ansible_dir)
+    output = run_subprocess_cmd(["ansible-playbook", "-i", "hosts", "kube-dependencies.yml"], cwd=ansible_dir)
     print(output)
     
     # Run the control-plane playbook
-    output = rn_subprocess_cmd(["ansible-playbook", "-i", "hosts", "control-plane.yml"], cwd=ansible_dir)
+    output = run_subprocess_cmd(["ansible-playbook", "-i", "hosts", "control-plane.yml"], cwd=ansible_dir)
     print(output)
     
     return {"message": "Nodes configured", "status": "success"}
