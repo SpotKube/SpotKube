@@ -42,23 +42,10 @@ async def destroy_and_provision_private_cloud():
         # Initialize Terraform
         run_subprocess_cmd(["terraform", "init"])
         
-        # Apply changes
-        run_subprocess_cmd(["terraform", "apply", "-auto-approve", "-var-file=private.tfvars"], cwd=terraform_dir)
-        
-        # Wait for instances to be provisioned
-        time.sleep(60)
-        
-        # Save Terraform output to a JSON file
-        output = subprocess.check_output(["terraform", "output", "-json"]).decode("utf-8")
-        with open(f"{terraform_dir}/private_instance_terraform_output.json", "w") as f:
-            f.write(output)
-        
-        # Read the management node floating IP from the Terraform output
-        with open(f"{terraform_dir}/private_instance_terraform_output.json", "r") as f:
-            data = json.load(f)
-            management_node_floating_ip = data["private_management_floating_ip"]["value"]
+        # Apply terraform
+        await apply_terraform()
             
-        return {"management_node_floating_ip": management_node_floating_ip, "status": "success"}
+        return {"message": "Destroy and provisioning completed", "status": "success"}
     except subprocess.CalledProcessError as e:
         # Log the error message and return it
         error_message = e.output.decode("utf-8")
@@ -103,5 +90,6 @@ async def apply_terraform():
     
     # Save Terraform output to a JSON file
     output = subprocess.check_output(["terraform", "output", "-json"]).decode("utf-8")
-    with open("private_instance_terraform_output.json", "w") as f:
+    with open(f"{terraform_dir}/private_instance_terraform_output.json", "w") as f:
         f.write(output)
+    
