@@ -3,6 +3,8 @@
 # Import common functions
 source ../../../scripts/common.sh
 
+set -e
+
 # ------------------------------------------------ Help function ---------------------------------------------------- #
 
 function help() {
@@ -15,7 +17,7 @@ function help() {
 
 # --------------------------------------------------- Logging ------------------------------------------------------- #
 # Set the provisioner log file path
-LOG_FILE="../../../../logs/private_provisioner.log"
+LOG_FILE="../../../../logs/public_provisioner.log"
 
 
 # Redirect stdout to the log file
@@ -54,6 +56,10 @@ if [[ -z "$AWS_SHARED_CREDENTIALS_FILE_PATH" ]]; then
     CONF_FILE_ERROR=true
 elif [[ ! -f "$AWS_SHARED_CREDENTIALS_FILE_PATH" ]]; then
     print_error "AWS_SHARED_CREDENTIALS_FILE_PATH ($AWS_SHARED_CREDENTIALS_FILE_PATH) does not exist"
+    CONF_FILE_ERROR=true
+fi
+if [[ ! -f "$PUBLIC_INSTANCE_SSH_KEY_PATH" ]]; then
+    print_error "PUBLIC_INSTANCE_SSH_KEY_PATH ($AWS_SHARED_CREDENTIALS_FILE_PATH) does not exist"
     CONF_FILE_ERROR=true
 fi
 
@@ -122,14 +128,15 @@ do
 done
 
 # ------------------------------------- Terraform actions ----------------------------------------------------------- #
-# If configure_only flag is set, only configure the private cloud environment
+# If configure_only flag is set, only configure the public cloud environment
 if ! $configure_only
 then
-    # If destroy flag is set, destroy the private cloud environment
+    # If destroy flag is set, destroy the public cloud environment
     if $destroy
     then
         # terraform destroy -auto-approve
-        echo "Destroying the private cloud environment"
+        echo "Destroying the public cloud environment"
+        terraform destroy -auto-approve -var "aws_shared_config_file_path=$AWS_SHARED_CONFIG_FILE_PATH" -var "aws_shared_credentials_file_path=$AWS_SHARED_CREDENTIALS_FILE_PATH" -var "pub_id_file_path=$PUBLIC_INSTANCE_SSH_KEY_PATH"
         exit 1
     fi
 
@@ -141,20 +148,20 @@ then
         terraform init
     fi
 
-    # If destroy_build flag is set, destroy the private cloud environment and then build it
+    # If destroy_build flag is set, destroy the public cloud environment and then build it
     if $destroy_build
     then
-        terraform destroy -auto-approve
+        terraform destroy -auto-approve -var "aws_shared_config_file_path=$AWS_SHARED_CONFIG_FILE_PATH" -var "aws_shared_credentials_file_path=$AWS_SHARED_CREDENTIALS_FILE_PATH" -var "pub_id_file_path=$PUBLIC_INSTANCE_SSH_KEY_PATH"
         terraform init -reconfigure
     fi
 
-    terraform apply -auto-approve -var "aws_shared_config_file_path=$AWS_SHARED_CONFIG_FILE_PATH" -var "aws_shared_credentials_file_path=$AWS_SHARED_CREDENTIALS_FILE_PATH"
+    terraform apply -auto-approve -var "aws_shared_config_file_path=$AWS_SHARED_CONFIG_FILE_PATH" -var "aws_shared_credentials_file_path=$AWS_SHARED_CREDENTIALS_FILE_PATH" -var "pub_id_file_path=$PUBLIC_INSTANCE_SSH_KEY_PATH"
     sleep 60 # Wait for 60 seconds to ensure the instances are fully provisioned
-    terraform output -json > private_env_terraform_output.json
+    terraform output -json > public_env_terraform_output.json
 fi
 
 # Read control_plane_ip and worker_ips from input.json using jq
-management_node_public_ip=$(jq -r '.management_node_public_ip.value' terraform_output.json)
+management_node_public_ip=$(jq -r '.management_node_public_ip.value' public_env_terraform_output.json)
 
 print_info "AWS Management node public IP: $management_node_public_ip"
 
@@ -166,7 +173,8 @@ scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr ~/.ssh/id_spotkube.pub
 
 # Connect to the remote server
 ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" ubuntu@$management_node_public_ip <<EOF
-sh configure_management_node.sh
+chmod +x configure_management_node.sh
+./configure_management_node.sh
 EOF
 
 # Copy the aws shared config and credentials files to the management node

@@ -1,0 +1,42 @@
+{
+  "management_node_public_ip": {
+    "sensitive": false,
+    "type": "string",
+    "value": "54.237.207.99"
+  },
+  "pod_network_cidr": {
+    "sensitive": false,
+    "type": "string",
+    "value": "10.0.2.0/24"
+  },
+  "public_subnet_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "subnet-052da8b2e3a672701"
+  },
+  "security_group_http_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "sg-0bb4e7c1003609a2f"
+  },
+  "security_group_https_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "sg-01d02fb52e75f58cf"
+  },
+  "security_group_ssh_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "sg-0e6b2f257d1c479d6"
+  },
+  "vpc_cidr_block": {
+    "sensitive": false,
+    "type": "string",
+    "value": "10.0.0.0/16"
+  },
+  "vpc_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "vpc-0c7ff8fee9e08a417"
+  }
+}
