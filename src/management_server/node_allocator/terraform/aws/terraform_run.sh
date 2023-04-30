@@ -182,6 +182,8 @@ cd ansible
 sh configure_management_node.sh
 cp kube_cluster/.ansible.cfg ~/.ansible.cfg
 ansible-playbook -i hosts kube_cluster/initial.yml
-ansible-playbook -i hosts kube_cluster/kube-depndencies.yml
-ansible-playbook -i hosts kube_cluster/control-plane.yml
+ansible-playbook -i hosts kube_cluster/kube_depndencies.yml
+ansible-playbook -i hosts kube_cluster/control_plane.yml
+ansible-playbook -i hosts kube_cluster/workers.yml
+ansible-playbook -i hosts kube_cluster/setup_kubectl.yml
 EOF
