@@ -67,6 +67,12 @@ async def configure_private_nodes():
         
         # Run the control-plane playbook
         run_subprocess_popen_cmd(["ansible-playbook", "-i", "hosts", "control_plane.yml"], cwd=ansible_dir)
+
+        # Run the worker playbook
+        run_subprocess_popen_cmd(["ansible-playbook", "-i", "hosts", "workers.yml"], cwd=ansible_dir)
+
+        # Run the setup_kubectl playbook
+        run_subprocess_popen_cmd(["ansible-playbook", "-i", "hosts", "setup_kubectl.yml"], cwd=ansible_dir)
         
         logger.info("Private cloud nodes configured")
         

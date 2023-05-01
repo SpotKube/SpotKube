@@ -29,9 +29,11 @@ sh gen_private_hosts_file.sh
 cp private_hosts ../hosts
 cd ../
 cp .ansible.cfg ~/.ansible.cfg
-ansible-playbook -i hosts initial.yml
-ansible-playbook -i hosts kube-depndencies.yml
-ansible-playbook -i hosts control-plane.yml
+ansible-playbook -i hosts kube_cluster/initial.yml
+ansible-playbook -i hosts kube_cluster/kube_depndencies.yml
+ansible-playbook -i hosts kube_cluster/control_plane.yml
+ansible-playbook -i hosts kube_cluster/workers.yml
+ansible-playbook -i hosts kube_cluster/setup_kubectl.yml
 
 echo "Configure management node done"
 touch ~/management_node_done.txt

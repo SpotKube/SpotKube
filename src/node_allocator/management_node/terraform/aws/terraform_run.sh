@@ -1,7 +1,9 @@
 #! /bin/bash
 
+set -e
+
 # Import common functions
-source ../../../scripts/common.sh
+source ../../../../scripts/common.sh
 
 # Help function
 function help() {
@@ -18,12 +20,12 @@ print_title "Provisioning public cloud environment"
 CONF_FILE_ERROR=false
 
 # Check if provisioner.conf exists
-if [[ ! -f "../../../../.config/provisioner.conf" ]]; then
+if [[ ! -f "../../../../../.config/provisioner.conf" ]]; then
     print_error "provisioner.conf does not exist"
     CONF_FILE_ERROR=true
     exit 1
 else
-    source "../../../../.config/provisioner.conf"
+    source "../../../../../.config/provisioner.conf"
 fi
 
 # Check if AWS_SHARED_CONFIG_FILE_PATH is set and exists
@@ -102,14 +104,15 @@ do
 done
 
 # ------------------------------------- Terraform actions ----------------------------------------------------------- #
-# If configure_only flag is set, only configure the private cloud environment
+# If configure_only flag is set, only configure the public cloud environment
 if ! $configure_only
 then
-    # If destroy flag is set, destroy the private cloud environment
+    # If destroy flag is set, destroy the public cloud environment
     if $destroy
     then
         # terraform destroy -auto-approve
-        echo "Destroying the private cloud environment"
+        print_info "Destroying the public cloud environment"
+        terraform destroy -auto-approve -var-file="allocation_map.tfvars"
         exit 1
     fi
 
@@ -121,16 +124,16 @@ then
         terraform init
     fi
 
-    # If destroy_build flag is set, destroy the private cloud environment and then build it
+    # If destroy_build flag is set, destroy the public cloud environment and then build it
     if $destroy_build
     then
-        terraform destroy -auto-approve
+        terraform destroy -auto-approve -var-file="allocation_map.tfvars"
         terraform init -reconfigure
     fi
 
-    terraform apply -auto-approve
+    terraform apply -auto-approve -var-file="allocation_map.tfvars"
     sleep 60 # Wait for 60 seconds to ensure the instances are fully provisioned
-    terraform output -json > private_env_terraform_output.json
+    terraform output -json > public_env_terraform_output.json
 fi
 
 # Read control_plane_ip and worker_ips from input.json using jq
@@ -140,7 +143,7 @@ management_node_public_ip=$(jq -r '.management_node_public_ip.value' terraform_o
 
 print_info "Management node floating IP: $management_node_floating_ip"
 
-# ------------------------------------ Configuring the private cloud ------------------------------------------------ #
+# ------------------------------------ Configuring the public cloud ------------------------------------------------ #
 
 
 
@@ -162,18 +165,18 @@ cat >> hosts << EOF
 [control_plane:vars]
 ansible_connection=ssh
 ansible_user=ubuntu
-ansible_ssh_private_key_file=~/.ssh/id_spotkube
+ansible_ssh_private_key_file=~/.ssh/id_rsa
 
 [workers:vars]
 ansible_connection=ssh
 ansible_user=ubuntu
-ansible_ssh_private_key_file=~/.ssh/id_spotkube
+ansible_ssh_private_key_file=~/.ssh/id_rsa
 
 EOF
 
 # Copy the Ansible hosts file, terraform output and kube_cluster files to the management node
-scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr hosts terraform_output.json ../../kube_cluster/ scripts/configure_management_node.sh ubuntu@$management_node_public_ip:~/ansible
-scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr ~/.ssh/id_spotkube.pub ~/.ssh/id_spotkube ubuntu@$management_node_public_ip:~/.ssh
+scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr hosts public_env_terraform_output.json scripts/configure_management_node.sh ubuntu@$management_node_public_ip:~/ansible
+# scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr ~/.ssh/id_spotkube.pub ~/.ssh/id_spotkube ubuntu@$management_node_public_ip:~/.ssh
 
 # Connect to the remote server
 ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" ubuntu@$management_node_public_ip <<EOF
@@ -182,6 +185,8 @@ cd ansible
 sh configure_management_node.sh
 cp kube_cluster/.ansible.cfg ~/.ansible.cfg
 ansible-playbook -i hosts kube_cluster/initial.yml
-ansible-playbook -i hosts kube_cluster/kube-depndencies.yml
-ansible-playbook -i hosts kube_cluster/control-plane.yml
+ansible-playbook -i hosts kube_cluster/kube_depndencies.yml
+ansible-playbook -i hosts kube_cluster/control_plane.yml
+ansible-playbook -i hosts kube_cluster/workers.yml
+ansible-playbook -i hosts kube_cluster/setup_kubectl.yml
 EOF
