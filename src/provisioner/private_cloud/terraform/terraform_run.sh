@@ -171,7 +171,7 @@ then
 fi
 
 # Read the management node floating IP from terraform output
-management_node_floating_ip=$(jq -r '.private_management_floating_ip.value' private_env_terraform_output.json)
+management_node_floating_ip=$(jq -r '.private_management_test_floating_ip.value' private_env_terraform_output.json)
 print_info "Management node floating IP: $management_node_floating_ip"
 
 # Get private instance SSH key name

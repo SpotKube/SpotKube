@@ -7,12 +7,12 @@
   "private_master_floating_ip": {
     "sensitive": false,
     "type": "string",
-    "value": "172.24.4.63"
+    "value": "172.24.4.152"
   },
   "private_master_ip": {
     "sensitive": false,
     "type": "string",
-    "value": "10.0.1.136"
+    "value": "10.0.1.211"
   },
   "private_workers": {
     "sensitive": false,
@@ -35,10 +35,10 @@
     ],
     "value": [
       {
-        "private_ip": "10.0.1.164"
+        "private_ip": "10.0.1.81"
       },
       {
-        "private_ip": "10.0.1.252"
+        "private_ip": "10.0.1.137"
       }
     ]
   }

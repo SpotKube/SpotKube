@@ -1,6 +1,8 @@
 #! /bin/bash
 set -e
 
+sudo apt-get update
+
 # Install terraform
 sudo apt-add-repository --yes --update ppa:ansible/ansible
 curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
@@ -11,16 +13,16 @@ wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | sudo tee /usr/
 gpg --no-default-keyring --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg --fingerprint
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 
-sudo apt update
+sudo apt-get update
 
-sudo apt install apt-transport-https --yes
-sudo apt install helm --yes
+sudo apt-get install apt-transport-https --yes
+sudo apt-get install helm --yes
 
 #Python3
-sudo apt install -y python3-pip python3-venv
+sudo apt-get install -y python3-pip python3-venv
 
 # Install ansible
-sudo apt install -y software-properties-common ansible
+sudo apt-get install -y software-properties-common ansible
 
 # Create ansible config file
 touch ~/.ansible.cfg
@@ -28,7 +30,7 @@ echo "[defaults]" >> ~/.ansible.cfg
 echo "host_key_checking = False" >> ~/.ansible.cfg
 
 # Install terraform
-sudo apt install -y gnupg terraform unzip jq
+sudo apt-get install -y gnupg terraform unzip jq
 
 mkdir -p ~/.config/openstack
 mv ~/clouds.yaml ~/.config/openstack/
