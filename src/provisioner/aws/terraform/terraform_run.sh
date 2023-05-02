@@ -9,9 +9,10 @@ set -e
 
 function help() {
     print_info "Usage:"
+    echo "  -i, --init                          Initialize the aws cloud environment"
     echo "  -d, --destroy                       Destroy the aws cloud environment"
     echo "  -db, --destroy_build                Destroy and build the aws cloud environment"
-    echo "  -r, --reconfigure                   Reconfigure the aws cloud environment"
+    echo "  -r, --init_reconfigure                   Reconfigure the aws cloud environment"
     echo "  -c, --configure                     Configure the aws cloud environment"
 }
 
@@ -21,7 +22,7 @@ LOG_FILE="../../../../logs/public_provisioner.log"
 
 
 # Redirect stdout to the log file
-exec 3>&1 1> >(tee -a "${LOG_FILE}" >&3) 2>&1
+exec 3>&1 1> >(tee >(sed 's/\x1B\[[0-9;]*[JKmsu]//g' >>"${LOG_FILE}") >&3) 2>&1
 
 # Set the trap to log the date and time of each command
 trap "date -Is" DEBUG
@@ -33,12 +34,12 @@ print_title "Provisioning public cloud environment"
 CONF_FILE_ERROR=false
 
 # Check if provisioner.conf exists
-if [[ ! -f "../../../../.config/provisioner.conf" ]]; then
+if [[ ! -f "~/.config/spotkube/provisioner.conf" ]]; then
     print_error "provisioner.conf does not exist"
     CONF_FILE_ERROR=true
     exit 1
 else
-    source "../../../../.config/provisioner.conf"
+    source "~/.config/spotkube/provisioner.conf"
 fi
 
 # Check if AWS_SHARED_CONFIG_FILE_PATH is set and exists
@@ -77,13 +78,6 @@ then
     exit 1
 fi
 
-# Check if Terraform is installed
-if ! command -v ansible &> /dev/null
-then
-    echo "Ansible is not installed. Please install it first."
-    exit 1
-fi
-
 # Check if jq is installed
 if ! command -v jq &> /dev/null
 then
@@ -98,6 +92,7 @@ destroy=false
 reconfigure=false
 destroy_build=false
 configure_only=false
+initialize=false
 
 # Parse command-line arguments
 while [[ $# -gt 0 ]]
@@ -116,6 +111,9 @@ do
         ;;
         -c|--configure)
         configure_only=true
+        ;;
+        -i|--init)
+        initialize=true
         ;;
         *)
         echo "Invalid argument: $1"
@@ -140,8 +138,8 @@ then
         exit 1
     fi
 
-    # If reconfigure flag is set, run "terraform init -reconfigure", otherwise just run "terraform init"
-    if $reconfigure
+    # If reconfigure flag is set and destroy_build is not set, run "terraform init -reconfigure", otherwise just run "terraform init"
+    if $reconfigure 
     then
         terraform init -reconfigure
     else
@@ -153,6 +151,9 @@ then
     then
         terraform destroy -auto-approve -var "aws_shared_config_file_path=$AWS_SHARED_CONFIG_FILE_PATH" -var "aws_shared_credentials_file_path=$AWS_SHARED_CREDENTIALS_FILE_PATH" -var "pub_id_file_path=$PUBLIC_INSTANCE_SSH_KEY_PATH"
         terraform init -reconfigure
+    elif $initialize
+    then
+        terraform init
     fi
 
     terraform apply -auto-approve -var "aws_shared_config_file_path=$AWS_SHARED_CONFIG_FILE_PATH" -var "aws_shared_credentials_file_path=$AWS_SHARED_CREDENTIALS_FILE_PATH" -var "pub_id_file_path=$PUBLIC_INSTANCE_SSH_KEY_PATH"
@@ -180,4 +181,3 @@ EOF
 # Copy the aws shared config and credentials files to the management node
 scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr $AWS_SHARED_CONFIG_FILE_PATH ubuntu@$management_node_public_ip:~/.aws/config
 scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr $AWS_SHARED_CREDENTIALS_FILE_PATH ubuntu@$management_node_public_ip:~/.aws/credentials
-

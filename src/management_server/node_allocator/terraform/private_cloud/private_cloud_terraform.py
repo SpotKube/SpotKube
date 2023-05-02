@@ -39,7 +39,7 @@ async def destroy_and_provision_private_cloud():
         run_subprocess_cmd(["terraform", "destroy", "-auto-approve", "-var-file=private.tfvars"], cwd=terraform_dir)
         
         # Initialize Terraform
-        run_subprocess_cmd(["terraform", "init"])
+        run_subprocess_cmd(["terraform", "init"], cwd=terraform_dir)
         
         # Apply terraform
         await apply_terraform()
