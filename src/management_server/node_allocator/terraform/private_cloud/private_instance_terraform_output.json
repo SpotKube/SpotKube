@@ -1,0 +1,45 @@
+{
+  "private_management_floating_ip": {
+    "sensitive": false,
+    "type": "string",
+    "value": "172.24.4.53"
+  },
+  "private_master_floating_ip": {
+    "sensitive": false,
+    "type": "string",
+    "value": "172.24.4.152"
+  },
+  "private_master_ip": {
+    "sensitive": false,
+    "type": "string",
+    "value": "10.0.1.211"
+  },
+  "private_workers": {
+    "sensitive": false,
+    "type": [
+      "tuple",
+      [
+        [
+          "object",
+          {
+            "private_ip": "string"
+          }
+        ],
+        [
+          "object",
+          {
+            "private_ip": "string"
+          }
+        ]
+      ]
+    ],
+    "value": [
+      {
+        "private_ip": "10.0.1.81"
+      },
+      {
+        "private_ip": "10.0.1.137"
+      }
+    ]
+  }
+}

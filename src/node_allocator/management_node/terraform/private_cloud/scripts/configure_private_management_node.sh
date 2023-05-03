@@ -16,6 +16,7 @@ sudo apt-add-repository --yes --update ppa:ansible/ansible
 sudo apt install -y ansible
 
 # Create ansible config file
+rm -rf ~/.ansible.cfg # Remove the existing ansible config file
 touch ~/.ansible.cfg
 echo "[defaults]" >> ~/.ansible.cfg
 echo "host_key_checking = False" >> ~/.ansible.cfg

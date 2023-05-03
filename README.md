@@ -1,6 +1,7 @@
 # SpotKube
 
-<img src="https://github.com/SpotKube/SpotKube/blob/update/readme/resources/spotkube.png" width="100">
+<!-- <img src="https://github.com/SpotKube/SpotKube/blob/update/readme/resources/spotkube.png" width="100"> -->
+<img src="documentation/images/spotkube.png" width="100">
 
 ----
 
@@ -15,7 +16,10 @@ provisioner, optimization engine, node allocator, helm service, container orches
 
 ## High Level Architecture
 
-<center><img src="https://github.com/SpotKube/SpotKube/blob/update/readme/resources/OPEN%20SOURCE%20%20-%20HL_A3_cropped.png" width="800"></center>
+<center>
+<!-- <img src="https://github.com/SpotKube/SpotKube/blob/update/readme/resources/OPEN%20SOURCE%20%20-%20HL_A3_cropped.png" width="800"> -->
+<img src="documentation/images/OPEN SOURCE  - HL_A3_cropped.png" width="800">
+</center>
 
 ----
 
