@@ -14,9 +14,9 @@ func GetPods() *v1.PodList {
 		panic(err)
 	}
 
-	for _, pod := range pods.Items {
-		fmt.Println(pod.Name)
-	}
+	// for _, pod := range pods.Items {
+	// 	fmt.Println(pod.Name)
+	// }
 	return pods
 }
 
