@@ -28,7 +28,8 @@ async def deploy_helm_charts():
             
             chartPath = os.path.join(home_dir, helm_chart_path)
             run_subprocess_popen_cmd(["helm", "upgrade", release_name, chartPath, "--install", "--set", f"replicaCount={pod_count}"], cwd=current_dir)
-    
+            
+        return {"message": "Helm charts deployed", "status": "success"}    
     except subprocess.CalledProcessError as e:
         # Log the error message and return it
         error_message = e.output.decode("utf-8")
@@ -57,7 +58,9 @@ async def uninstall_helm_charts():
             
             chartPath = os.path.join(home_dir, helm_chart_path)
             
-            run_subprocess_popen_cmd(["helm", "uninstall", release_name , chartPath], cwd=current_dir)
+            run_subprocess_popen_cmd(["helm", "uninstall", chartPath, release_name], cwd=current_dir)
+            
+        return {"message": "Helm charts uninstalled", "status": "success"}
     
     except subprocess.CalledProcessError as e:
         # Log the error message and return it
