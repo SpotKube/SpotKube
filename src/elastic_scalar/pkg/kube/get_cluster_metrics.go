@@ -2,6 +2,7 @@ package kube
 
 import (
 	"context"
+	"fmt"
 
 	log "github.com/sirupsen/logrus"
 
@@ -20,7 +21,8 @@ func GetNodeCpuUsage() []nodeCpuUsage {
 		}
 		cpuUsage := nodeMetrics.Usage.Cpu()
 		totalCpu := node.Status.Capacity.Cpu()
-		log.Debug("Node %s CPU usage: %f and total CPU: %f\n", node.ObjectMeta.Name, float64(cpuUsage.MilliValue()), float64(totalCpu.MilliValue()))
+		logMsg := fmt.Sprintf("Node %s CPU usage: %f and total CPU: %f\n", node.ObjectMeta.Name, float64(cpuUsage.MilliValue()), float64(totalCpu.MilliValue()))
+		log.Info(logMsg)
 		nodesCpuUsage[i] = nodeCpuUsage{
 			nodeName: node.ObjectMeta.Name,
 			cpuUsage: float64(cpuUsage.MilliValue()),
@@ -42,7 +44,8 @@ func GetPodCpuUsage() []podCpuUsage {
 		cpuUsage := podMetrics.Containers[0].Usage.Cpu()
 		// Get the total CPU allocated to the pod
 		totalCpu := pod.Spec.Containers[0].Resources.Requests.Cpu()
-		log.Debug("Pod %s  CPU usage: %f and total CPU allocation: %f\n", pod.ObjectMeta.Name, float64(cpuUsage.MilliValue()), float64(totalCpu.MilliValue()))
+		logMsg := fmt.Sprintf("Pod %s  CPU usage: %f and total CPU allocation: %f\n", pod.ObjectMeta.Name, float64(cpuUsage.MilliValue()), float64(totalCpu.MilliValue()))
+		log.Info(logMsg)
 		podsCpuUsage[i] = podCpuUsage{
 			podName:  pod.ObjectMeta.Name,
 			cpuUsage: float64(cpuUsage.MilliValue()),
