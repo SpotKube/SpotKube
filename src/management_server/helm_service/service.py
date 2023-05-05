@@ -1,19 +1,23 @@
 import yaml
 import os
 import subprocess
-from utils import run_subprocess_cmd, run_subprocess_popen_cmd, format_terraform_error_message, get_logger
+from utils import run_subprocess_popen_cmd, format_terraform_error_message, get_logger
 
+home_dir = os.path.expanduser("~")
+config_path = os.path.join(home_dir, ".config/spotkube/config.yml")
 current_dir = os.getcwd()
 logger_dir = os.path.join(current_dir, "logs")
 
 logger = get_logger(path=logger_dir, log_file="private_cloud_helm_service.log")
+
+release_name = "release1"
 
 # configFilePath = os.path.join(os.path.dirname(__file__), 'config.yml')
 
 async def deploy_helm_charts():
     try:
         # Load the config.yml file
-        with open('~/.config/spotkube/config.yml') as f:
+        with open(config_path) as f:
             config = yaml.safe_load(f)
 
         # Loop through each service and install the corresponding Helm chart
@@ -22,7 +26,7 @@ async def deploy_helm_charts():
             pod_count = service['minRPS']['pods']
             service_name = service['name']
             
-            run_subprocess_popen_cmd(["helm", "upgrade", "--install", "--set", "replicaCount={pod_count}" "{helm_chart_path}"], cwd=current_dir)        
+            run_subprocess_popen_cmd(["helm", "upgrade", "{release_name}" ,"--install", "--set", "replicaCount={pod_count}" "{helm_chart_path}"], cwd=current_dir)        
             # os.system(f"helm upgrade --install --set replicaCount={pod_count} {service_name} {helm_chart_path}")
     
     except subprocess.CalledProcessError as e:
@@ -42,7 +46,7 @@ async def deploy_helm_charts():
 async def uninstall_helm_charts():
     try:
         # Load the config.yml file
-        with open('~/.config/spotkube/config.yml') as f:
+        with open(config_path) as f:
             config = yaml.safe_load(f)
 
         # Loop through each service and install the corresponding Helm chart
@@ -51,8 +55,7 @@ async def uninstall_helm_charts():
             pod_count = service['minRPS']['pods']
             service_name = service['name']
             
-            run_subprocess_popen_cmd(["helm", "uninstall", "{helm_chart_path}"], cwd=current_dir)        
-            # os.system(f"helm upgrade --install --set replicaCount={pod_count} {service_name} {helm_chart_path}")
+            run_subprocess_popen_cmd(["helm", "uninstall", "{release_name}" , "{helm_chart_path}"], cwd=current_dir)
     
     except subprocess.CalledProcessError as e:
         # Log the error message and return it
