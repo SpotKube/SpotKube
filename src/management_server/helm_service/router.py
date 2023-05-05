@@ -13,7 +13,7 @@ async def root():
     return {"message": "This is the helm service private cloud router"}
 
 @helm_router_private.get("/deploy")
-async def deploy_helm_charts():
+async def deploy():
     return await deploy_helm_charts()
 
 @helm_router_private.get("/uninstall")

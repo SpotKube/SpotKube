@@ -26,7 +26,7 @@ async def deploy_helm_charts():
             pod_count = service['minRPS']['pods']
             service_name = service['name']
             
-            run_subprocess_popen_cmd(["helm", "upgrade", "{release_name}" ,"--install", "--set", "replicaCount={pod_count}" "{helm_chart_path}"], cwd=current_dir)        
+            run_subprocess_popen_cmd(["helm", "upgrade", release_name ,"--install", "--set", "replicaCount={pod_count}" "{helm_chart_path}"], cwd=current_dir)        
             # os.system(f"helm upgrade --install --set replicaCount={pod_count} {service_name} {helm_chart_path}")
     
     except subprocess.CalledProcessError as e:
@@ -55,7 +55,7 @@ async def uninstall_helm_charts():
             pod_count = service['minRPS']['pods']
             service_name = service['name']
             
-            run_subprocess_popen_cmd(["helm", "uninstall", "{release_name}" , "{helm_chart_path}"], cwd=current_dir)
+            run_subprocess_popen_cmd(["helm", "uninstall", release_name , "{helm_chart_path}"], cwd=current_dir)
     
     except subprocess.CalledProcessError as e:
         # Log the error message and return it
