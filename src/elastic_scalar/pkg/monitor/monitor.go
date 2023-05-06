@@ -1,9 +1,9 @@
 package monitor
 
 import (
-	log "github.com/sirupsen/logrus"
-
+	"github.com/SpotKube/SpotKube/src/elastic_scalar/pkg/optimizer"
 	"github.com/robfig/cron/v3"
+	log "github.com/sirupsen/logrus"
 )
 
 func Watch() {
@@ -14,6 +14,5 @@ func Watch() {
 }
 
 func monitor() {
-	// nodesCpuUsage := kube.GetNodeCpuUsage()
-
+	optimizer.Run()
 }
