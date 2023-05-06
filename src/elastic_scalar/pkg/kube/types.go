@@ -1,13 +1,13 @@
 package kube
 
-type nodeCpuUsage struct {
-	nodeName string
-	cpuUsage float64
-	totalCpu float64
+type NodeCpuUsage struct {
+	NodeName string
+	CpuUsage float64
+	TotalCpu float64
 }
 
-type podCpuUsage struct {
-	podName  string
-	cpuUsage float64
-	totalCpu float64
+type PodCpuUsage struct {
+	PodName  string
+	CpuUsage float64
+	TotalCpu float64
 }

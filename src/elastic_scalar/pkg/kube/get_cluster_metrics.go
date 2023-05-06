@@ -9,9 +9,9 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func GetNodeCpuUsage() []nodeCpuUsage {
+func GetNodeCpuUsage() []NodeCpuUsage {
 	nodes := GetNodes()
-	nodesCpuUsage := make([]nodeCpuUsage, len(nodes.Items))
+	nodesCpuUsage := make([]NodeCpuUsage, len(nodes.Items))
 
 	for i, node := range nodes.Items {
 		nodeMetrics, err := metricsClientset.MetricsV1beta1().NodeMetricses().Get(context.Background(), node.ObjectMeta.Name, metav1.GetOptions{})
@@ -23,18 +23,18 @@ func GetNodeCpuUsage() []nodeCpuUsage {
 		totalCpu := node.Status.Capacity.Cpu()
 		logMsg := fmt.Sprintf("Node %s CPU usage: %f and total CPU: %f\n", node.ObjectMeta.Name, float64(cpuUsage.MilliValue()), float64(totalCpu.MilliValue()))
 		log.Info(logMsg)
-		nodesCpuUsage[i] = nodeCpuUsage{
-			nodeName: node.ObjectMeta.Name,
-			cpuUsage: float64(cpuUsage.MilliValue()),
-			totalCpu: float64(totalCpu.MilliValue()),
+		nodesCpuUsage[i] = NodeCpuUsage{
+			NodeName: node.ObjectMeta.Name,
+			CpuUsage: float64(cpuUsage.MilliValue()),
+			TotalCpu: float64(totalCpu.MilliValue()),
 		}
 	}
 	return nodesCpuUsage
 }
 
-func GetPodCpuUsage() []podCpuUsage {
+func GetPodCpuUsage() []PodCpuUsage {
 	pods := GetPods()
-	podsCpuUsage := make([]podCpuUsage, len(pods.Items))
+	podsCpuUsage := make([]PodCpuUsage, len(pods.Items))
 	for i, pod := range pods.Items {
 		podMetrics, err := metricsClientset.MetricsV1beta1().PodMetricses(namespace).Get(context.Background(), pod.ObjectMeta.Name, metav1.GetOptions{})
 		if err != nil {
@@ -46,10 +46,10 @@ func GetPodCpuUsage() []podCpuUsage {
 		totalCpu := pod.Spec.Containers[0].Resources.Requests.Cpu()
 		logMsg := fmt.Sprintf("Pod %s  CPU usage: %f and total CPU allocation: %f\n", pod.ObjectMeta.Name, float64(cpuUsage.MilliValue()), float64(totalCpu.MilliValue()))
 		log.Info(logMsg)
-		podsCpuUsage[i] = podCpuUsage{
-			podName:  pod.ObjectMeta.Name,
-			cpuUsage: float64(cpuUsage.MilliValue()),
-			totalCpu: float64(totalCpu.MilliValue()),
+		podsCpuUsage[i] = PodCpuUsage{
+			PodName:  pod.ObjectMeta.Name,
+			CpuUsage: float64(cpuUsage.MilliValue()),
+			TotalCpu: float64(totalCpu.MilliValue()),
 		}
 	}
 	return podsCpuUsage
