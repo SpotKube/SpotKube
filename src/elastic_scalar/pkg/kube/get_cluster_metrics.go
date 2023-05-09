@@ -50,6 +50,7 @@ func GetPodCpuUsage() []PodCpuUsage {
 			PodName:  pod.ObjectMeta.Name,
 			CpuUsage: float64(cpuUsage.MilliValue()),
 			TotalCpu: float64(totalCpu.MilliValue()),
+			NodeName: pod.Spec.NodeName,
 		}
 	}
 	return podsCpuUsage
