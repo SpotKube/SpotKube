@@ -13,7 +13,7 @@ func calculateTotalCpuUsage() CalcUsage {
 	podsCpuUsage := kube.GetPodCpuUsage()
 	for _, podCpuUsage := range podsCpuUsage {
 		if podCpuUsage.TotalCpu == 0.0 {
-			log.Warn("Total CPU is 0 for pod: ", podCpuUsage.PodName)
+			log.Warn("Total CPU allocation is 0 for pod: ", podCpuUsage.PodName)
 			totalCpuUsage += podCpuUsage.CpuUsage
 			numOfPods++
 			if podCpuUsage.ServiceName != "" {
