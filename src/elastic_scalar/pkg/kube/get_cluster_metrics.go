@@ -35,7 +35,7 @@ func GetNodeCpuUsage() []NodeCpuUsage {
 func GetPodCpuUsage() []PodCpuUsage {
 	pods := GetPods()
 	podsCpuUsage := make([]PodCpuUsage, len(pods.Items))
-	for i, pod := range pods.Items {
+	for _, pod := range pods.Items {
 		podMetrics, err := metricsClientset.MetricsV1beta1().PodMetricses(namespace).Get(context.Background(), pod.ObjectMeta.Name, metav1.GetOptions{})
 		if err != nil {
 			// panic(err.Error())
@@ -46,12 +46,13 @@ func GetPodCpuUsage() []PodCpuUsage {
 		totalCpu := pod.Spec.Containers[0].Resources.Requests.Cpu()
 		logMsg := fmt.Sprintf("Pod %s  CPU usage: %f and total CPU allocation: %f\n", pod.ObjectMeta.Name, float64(cpuUsage.MilliValue()), float64(totalCpu.MilliValue()))
 		log.Info(logMsg)
-		podsCpuUsage[i] = PodCpuUsage{
-			PodName:  pod.ObjectMeta.Name,
-			CpuUsage: float64(cpuUsage.MilliValue()),
-			TotalCpu: float64(totalCpu.MilliValue()),
-			NodeName: pod.Spec.NodeName,
-		}
+		podsCpuUsage = append(podsCpuUsage, PodCpuUsage{
+			PodName:     pod.ObjectMeta.Name,
+			CpuUsage:    float64(cpuUsage.MilliValue()),
+			TotalCpu:    float64(totalCpu.MilliValue()),
+			NodeName:    pod.Spec.NodeName,
+			ServiceName: pod.ObjectMeta.Labels["app"],
+		})
 	}
 	return podsCpuUsage
 }
