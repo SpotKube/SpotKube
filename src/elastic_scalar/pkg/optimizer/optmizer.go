@@ -8,6 +8,7 @@ import (
 func calculateTotalCpuUsage() CalcUsage {
 	var totalCpuUsage float64
 	var numOfPods int
+	services := make(map[string]int)
 
 	podsCpuUsage := kube.GetPodCpuUsage()
 	for _, podCpuUsage := range podsCpuUsage {
@@ -15,22 +16,32 @@ func calculateTotalCpuUsage() CalcUsage {
 			log.Warn("Total CPU is 0 for pod: ", podCpuUsage.PodName)
 			totalCpuUsage += podCpuUsage.CpuUsage
 			numOfPods++
+			if podCpuUsage.ServiceName != "" {
+				services[podCpuUsage.ServiceName]++ // Increment the number of pods for the service
+			}
+
 		} else {
 			cpuUsageAsPercentage := podCpuUsage.CpuUsage / podCpuUsage.TotalCpu
 			if cpuUsageAsPercentage > 0.6 {
 				log.Warn("CPU usage is greater than 60% for pod: ", podCpuUsage.PodName)
 				totalCpuUsage += 2 * podCpuUsage.TotalCpu
 				numOfPods += 2
+				if podCpuUsage.ServiceName != "" {
+					services[podCpuUsage.ServiceName] += 2 // Increment the number of pods for the service
+				}
 			} else {
 				totalCpuUsage += podCpuUsage.TotalCpu
 				numOfPods++
+				if podCpuUsage.ServiceName != "" {
+					services[podCpuUsage.ServiceName]++ // Increment the number of pods for the service
+				}
 			}
 		}
 	}
 	log.Info("Total CPU usage: ", totalCpuUsage)
 	log.Info("Number of pods: ", numOfPods)
 
-	return CalcUsage{TotalCpu: totalCpuUsage, NumOfPods: numOfPods}
+	return CalcUsage{TotalCpu: totalCpuUsage, NumOfPods: numOfPods, Services: services}
 }
 
 func calculateTotalCpuCapacity() float64 {
