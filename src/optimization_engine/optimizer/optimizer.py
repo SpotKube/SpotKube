@@ -20,7 +20,7 @@ spot = helper.readJson(spot_path)
 private = helper.readJson(private_path)
 
 def main():
-    optimizer = optimizerStrategy.OptimizerStrategy(bruteforce_v1.optimize)
+    optimizer = optimizerStrategy.OptimizerStrategy(greedy_v2.optimize)
     spotNodes = optimizer.optimize(spot, False, publicCost_v1, [])
     privateNodes = optimizer.optimize(private, True, privateCost_v1, [])
     

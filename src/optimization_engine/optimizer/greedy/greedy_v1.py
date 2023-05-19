@@ -4,7 +4,7 @@ from optimizer import helper
 def sort_node_types(item):
     return float(item[1]['cost'])
 
-def optimize(instances, flag, costFunc=None):
+def optimize(instances, flag, costFunc, services):
     """
     Finds the optimal set of compute nodes for a workload given their hourly cost and resource availability
     using a greedy algorithm.
@@ -15,7 +15,7 @@ def optimize(instances, flag, costFunc=None):
     Returns:
     - optimal_nodes (list): the set of compute nodes that minimizes the cost while satisfying the resource requirements
     """
-    workload, max_pod_cpu, max_pod_memory = helper.calculateResources(flag)
+    workload = helper.calculateResources(flag, services)
     remaining_cpu = sum(pod['cpu'] for pod in workload.values())
     remaining_memory = sum(pod['memory'] for pod in workload.values())
     init_cpu = remaining_cpu
