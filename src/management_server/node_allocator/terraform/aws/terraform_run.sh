@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # Import common functions
-source ../../../scripts/common.sh
+source ../../../../scripts/common.sh
 
 # Help function
 function help() {
