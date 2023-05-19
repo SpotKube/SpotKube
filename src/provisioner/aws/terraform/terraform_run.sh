@@ -174,6 +174,8 @@ scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr ~/.ssh/id_spotkube.pub
 
 # Connect to the remote server
 ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" ubuntu@$management_node_public_ip <<EOF
+git clone https://github.com/SpotKube/SpotKube.git
+cd SpotKube/src/provisioner/aws/terraform/scripts
 chmod +x configure_management_node.sh
 ./configure_management_node.sh
 EOF
