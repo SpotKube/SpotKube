@@ -18,12 +18,12 @@ print_title "Provisioning public cloud environment"
 CONF_FILE_ERROR=false
 
 # Check if provisioner.conf exists
-if [[ ! -f "../../../../.config/provisioner.conf" ]]; then
+if [[ ! -f "$HOME/.config/spotkube/provisioner.conf" ]]; then
     print_error "provisioner.conf does not exist"
     CONF_FILE_ERROR=true
     exit 1
 else
-    source "../../../../.config/provisioner.conf"
+    source "$HOME/.config/spotkube/provisioner.conf"
 fi
 
 # Check if AWS_SHARED_CONFIG_FILE_PATH is set and exists
