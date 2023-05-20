@@ -169,7 +169,7 @@ print_info "AWS Management node public IP: $management_node_public_ip"
 # ------------------------------------ Configuring the public cloud ------------------------------------------------ #
 
 # Copy the Ansible hosts file, terraform output and kube_cluster files to the management node
-scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr scripts/configure_management_node.sh ubuntu@$management_node_public_ip:~/
+scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -r $HOME/.config/spotkube ubuntu@$management_node_public_ip:~/.config/spotkube
 scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr ~/.ssh/id_spotkube.pub ~/.ssh/id_spotkube ubuntu@$management_node_public_ip:~/.ssh
 
 # Connect to the remote server
