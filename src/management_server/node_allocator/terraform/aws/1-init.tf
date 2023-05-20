@@ -13,7 +13,7 @@ data "local_file" "public_key" {
 }
 
 resource "aws_key_pair" "key" {
-  key_name   = "spotkube_management_key"
+  key_name   = "id_rsa"
   public_key = data.local_file.public_key.content
 }
 
