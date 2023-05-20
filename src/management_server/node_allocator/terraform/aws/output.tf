@@ -12,3 +12,7 @@ output "spot_instances" {
     tags                        = instance.tags
   }]
 }
+
+output "master_node_ip" {
+  value = aws_instance.master_node.private_ip
+}
