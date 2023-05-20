@@ -1,5 +1,8 @@
 #! /bin/bash
 
+# Exit on error
+set -e
+
 # Import common functions
 source ../../../../scripts/common.sh
 
@@ -124,19 +127,19 @@ then
     # If destroy_build flag is set, destroy the private cloud environment and then build it
     if $destroy_build
     then
-        terraform destroy -auto-approve
+        terraform destroy -auto-approve -var-file="allocation_map.tfvars"  
         terraform init -reconfigure
     fi
 
-    terraform apply -auto-approve
+    terraform apply -auto-approve -var-file="allocation_map.tfvars"  
     sleep 60 # Wait for 60 seconds to ensure the instances are fully provisioned
-    terraform output -json > private_env_terraform_output.json
+    terraform output -json > public_env_terraform_output.json
 fi
 
 # Read control_plane_ip and worker_ips from input.json using jq
-control_plane_ip=$(jq -r '.control_plane_ip.value[0]' terraform_output.json)
-worker_ips=$(jq -r '.worker_ips.value | join(" ")' terraform_output.json)
-management_node_public_ip=$(jq -r '.management_node_public_ip.value' terraform_output.json)
+control_plane_ip=$(jq -r '.master_node_ip.value' public_env_terraform_output.json)
+worker_ips=$(jq -r '.spot_instances.value[].private_ip' public_env_terraform_output.json)
+management_node_public_ip=$(jq -r '.management_node_public_ip.value' ../../../../provisioner/aws/terraform/public_env_terraform_output.json)
 
 print_info "Management node floating IP: $management_node_floating_ip"
 
