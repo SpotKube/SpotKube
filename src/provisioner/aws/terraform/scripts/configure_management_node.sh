@@ -1,6 +1,7 @@
 #! /bin/bash
 set -e
 
+source "../../../../scripts/common.sh"
 source "../../../common/scripts/common_pkg_installer.sh"
 
 # Create anisble config file
