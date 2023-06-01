@@ -100,6 +100,10 @@ do
     key="$1"
 
     case $key in
+        -h|--help)
+        help
+        exit 0
+        ;;
         -d|--destroy)
         destroy=true
         ;;
@@ -169,12 +173,15 @@ print_info "AWS Management node public IP: $management_node_public_ip"
 # ------------------------------------ Configuring the public cloud ------------------------------------------------ #
 
 # Copy the Ansible hosts file, terraform output and kube_cluster files to the management node
-scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr scripts/configure_management_node.sh ubuntu@$management_node_public_ip:~/
-scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr ~/.ssh/id_spotkube.pub ~/.ssh/id_spotkube ubuntu@$management_node_public_ip:~/.ssh
+scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -r $HOME/.config/spotkube ubuntu@$management_node_public_ip:~/.config/spotkube
+scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr $HOME/.ssh/id_spotkube.pub ~/.ssh/id_spotkube ubuntu@$management_node_public_ip:~/.ssh
+scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr public_env_terraform_output.json ubuntu@$management_node_public_ip:~/SpotKube/src/provisioner/aws/terraform/
 
 # Connect to the remote server
 ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" ubuntu@$management_node_public_ip <<EOF
-git clone https://github.com/SpotKube/SpotKube.git
+if [ ! -d "$HOME/SpotKube" ]; then
+    git clone https://github.com/SpotKube/SpotKube.git
+fi
 cd SpotKube/src/provisioner/aws/terraform/scripts
 chmod +x configure_management_node.sh
 ./configure_management_node.sh

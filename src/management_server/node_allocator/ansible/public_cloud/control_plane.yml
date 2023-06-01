@@ -4,7 +4,7 @@
   tasks:
     - name: Get variable from file
       set_fact:
-        pod_network_cidr: "10.0.1.0/16"
+        pod_network_cidr: "10.244.0.0/16"
         
     - name: initialize the cluster
       shell: kubeadm init --pod-network-cidr={{ pod_network_cidr }} >> cluster_initialized.txt

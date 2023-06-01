@@ -1,0 +1,11 @@
+---
+- name: Copy .kube folder from host to control node
+  hosts: control_plane
+  become: yes
+
+  tasks:
+    - name: Fetch .kube folder
+      fetch:
+        src: "/home/ubuntu/.kube/config"
+        dest: "/home/ubuntu/.kube/config"
+        flat: yes
