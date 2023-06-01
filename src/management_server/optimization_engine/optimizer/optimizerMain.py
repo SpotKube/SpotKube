@@ -20,13 +20,21 @@ private_path = os.path.join(dir_path, '../.privateConfig.json')
 spot = helper.readJson(spot_path)
 private = helper.readJson(private_path)
 
-def returnNodeConfiguration():
-    optimizer = optimizerStrategy.OptimizerStrategy(greedy_v2.optimize)
-    spotNodes = optimizer.optimize(spot, False, publicCost_v1, [])
-    privateNodes = optimizer.optimize(private, True, privateCost_v1, [])
+async def returnNodeConfiguration():
+    try :
+        optimizer = optimizerStrategy.OptimizerStrategy(greedy_v2.optimize)
+        spotNodes = optimizer.optimize(spot, False, publicCost_v1, [])
+        privateNodes = optimizer.optimize(private, True, privateCost_v1, [])
+        
+        helper.returnTf(spotNodes, False)
+        helper.returnTf(privateNodes, True)
+        return {"message": "Optimization completed", "status": "success"}
+    except:
+        print("Unexpected error:", sys.exc_info()[0])
+        return {"message": "Error in optimization engine", "status": "failed"}
+    finally:
+        return {"message": "Error in optimization engine", "status": "failed"}
     
-    helper.returnTf(spotNodes, False)
-    helper.returnTf(privateNodes, True)
    
 
      

@@ -4,8 +4,8 @@ from .optimizer.optimizerMain import returnNodeConfiguration
 
 # Private cloud
 optimize_engine_router = APIRouter(
-    prefix="/helm_service/private",
-    tags=["helm_service"],
+    prefix="/opt_eng",
+    tags=["opt_eng"],
 )
 
 @optimize_engine_router.get("/")

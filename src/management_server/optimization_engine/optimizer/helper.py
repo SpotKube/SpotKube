@@ -10,7 +10,10 @@ dir_path = os.path.dirname(os.path.abspath(__file__))
 def calculateResources(flag, services_list):
     pods = defaultdict(dict)
     if (len(services_list) == 0): # initially service list is empty. Hence need to get the relevant details from the config file
-        file_path = os.path.join(dir_path, '../../../.config/config.yml')
+        CONFIG_PATH = '~/.config/spotkube/config.yml'
+        file_path = os.path.expanduser(CONFIG_PATH)
+    
+        # file_path = os.path.join(dir_path, '../../../.config/config.yml')
         with open(file_path, "r") as stream:
             try:
                 data = yaml.safe_load(stream)
@@ -35,7 +38,10 @@ def calculateResources(flag, services_list):
     return pods
 
 def getPodDetails():
-    file_path = os.path.join(dir_path, '../../../.config/config.yml')
+    CONFIG_PATH = '~/.config/spotkube/config.yml'
+    file_path = os.path.expanduser(CONFIG_PATH)
+    
+    # file_path = os.path.join(dir_path, '../../../.config/config.yml')
     with open(file_path, "r") as stream:
         try:
             data = yaml.safe_load(stream)
@@ -55,7 +61,7 @@ def returnTf(nodes, flag):
     if (nodes and len(nodes) > 0):
         if (flag):
             file_path = os.path.join(dir_path, '../.privateConfig.json')
-            output_path = os.path.join(dir_path, '../output/private.tfvars')
+            output_path = os.path.join(dir_path, '../../node_allocator/terraform/private_cloud/private.tfvars')
             instances = readJson(file_path)
             for i in range(len(nodes)):
                 tf['private_instances'][f'node-{i+1}'] = {
@@ -65,7 +71,7 @@ def returnTf(nodes, flag):
                 }
         else:
             file_path = os.path.join(dir_path, '../.spotConfig.json')
-            output_path = os.path.join(dir_path, '../output/spot.tfvars')
+            output_path = os.path.join(dir_path, '../../node_allocator/terraform/aws/spot.tfvars')
             instances = readJson(file_path)
             for i in range(len(nodes)):
                 tf['spot_instances'][f'spot-{i+1}'] = {
@@ -97,8 +103,11 @@ def readYml(file):
             print(exc)
             
 def getPrivateNodeCount():
-    dir_path = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(dir_path, '../../../.config/config.yml')
+    CONFIG_PATH = '~/.config/spotkube/config.yml'
+    file_path = os.path.expanduser(CONFIG_PATH)
+    
+    # dir_path = os.path.dirname(os.path.abspath(__file__))
+    # file_path = os.path.join(dir_path, '../../../.config/config.yml')
     data = readYml(file_path)
     node_count = data['resources']['privateResources']['nodeCount']
     return node_count

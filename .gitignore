@@ -26,3 +26,7 @@ env/
 
 src/management_server/node_allocator/ansible/private_cloud/hosts
 hosts
+
+# Private and spot tfvars
+src/management_server/node_allocator/terraform/private_cloud/private.tfvars
+src/management_server/node_allocator/terraform/aws/spot.tfvars
