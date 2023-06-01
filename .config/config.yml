@@ -29,33 +29,35 @@ services:
       pods: 1
     helmChartPath: "~/helm_charts/converter-chart"
 
-  # - name: service3
-  #   private: True
-  #   maxRPS:
-  #     rps: 50000
-  #     cpu:
-  #     memory:
-  #     pods:
-  #   minRPS:
-  #     rps: 100
-  #     cpu:
-  #     memory:
-  #     pods: 6
+  - name: service3
+    private: True
+    maxRPS:
+      rps: 50000
+      cpu:
+      memory:
+      pods:
+    minRPS:
+      rps: 100
+      cpu:
+      memory:
+      pods: 6
 
-  # - name: service4
-  #   private: True
-  #   maxRPS:
-  #     rps: 50000
-  #     cpu:
-  #     memory:
-  #     pods:
-  #   minRPS:
-  #     rps: 100
-  #     cpu:
-  #     memory:
-  #     pods: 6
+  - name: service4
+    private: True
+    maxRPS:
+      rps: 50000
+      cpu:
+      memory:
+      pods:
+    minRPS:
+      rps: 100
+      cpu:
+      memory:
+      pods: 6
 
 resources:
+  privateResources:
+    nodeCount: 3
   pods:
     maxCPU: 0.4
     maxMemory: 0.6

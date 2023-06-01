@@ -1,12 +1,12 @@
 import itertools
-from optimizer import helper
+from optimization_engine.optimizer.optimizerMain import helper
 
 # sort node types based on the cost
 def sort_node_types(item):
     return float(item[1]['cost'])
 
 
-def optimize(instances, flag, costFunc):
+def optimize(instances, flag, costFunc, services):
     """
     Finds the optimal set of compute nodes for a workload given their hourly cost and resource availability
     using a bruteforce algorithm.
@@ -15,6 +15,7 @@ def optimize(instances, flag, costFunc):
     - instances (dict): a dictionary of resource availability for each compute node
     - flag (bool): to identify private vs spot services
     - costFunc (func): Function to calculate the cost of each node combination
+    - Services: This list contains services and pod count -> [{'name': 'service3', 'pods': 6}, {'name': 'service4', 'pods': 6}]
     
     Method:
     - Considered mapping the total required resources with the node resources.
@@ -25,10 +26,11 @@ def optimize(instances, flag, costFunc):
     - optimal_nodes (list)): the set of compute nodes that minimizes the cost while satisfying the resource requirements
     """
     node_types = dict(sorted(instances.items(), key=sort_node_types))
-    workload, max_pod_cpu, max_pod_memory = helper.calculateResources(flag)
-    private_node_count = helper.getPrivateNodeCount()
+    workload = helper.calculateResources(flag, services)
     total_services = len(workload)
     max_r = 2 * total_services
+    if (flag):
+        private_node_count = helper.getPrivateNodeCount()
     if (flag and max_r > private_node_count):
         max_r = private_node_count
     # Evaluate the cost function for each combination of nodes and select the optimal one

@@ -7,31 +7,50 @@ import os
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 
-def calculateResources(flag):
+def calculateResources(flag, services_list):
     pods = defaultdict(dict)
-    file_path = os.path.join(dir_path, '../../../.config/config.yml')
-    with open(file_path, "r") as stream:
-        try:
-            data = yaml.safe_load(stream)
-            maxCPU = data['resources']['pods']['maxCPU']
-            maxMemory = data['resources']['pods']['maxMemory']
-            # services = [{'name':service['name'], 'pods': service['minRPS']['pods']} for service in data['services'] and service['private'] == private]
-            services = []
-            for service in data['services']:
-                if service['private'] == flag:
-                    services.append({'name':service['name'], 'pods': service['minRPS']['pods']})
-        except yaml.YAMLError as exc:
-            print(exc)
+    if (len(services_list) == 0): # initially service list is empty. Hence need to get the relevant details from the config file
+        CONFIG_PATH = '~/.config/spotkube/config.yml'
+        file_path = os.path.expanduser(CONFIG_PATH)
     
+        # file_path = os.path.join(dir_path, '../../../.config/config.yml')
+        with open(file_path, "r") as stream:
+            try:
+                data = yaml.safe_load(stream)
+                maxCPU = data['resources']['pods']['maxCPU']
+                maxMemory = data['resources']['pods']['maxMemory']
+                # services = [{'name':service['name'], 'pods': service['minRPS']['pods']} for service in data['services'] and service['private'] == private]
+                services = []
+                for service in data['services']:
+                    if service['private'] == flag:
+                        services.append({'name':service['name'], 'pods': service['minRPS']['pods']})
+            except yaml.YAMLError as exc:
+                print(exc)
+    else:
+        services = services_list
+               
     for service in services:
         pods[service['name']]['pods'] = service['pods']
         pods[service['name']]['memory'] = round(int(service['pods']) * maxMemory, 2)
         pods[service['name']]['cpu'] = round(int(service['pods']) * maxCPU, 2)
         
     
-    return pods, maxCPU, maxMemory
+    return pods
 
-
+def getPodDetails():
+    CONFIG_PATH = '~/.config/spotkube/config.yml'
+    file_path = os.path.expanduser(CONFIG_PATH)
+    
+    # file_path = os.path.join(dir_path, '../../../.config/config.yml')
+    with open(file_path, "r") as stream:
+        try:
+            data = yaml.safe_load(stream)
+            maxCPU = data['resources']['pods']['maxCPU']
+            maxMemory = data['resources']['pods']['maxMemory']
+        except yaml.YAMLError as exc:
+            print(exc)
+    return maxCPU, maxMemory
+    
 def readJson(file):
     with open(file, "r") as jsonFile:
         data = json.load(jsonFile)
@@ -42,7 +61,7 @@ def returnTf(nodes, flag):
     if (nodes and len(nodes) > 0):
         if (flag):
             file_path = os.path.join(dir_path, '../.privateConfig.json')
-            output_path = os.path.join(dir_path, '../output/private.tfvars')
+            output_path = os.path.join(dir_path, '../../node_allocator/terraform/private_cloud/private.tfvars')
             instances = readJson(file_path)
             for i in range(len(nodes)):
                 tf['private_instances'][f'node-{i+1}'] = {
@@ -52,7 +71,7 @@ def returnTf(nodes, flag):
                 }
         else:
             file_path = os.path.join(dir_path, '../.spotConfig.json')
-            output_path = os.path.join(dir_path, '../output/spot.tfvars')
+            output_path = os.path.join(dir_path, '../../node_allocator/terraform/aws/spot.tfvars')
             instances = readJson(file_path)
             for i in range(len(nodes)):
                 tf['spot_instances'][f'spot-{i+1}'] = {
@@ -84,8 +103,11 @@ def readYml(file):
             print(exc)
             
 def getPrivateNodeCount():
-    dir_path = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(dir_path, '../../../.config/config.yml')
+    CONFIG_PATH = '~/.config/spotkube/config.yml'
+    file_path = os.path.expanduser(CONFIG_PATH)
+    
+    # dir_path = os.path.dirname(os.path.abspath(__file__))
+    # file_path = os.path.join(dir_path, '../../../.config/config.yml')
     data = readYml(file_path)
     node_count = data['resources']['privateResources']['nodeCount']
     return node_count

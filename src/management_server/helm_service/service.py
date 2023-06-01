@@ -31,10 +31,10 @@ async def deploy_helm_charts():
         print(error_message)
         error_message = format_terraform_error_message(str(error_message))
         logger.error(error_message)
-        return {"error_message": error_message, "status": "failed"}
+        return {"error_message": error_message, "status": 500}
     
     except  Exception as error:
         print(error)
         error_message = format_terraform_error_message(str(error))
         logger.error(error_message)
-        return {"error_message": error_message, "status": "failed"}
+        return {"error_message": error_message, "status": 500}

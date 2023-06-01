@@ -1,11 +1,11 @@
 import heapq
-from optimizer import helper
+from optimization_engine.optimizer.optimizerMain import helper
 
 # sort node types based on the cost
 def sort_node_types(item):
     return float(item[1]['cost'])
 
-def optimize(instances, flag, costFunc):
+def optimize(instances, flag, costFunc, services):
     """
     Finds the optimal set of compute nodes for a workload given their hourly cost and resource availability
     using a greedy algorithm.
@@ -23,7 +23,8 @@ def optimize(instances, flag, costFunc):
     - optimal_nodes (list): the set of compute nodes that minimizes the cost while satisfying the resource requirements
     """
     node_types = dict(sorted(instances.items(), key=sort_node_types))
-    workload, max_pod_cpu, max_pod_memory = helper.calculateResources(flag)
+    workload = helper.calculateResources(flag, services)
+    max_pod_cpu, max_pod_memory = helper.getPodDetails()
     
     private_node_count = helper.getPrivateNodeCount()
     total_pods = sum(service['pods'] for service in workload.values())

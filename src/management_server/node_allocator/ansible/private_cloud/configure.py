@@ -46,13 +46,13 @@ async def generate_private_cloud_hosts_file():
             f.write('ansible_user=ubuntu\n')
             f.write(f'ansible_ssh_private_key_file=~/.ssh/{key_name}\n')
             
-        return {"message": "Ansible hosts file generated", "status": "success"}
+        return {"message": "Ansible hosts file generated", "status": 200}
     
     except  Exception as error:
         print(error)
         error_message = format_terraform_error_message(str(error))
         logger.error(error_message)
-        return {"error_message": error_message, "status": "failed"}
+        return {"error_message": error_message, "status": 500}
         
 async def configure_private_nodes():
     try:
@@ -76,7 +76,7 @@ async def configure_private_nodes():
         
         logger.info("Private cloud nodes configured")
         
-        return {"message": "Nodes configured", "status": "success"}
+        return {"message": "Nodes configured", "status": 200}
     
     except subprocess.CalledProcessError as e:
         # Log the error message and return it
@@ -84,11 +84,11 @@ async def configure_private_nodes():
         print(error_message)
         error_message = format_terraform_error_message(str(error_message))
         logger.error(error_message)
-        return {"error_message": error_message, "status": "failed"}
+        return {"error_message": error_message, "status": 500}
     
     except  Exception as error:
         print(error)
         error_message = format_terraform_error_message(str(error))
         logger.error(error_message)
-        return {"error_message": error_message, "status": "failed"}
+        return {"error_message": error_message, "status": 500}
 
