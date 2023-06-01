@@ -1,5 +1,5 @@
 import heapq
-from optimizer import helper
+from optimization_engine.optimizer.optimizerMain import helper
 
 def optimize(instances, flag, costFunc, services):
     """
