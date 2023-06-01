@@ -111,8 +111,8 @@ then
     # If destroy flag is set, destroy the private cloud environment
     if $destroy
     then
-        # terraform destroy -auto-approve
-        echo "Destroying the private cloud environment"
+        terraform destroy -auto-approve -var-file="allocation_map.tfvars"
+        echo "Destroying the public cloud environment"
         exit 1
     fi
 
