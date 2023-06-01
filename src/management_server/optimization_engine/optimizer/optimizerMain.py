@@ -20,20 +20,34 @@ private_path = os.path.join(dir_path, '../.privateConfig.json')
 spot = helper.readJson(spot_path)
 private = helper.readJson(private_path)
 
-async def returnNodeConfiguration():
+async def returnNodeConfiguration(optimizer_strategy_name):
     try :
-        optimizer = optimizerStrategy.OptimizerStrategy(greedy_v2.optimize)
-        spotNodes = optimizer.optimize(spot, False, publicCost_v1, [])
-        privateNodes = optimizer.optimize(private, True, privateCost_v1, [])
-        
-        helper.returnTf(spotNodes, False)
-        helper.returnTf(privateNodes, True)
-        return {"message": "Optimization completed", "status": "success"}
+        optimizer = None
+        if optimizer_strategy_name == "bruteforce_v1":
+            optimizer = optimizerStrategy.OptimizerStrategy(bruteforce_v1.optimize)
+        elif optimizer_strategy_name == "bruteforce_v2":
+            optimizer = optimizerStrategy.OptimizerStrategy(bruteforce_v2.optimize)
+        elif optimizer_strategy_name == "greedy_v1":
+            optimizer = optimizerStrategy.OptimizerStrategy(greedy_v1.optimize)
+        elif optimizer_strategy_name == "greedy_v2":
+            optimizer = optimizerStrategy.OptimizerStrategy(greedy_v2.optimize)
+        elif optimizer_strategy_name == "greedy_v3":
+            optimizer = optimizerStrategy.OptimizerStrategy(greedy_v3.optimize)
+        else:
+            return {"message": "Invalid optimizer strategy name", "status": 500}
+
+        if optimizer is not None:
+            spotNodes = optimizer.optimize(spot, False, publicCost_v1, [])
+            privateNodes = optimizer.optimize(private, True, privateCost_v1, [])
+            helper.returnTf(spotNodes, False)
+            helper.returnTf(privateNodes, True)
+            return {"message": "Optimization completed", "status": 200}
+        else:
+            return {"message": "Failed to initialize optimizer", "status": 500}
     except:
         print("Unexpected error:", sys.exc_info()[0])
-        return {"message": "Error in optimization engine", "status": "failed"}
-    finally:
-        return {"message": "Error in optimization engine", "status": "failed"}
+        return {"message": "Error in optimization engine", "status": 500}
+    
     
    
 
