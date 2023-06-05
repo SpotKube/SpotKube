@@ -6,7 +6,7 @@ from utils import run_subprocess_cmd, run_subprocess_popen_cmd, format_terraform
 current_dir = os.getcwd()
 logger_dir = os.path.join(current_dir, "logs")
 
-logger = get_logger(path=logger_dir, log_file="private_cloud_helm_service.log")
+logger = get_logger(path=logger_dir, log_file="helm_service.log")
 
 # configFilePath = os.path.join(os.path.dirname(__file__), 'config.yml')
 
