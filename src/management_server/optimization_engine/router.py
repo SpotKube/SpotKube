@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-from .optimizer.optimizerMain import returnNodeConfiguration
+from .service import *
 
 # Private cloud
 optimize_engine_router = APIRouter(
