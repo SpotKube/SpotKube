@@ -1,5 +1,6 @@
 from optimization_engine.service import service_get_node_configuration
 from node_allocator.service_private_cloud import *
+from node_allocator.service_aws_cloud import *
 from helm_service.service import *
 
 # Private cloud related services
@@ -30,4 +31,25 @@ async def updatePrivateCloud():
     await deploy_helm_charts()
 
 # Public cloud related services
+
+async def startUpAwsCloud():
+    # Get optimal node configuration
+    await service_get_node_configuration("greedy_v2")
+    
+    # Allocate the nodes to the aws cloud
+    await service_provision_aws_cloud()
+    
+    # Deploy the helm charts
+    await deploy_helm_charts()
+    
+# This function is called when the elastic scaler wants to update the aws cloud
+async def updateAwsCloud():
+    # Get optimal node configuration
+    await service_get_node_configuration("greedy_v2")
+    
+    # Allocate the nodes to the aws cloud
+    await service_apply_aws_cloud()
+    
+    # Deploy the helm charts
+    await deploy_helm_charts()
     
