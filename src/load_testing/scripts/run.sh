@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# set -e 
+
 # Import common functions
 source ../../scripts/common.sh
 # Import configs
@@ -16,6 +18,8 @@ HOST_URL=""
 NUMBER_OF_USERS=0
 SPAWN_RATE=0
 RUN_TIME=0
+GRAFANA_HOST="http://192.168.49.2:30468"
+GRAFANA_API_KEY="eyJrIjoiRFNOQmpobzZTbG1qWDZCMjNJb2xGNHBDM01FUXNHSU8iLCJuIjoiU3BvdGt1YmUyIiwiaWQiOjF9"
 
 function help() {
     print_info "Usage:"

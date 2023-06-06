@@ -3,6 +3,7 @@ import json
 import sys
 import pandas as pd
 import numpy as np
+import time
 
 def fetch_cpu_metrics(service, host, start, end, api_token):
     url = f"{host}/api/ds/query"
@@ -30,6 +31,8 @@ def fetch_cpu_metrics(service, host, start, end, api_token):
     response = requests.post(url, headers={"Content-Type": "application/json", "Authorization": f"Bearer {api_token}"}, data=json.dumps(body))
     json_response = json.loads(response.text)
 
+    print(json_response)
+    
     data = json_response["results"]["A"]["frames"][0]["data"]["values"]
     return data
 
@@ -57,7 +60,9 @@ def fetch_memory_metrics(service, host, start, end, api_token):
     }
     response = requests.post(url, headers={"Content-Type": "application/json", "Authorization": f"Bearer {api_token}"}, data=json.dumps(body))
     json_response = json.loads(response.text)
-
+    
+    print(json_response)
+    
     data = json_response["results"]["A"]["frames"][0]["data"]["values"]
     return data
 
@@ -68,7 +73,7 @@ if __name__ == "__main__":
     users = int(args[3])
     rate = int(args[4])
     start = args[5]
-    end = args[6]
+    end = time.time()*1000 #args[6]
     api_token = args[7]
 
 
