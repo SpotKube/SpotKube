@@ -1,3 +1,0 @@
-Method,Name,Error,Occurrences
-GET,/primes/19319?algorithm=bruteForce,HTTPError('503 Server Error: Service Temporarily Unavailable for url: /primes/19319?algorithm=bruteForce'),2849
-GET,/primes/19319?algorithm=bruteForce,HTTPError('502 Server Error: Bad Gateway for url: /primes/19319?algorithm=bruteForce'),35592
