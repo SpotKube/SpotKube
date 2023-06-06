@@ -218,28 +218,28 @@ $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/
 
 print_info "Copying helm charts to the private host"
 
-# HELM_CHARTS=()
-# while IFS= read -r line
-# do
-#     if [[ "$line" == *"helmChartPath"* ]]; then
-#         chart_path=$(echo "$line" | cut -d: -f2- | tr -d '[:space:]' | tr -d '"' | tr -d ',')
-#         if [[ -d "$chart_path" ]]; then
-#             HELM_CHARTS+=("$chart_path")
-#         fi
-#     fi
-#     echo "$line"
-#     echo "chart_path: $chart_path"
-# done < ~/.config/spotkube/user_config.yml
+HELM_CHARTS=()
+while IFS= read -r line
+do
+    if [[ "$line" == *"helmChartPath"* ]]; then
+        chart_path=$(echo "$line" | cut -d: -f2- | tr -d '[:space:]' | tr -d '"' | tr -d ',')
+        if [[ -d "$chart_path" ]]; then
+            HELM_CHARTS+=("$chart_path")
+        fi
+    fi
+    echo "$line"
+    echo "chart_path: $chart_path"
+done < ~/.config/spotkube/user_config.yml
 
-# # Print out the list of helm chart paths
-# echo "HELM_CHARTS: ${HELM_CHARTS[@]}"
+# Print out the list of helm chart paths
+echo "HELM_CHARTS: ${HELM_CHARTS[@]}"
 
-# # Copy helm charts to remote server
-# for chart in "${HELM_CHARTS[@]}"
-# do
-#     echo "Copying $chart to $PRIVATE_HOST_USER@$PRIVATE_HOST_IP"
-#     scp -o StrictHostKeyChecking=no -i "$PRIVATE_HOST_SSH_KEY_PATH" -vr "$chart" "$PRIVATE_HOST_USER@$PRIVATE_HOST_IP":~/helm_charts/
-# done
+# Copy helm charts to remote server
+for chart in "${HELM_CHARTS[@]}"
+do
+    echo "Copying $chart to $PRIVATE_HOST_USER@$PRIVATE_HOST_IP"
+    scp -o StrictHostKeyChecking=no -i "$PRIVATE_HOST_SSH_KEY_PATH" -vr "$chart" "$PRIVATE_HOST_USER@$PRIVATE_HOST_IP":~/helm_charts/
+done
 
 # SSH to the private host and then ssh to the management node and run the configure_management_node.sh script
 ssh -o StrictHostKeyChecking=no -i "$PRIVATE_HOST_SSH_KEY_PATH" -T $PRIVATE_HOST_USER@$PRIVATE_HOST_IP <<EOF
@@ -249,9 +249,6 @@ mv ~/configure_private_management_node.sh ~/management_node/
 
 # copy configure_management_node.sh to the management node
 echo "Coping required files to the management node"
-echo "$PRIVATE_INSTANCE_USER"
-echo "$management_node_floating_ip"
-echo "PRIVATE_INSTANCE_SSH_KEY_NAME"
 
 scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr ~/config ~/credentials \
 ~/management_node/configure_private_management_node.sh ~/clouds.yaml ~/spotkube/ ~/helm_charts/ \
@@ -272,9 +269,14 @@ mv ~/configure_private_management_node.sh ~/scripts/
 sh ~/scripts/configure_private_management_node.sh
 echo "Configure management node done"
 
+if [ ! -d "/home/ubuntu/.config/spotKube" ]; then
+    mkdir -p /home/ubuntu/.config/spotKube
+fi
 if [ ! -d "/home/ubuntu/SpotKube" ]; then
     git clone https://github.com/SpotKube/SpotKube.git
 fi
+
+mv /home/ubuntu/spotkube /home/ubuntu/.config/spotKube/
 
 FED1
 EOF

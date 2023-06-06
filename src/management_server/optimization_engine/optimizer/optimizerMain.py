@@ -41,7 +41,7 @@ async def returnNodeConfiguration(optimizer_strategy_name):
             privateNodes = optimizer.optimize(private, True, privateCost_v1, [])
             helper.returnTf(spotNodes, False)
             helper.returnTf(privateNodes, True)
-            return {"message": "Optimization completed", "status": 200}
+            return {"message": "Optimization completed", "status": 200, "spot": spotNodes, "private": privateNodes}
         else:
             return {"message": "Failed to initialize optimizer", "status": 500}
     except:

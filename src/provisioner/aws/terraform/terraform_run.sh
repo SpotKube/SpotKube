@@ -217,7 +217,7 @@ echo "Helm charts copied to the remote server"
 echo $HOME
 
 # Copy the Ansible hosts file, terraform output and kube_cluster files to the management node
-scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -r $HOME/.config/spotkube ubuntu@$management_node_public_ip:~/.config/spotkube
+scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -r $HOME/.config/spotkube ubuntu@$management_node_public_ip:~/.config/
 scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr $HOME/.ssh/id_spotkube.pub ~/.ssh/id_spotkube ubuntu@$management_node_public_ip:~/.ssh
 scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr public_env_terraform_output.json ubuntu@$management_node_public_ip:~/SpotKube/src/provisioner/aws/terraform/
 
