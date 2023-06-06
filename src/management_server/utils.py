@@ -14,6 +14,9 @@ def get_logger(path, log_level=logging.DEBUG, log_file="log.log"):
     # logger.addHandler(file_handler)
     # # return logger
     # Check if log file exists
+    # Create the directory if it doesn't exist
+    os.makedirs(path, exist_ok=True)
+    
     log_file_path = os.path.join(path, log_file)
     if not os.path.exists(log_file_path):
         # Create the log file if it doesn't exist
