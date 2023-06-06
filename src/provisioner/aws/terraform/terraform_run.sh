@@ -172,6 +172,45 @@ print_info "AWS Management node public IP: $management_node_public_ip"
 
 # ------------------------------------ Configuring the public cloud ------------------------------------------------ #
 
+# ------- Copying helm charts to the private host ------- #
+# Read helm chart paths from user_config.yml
+
+HELM_CHARTS=()
+while IFS= read -r line
+do
+    if [[ "$line" == *"helmChartPath"* ]]; then
+        chart_path=$(echo "$line" | cut -d: -f2- | tr -d '[:space:]' | tr -d '"' | tr -d ',')
+        if [[ -d "$chart_path" ]]; then
+            HELM_CHARTS+=("$chart_path")
+        fi
+    fi
+done < ~/.config/spotkube/user_config.yml
+
+# Print out the list of helm chart paths
+echo "HELM_CHARTS: ${HELM_CHARTS[@]}"
+
+# Copy helm charts to remote server
+for chart in "${HELM_CHARTS[@]}"
+do
+    scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr "$chart" "ubuntu@$management_node_public_ip":~/helm_charts/
+done
+
+echo "Helm charts copied to the remote server"
+
+echo $HOME
+
+# Connect to the remote server
+ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" ubuntu@$management_node_public_ip <<EOF
+if [ ! -d "/home/ubuntu/.config/spotkube" ]; then
+    mkdir -p /home/ubuntu/.config/spotkube
+fi
+if [ ! -d "/home/ubuntu/.ssh" ]; then
+    mkdir -p /home/ubuntu/.ssh
+fi
+if [ ! -d "/home/ubuntu/SpotKube" ]; then
+    git clone https://github.com/SpotKube/SpotKube.git
+EOF
+
 # Copy the Ansible hosts file, terraform output and kube_cluster files to the management node
 scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -r $HOME/.config/spotkube ubuntu@$management_node_public_ip:~/.config/spotkube
 scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr $HOME/.ssh/id_spotkube.pub ~/.ssh/id_spotkube ubuntu@$management_node_public_ip:~/.ssh
@@ -179,9 +218,6 @@ scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr public_env_terraform_o
 
 # Connect to the remote server
 ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" ubuntu@$management_node_public_ip <<EOF
-if [ ! -d "$HOME/SpotKube" ]; then
-    git clone https://github.com/SpotKube/SpotKube.git
-fi
 cd SpotKube/src/provisioner/aws/terraform/scripts
 chmod +x configure_management_node.sh
 ./configure_management_node.sh

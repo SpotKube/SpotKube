@@ -7,7 +7,7 @@ variable "ami_id" {
 }
 
 variable "pub_id_file_path" {
-  # default = "/home/ksr/.ssh/id_spotkube.pub"
+  # default = "/home/pasindu/.ssh/id_spotkube.pub"
   type        = string
   description = "This contains the public key file path"
 }

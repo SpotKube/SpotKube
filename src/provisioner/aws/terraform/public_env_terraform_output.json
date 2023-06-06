@@ -2,7 +2,7 @@
   "management_node_public_ip": {
     "sensitive": false,
     "type": "string",
-    "value": "54.237.207.99"
+    "value": "34.197.89.122"
   },
   "pod_network_cidr": {
     "sensitive": false,
