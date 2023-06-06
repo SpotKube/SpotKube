@@ -3,7 +3,6 @@ import json
 import sys
 import pandas as pd
 import numpy as np
-import time
 
 def fetch_cpu_metrics(service, host, start, end, api_token):
     url = f"{host}/api/ds/query"
@@ -73,7 +72,7 @@ if __name__ == "__main__":
     users = int(args[3])
     rate = int(args[4])
     start = args[5]
-    end = time.time()*1000 #args[6]
+    end = args[6]
     api_token = args[7]
 
 
