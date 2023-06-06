@@ -162,8 +162,9 @@ then
 
     terraform apply -auto-approve -var "aws_shared_config_file_path=$AWS_SHARED_CONFIG_FILE_PATH" -var "aws_shared_credentials_file_path=$AWS_SHARED_CREDENTIALS_FILE_PATH" -var "pub_id_file_path=$PUBLIC_INSTANCE_SSH_KEY_PATH"
     sleep 60 # Wait for 60 seconds to ensure the instances are fully provisioned
-    terraform output -json > public_env_terraform_output.json
 fi
+
+terraform output -json > public_env_terraform_output.json
 
 # Read control_plane_ip and worker_ips from input.json using jq
 management_node_public_ip=$(jq -r '.management_node_public_ip.value' public_env_terraform_output.json)
@@ -174,6 +175,22 @@ print_info "AWS Management node public IP: $management_node_public_ip"
 
 # ------- Copying helm charts to the private host ------- #
 # Read helm chart paths from user_config.yml
+
+# Connect to the remote server
+ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" ubuntu@$management_node_public_ip <<EOF
+if [ ! -d "/home/ubuntu/.config/spotkube" ]; then
+    mkdir -p /home/ubuntu/.config/spotkube
+fi
+if [ ! -d "/home/ubuntu/.ssh" ]; then
+    mkdir -p /home/ubuntu/.ssh
+fi
+if [ ! -d "/home/ubuntu/SpotKube" ]; then
+    git clone https://github.com/SpotKube/SpotKube.git
+fi
+if [ ! -d "/home/ubuntu/helm_charts" ]; then
+    mkdir -p /home/ubuntu/helm_charts
+fi
+EOF
 
 HELM_CHARTS=()
 while IFS= read -r line
@@ -199,18 +216,6 @@ echo "Helm charts copied to the remote server"
 
 echo $HOME
 
-# Connect to the remote server
-ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" ubuntu@$management_node_public_ip <<EOF
-if [ ! -d "/home/ubuntu/.config/spotkube" ]; then
-    mkdir -p /home/ubuntu/.config/spotkube
-fi
-if [ ! -d "/home/ubuntu/.ssh" ]; then
-    mkdir -p /home/ubuntu/.ssh
-fi
-if [ ! -d "/home/ubuntu/SpotKube" ]; then
-    git clone https://github.com/SpotKube/SpotKube.git
-EOF
-
 # Copy the Ansible hosts file, terraform output and kube_cluster files to the management node
 scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -r $HOME/.config/spotkube ubuntu@$management_node_public_ip:~/.config/spotkube
 scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr $HOME/.ssh/id_spotkube.pub ~/.ssh/id_spotkube ubuntu@$management_node_public_ip:~/.ssh
@@ -226,3 +231,5 @@ EOF
 # Copy the aws shared config and credentials files to the management node
 scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr $AWS_SHARED_CONFIG_FILE_PATH ubuntu@$management_node_public_ip:~/.aws/config
 scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr $AWS_SHARED_CREDENTIALS_FILE_PATH ubuntu@$management_node_public_ip:~/.aws/credentials
+
+echo "AWS cloud configuration done"
