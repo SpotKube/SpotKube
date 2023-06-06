@@ -13,7 +13,7 @@ logger = get_logger(path=logger_dir, log_file="aws_terraform.log")
 async def destroy_aws_cloud():
     try:
         # Destroy resources
-        run_subprocess_cmd(["terraform", "destroy", "-auto-approve", "-var-file=aws.tfvars"], cwd=terraform_dir)
+        run_subprocess_cmd(["terraform", "destroy", "-auto-approve", "-var-file=spot.tfvars"], cwd=terraform_dir)
         logger.info("Aws cloud destroyed")
         return {"message": "Aws cloud destroyed", "status": 200}
     
@@ -36,7 +36,7 @@ async def destroy_aws_cloud():
 async def destroy_and_provision_aws_cloud():
     try:
         # Destroy resources
-        run_subprocess_cmd(["terraform", "destroy", "-auto-approve", "-var-file=aws.tfvars"], cwd=terraform_dir)
+        run_subprocess_cmd(["terraform", "destroy", "-auto-approve", "-var-file=spot.tfvars"], cwd=terraform_dir)
         
         # Initialize Terraform
         run_subprocess_cmd(["terraform", "init"], cwd=terraform_dir)
@@ -111,7 +111,7 @@ async def apply_aws_cloud():
 async def apply_terraform():
     try:
         # Apply changes
-        run_subprocess_cmd(["terraform", "apply", "-auto-approve", "-var-file=aws.tfvars"], cwd=terraform_dir)
+        run_subprocess_cmd(["terraform", "apply", "-auto-approve", "-var-file=spot.tfvars"], cwd=terraform_dir)
         
         # Wait for instances to be provisioned
         time.sleep(60)

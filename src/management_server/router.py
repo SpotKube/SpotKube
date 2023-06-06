@@ -22,7 +22,7 @@ async def route_update_private_cloud():
 
 @main_router.post("/startup_aws_cloud")
 async def route_startup_aws_cloud():
-    return await startUpPrivateCloud()
+    return await startUpAwsCloud()
 
 @main_router.post("/update_aws_cloud")
 async def route_update_aws_cloud():
