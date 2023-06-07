@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e 
-
 ansible-playbook -i hosts initial.yml
 ansible-playbook -i hosts kube_dependencies.yml
 ansible-playbook -i hosts control_plane.yml
