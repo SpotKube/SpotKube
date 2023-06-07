@@ -34,6 +34,9 @@ def updatePodCount(service, count):
             if(service == serviceDic['name']):
                 serviceDic['minRPS']['pods'] = count
                 break
+        else:
+            print("Service not found")
+            return
         with open(file_path, 'w') as f:
             yaml_ruamel.dump(data,f)
     except yaml_ruamel.YAMLError as exc:
