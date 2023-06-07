@@ -1,7 +1,7 @@
 version: 1.0
 
 services:
-  - name: service1
+  - name: prime
     maxRPS: 10000
     minRPS: 100
     private: True
