@@ -1,6 +1,7 @@
 import yaml
 import os
 import subprocess
+import time
 from utils import run_subprocess_cmd, run_subprocess_popen_cmd, format_terraform_error_message, get_logger
 
 current_dir = os.getcwd()
@@ -29,9 +30,8 @@ async def deploy_helm_charts(privateCloud=False):
             pod_count = service['minRPS']['pods']
             service_name = service['name']
             
-            print("helm chart path",helm_chart_path)
             helm_chart_path = os.path.expanduser(helm_chart_path)
-            run_subprocess_popen_cmd(["helm", "upgrade", "release", "--install", "--set", f"replicaCount={pod_count}", helm_chart_path], cwd=current_dir)        
+            run_subprocess_popen_cmd(["helm", "upgrade", service_name, "--install", "--set", f"replicaCount={pod_count}", helm_chart_path], cwd=current_dir)        
             # os.system(f"helm upgrade --install --set replicaCount={pod_count} {service_name} {helm_chart_path}")
         return {"status": 200, "message": "Deployed successfully"}
     
