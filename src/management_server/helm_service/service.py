@@ -10,7 +10,7 @@ logger = get_logger(path=logger_dir, log_file="helm_service.log")
 
 # configFilePath = os.path.join(os.path.dirname(__file__), 'config.yml')
 
-async def deploy_helm_charts():
+async def deploy_helm_charts(privateCloud=False):
     try:
         # Load the config.yml file
         CONFIG_PATH = "~/.config/spotkube/config.yml"
@@ -20,12 +20,20 @@ async def deploy_helm_charts():
 
         # Loop through each service and install the corresponding Helm chart
         for service in config['services']:
+            
+            cloud = service['private']
+            if privateCloud != cloud:
+                continue
+            
             helm_chart_path = service['helmChartPath']
             pod_count = service['minRPS']['pods']
             service_name = service['name']
             
-            run_subprocess_popen_cmd(["helm", "upgrade", "--install", "--set", "replicaCount={pod_count}" "{helm_chart_path}"], cwd=current_dir)        
+            print("helm chart path",helm_chart_path)
+            helm_chart_path = os.path.expanduser(helm_chart_path)
+            run_subprocess_popen_cmd(["helm", "upgrade", "release", "--install", "--set", f"replicaCount={pod_count}", helm_chart_path], cwd=current_dir)        
             # os.system(f"helm upgrade --install --set replicaCount={pod_count} {service_name} {helm_chart_path}")
+        return {"status": 200, "message": "Deployed successfully"}
     
     except subprocess.CalledProcessError as e:
         # Log the error message and return it
@@ -40,3 +48,4 @@ async def deploy_helm_charts():
         error_message = format_terraform_error_message(str(error))
         logger.error(error_message)
         return {"error_message": error_message, "status": 500}
+    
