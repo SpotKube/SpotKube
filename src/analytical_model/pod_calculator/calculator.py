@@ -22,12 +22,14 @@ def calculate(service):
         if(service == serviceDic['name']):
             serviceConfig = serviceDic
             break
-    cpu_count = math.ceil(serviceConfig['minRps']/ cpu_throttle_rps)
+    cpu_count = math.ceil(serviceConfig['minRPS']/ cpu_throttle_rps)
     mem_count = 0 # math.ceil(service['minRps']/ mem_throttle_rps[service['name']]['rps'])
     count = max(cpu_count, mem_count)
     # pod_count.append({'name': service['name'], 'podCount': count}) # assuming the resource limitaion for  load testing pod and actual deploying pod are equal
 
-    return (service, count)
+    # Prepare helm chart path
+    helmPath = "~/helm_charts/"+ serviceConfig['helmChartPath'].split('/')[-1]
+    return (service, count, serviceConfig['minRPS'], serviceConfig['private'], helmPath)
 
 
 
