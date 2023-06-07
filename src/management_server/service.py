@@ -35,7 +35,7 @@ async def startUpPrivateCloud():
         return res
     
     # Deploy the helm charts
-    res = await deploy_helm_charts()
+    res = await deploy_helm_charts(True)
     if (res["status"] != 200):
         return res
     
@@ -65,7 +65,7 @@ async def updatePrivateCloud():
         return res
     
     # Deploy the helm charts
-    res = await deploy_helm_charts()
+    res = await deploy_helm_charts(True)
     if (res["status"] != 200):
         return res
     
