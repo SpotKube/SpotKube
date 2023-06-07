@@ -10,7 +10,7 @@ dir_path = os.path.dirname(os.path.abspath(__file__))
 def calculateResources(flag, services_list):
     pods = defaultdict(dict)
     if (len(services_list) == 0): # initially service list is empty. Hence need to get the relevant details from the config file
-        CONFIG_PATH = '~/.config/spotkube/config.yml'
+        CONFIG_PATH = "~/.config/spotkube/config.yml"
         file_path = os.path.expanduser(CONFIG_PATH)
     
         # file_path = os.path.join(dir_path, '../../../.config/config.yml')
@@ -38,7 +38,7 @@ def calculateResources(flag, services_list):
     return pods
 
 def getPodDetails():
-    CONFIG_PATH = '~/.config/spotkube/config.yml'
+    CONFIG_PATH = "~/.config/spotkube/config.yml"
     file_path = os.path.expanduser(CONFIG_PATH)
     
     # file_path = os.path.join(dir_path, '../../../.config/config.yml')
@@ -103,7 +103,7 @@ def readYml(file):
             print(exc)
             
 def getPrivateNodeCount():
-    CONFIG_PATH = '~/.config/spotkube/config.yml'
+    CONFIG_PATH = "~/.config/spotkube/config.yml"
     file_path = os.path.expanduser(CONFIG_PATH)
     
     # dir_path = os.path.dirname(os.path.abspath(__file__))

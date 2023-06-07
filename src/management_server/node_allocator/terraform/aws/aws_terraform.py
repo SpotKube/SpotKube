@@ -66,8 +66,10 @@ async def destroy_and_provision_aws_cloud():
 async def provision_aws_cloud():  
     try:  
         # Initialize Terraform
-        subprocess.run(["terraform", "init"], cwd=terraform_dir)
-        await apply_terraform()
+        run_subprocess_cmd(["terraform", "init"], cwd=terraform_dir)
+        result = await apply_terraform()
+        if(result["status"] != 200):
+            return result
         
         logger.info("Aws cloud provisioned")
         return {"message": "Aws cloud provisioned", "status": 200}
@@ -89,7 +91,11 @@ async def provision_aws_cloud():
 # Apply changes
 async def apply_aws_cloud():
     try:
-        await apply_terraform()
+        result = await apply_terraform()
+        if(result["status"] != 200):
+            logger.error(result["error_message"])
+            return {"error_message": result["error_message"], "status": 500}
+            
         logger.info("Aws cloud changes applied")
         return {"message": "Aws cloud changes applied", "status": 200}
     
@@ -121,7 +127,8 @@ async def apply_terraform():
         
         with open(f"{terraform_dir}/aws_instance_terraform_output.json", "w") as f:
             f.write(output)
-            
+        return {"message": "Aws cloud changes applied", "status": 200}
+        
     except subprocess.CalledProcessError as e:
         # Log the error message and return it
         error_message = e.output.decode("utf-8")

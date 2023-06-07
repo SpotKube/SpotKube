@@ -13,7 +13,9 @@ logger = get_logger(path=logger_dir, log_file="helm_service.log")
 async def deploy_helm_charts():
     try:
         # Load the config.yml file
-        with open('~/.config/spotkube/config.yml') as f:
+        CONFIG_PATH = "~/.config/spotkube/config.yml"
+        file_path = os.path.expanduser(CONFIG_PATH)
+        with open(file_path) as f:
             config = yaml.safe_load(f)
 
         # Loop through each service and install the corresponding Helm chart

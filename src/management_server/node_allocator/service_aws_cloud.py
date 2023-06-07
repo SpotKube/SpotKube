@@ -18,7 +18,7 @@ async def service_provision_aws_cloud():
 async def service_apply_aws_cloud():
     return await apply_aws_cloud()
 
-# Configure aws cloud
+# Configure aws cloud - Ansible
 async def service_configure_aws_cloud():
     return await configure_aws_nodes()
 

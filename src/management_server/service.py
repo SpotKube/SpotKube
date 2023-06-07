@@ -21,13 +21,23 @@ async def startUpPrivateCloud():
     start_time = time.time()
     
     # Get optimal node configuration
-    await service_get_node_configuration("greedy_v2")
+    res = await service_get_node_configuration("greedy_v2")
+    if (res["status"] != 200):
+        return res
     
     # Allocate the nodes to the private cloud
-    await service_provision_private_cloud()
+    res = await service_provision_private_cloud()
+    if (res["status"] != 200):
+        return res
+    
+    res = await service_configure_private_cloud()
+    if (res["status"] != 200):
+        return res
     
     # Deploy the helm charts
-    await deploy_helm_charts()
+    res = await deploy_helm_charts()
+    if (res["status"] != 200):
+        return res
     
     # Calculate the elapsed time
     end_time = time.time()
@@ -41,13 +51,23 @@ async def updatePrivateCloud():
     start_time = time.time()
     
     # Get optimal node configuration
-    await service_get_node_configuration("greedy_v2")
+    res = await service_get_node_configuration("greedy_v2")
+    if (res["status"] != 200):
+        return res
     
     # Allocate the nodes to the private cloud
-    await service_apply_private_cloud()
+    res = await service_apply_private_cloud()
+    if (res["status"] != 200):
+        return res
+    
+    res = await service_configure_private_cloud()
+    if (res["status"] != 200):
+        return res
     
     # Deploy the helm charts
-    await deploy_helm_charts()
+    res = await deploy_helm_charts()
+    if (res["status"] != 200):
+        return res
     
     # Calculate the elapsed time
     end_time = time.time()
@@ -59,16 +79,26 @@ async def updatePrivateCloud():
 
 async def startUpAwsCloud():
     # Start measuring the time
-    start_time = time.time()
+    res = start_time = time.time()
     
     # Get optimal node configuration
-    await service_get_node_configuration("greedy_v2")
+    # res = await service_get_node_configuration("greedy_v2")
+    # if (res["status"] != 200):
+    #     return res
     
     # Allocate the nodes to the aws cloud
-    await service_provision_aws_cloud()
+    res = await service_provision_aws_cloud()
+    if (res["status"] != 200):
+        return res
+    
+    res = await service_configure_aws_cloud()
+    if (res["status"] != 200):
+        return res
     
     # Deploy the helm charts
-    await deploy_helm_charts()
+    res = await deploy_helm_charts()
+    if (res["status"] != 200):
+        return res
     
     # Calculate the elapsed time
     end_time = time.time()
@@ -83,13 +113,23 @@ async def updateAwsCloud():
     start_time = time.time()
     
     # Get optimal node configuration
-    await service_get_node_configuration("greedy_v2")
+    res = await service_get_node_configuration("greedy_v2")
+    if (res["status"] != 200):
+        return res
     
     # Allocate the nodes to the aws cloud
-    await service_apply_aws_cloud()
+    res = await service_apply_aws_cloud()
+    if (res["status"] != 200):
+        return res
+    
+    res = await service_configure_aws_cloud()
+    if (res["status"] != 200):
+        return res
     
     # Deploy the helm charts
-    await deploy_helm_charts()
+    res = await deploy_helm_charts()
+    if (res["status"] != 200):
+        return res
     
     # Calculate the elapsed time
     end_time = time.time()

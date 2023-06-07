@@ -12,7 +12,7 @@ variable "spot_instances" {
 }
 
 variable "pub_id_file_path" {
-  default     = "/home/ubuntu/.ssh/id_rsa.pub"
+  default     = "/home/pasindu/.ssh/id_rsa.pub"
   type        = string
   description = "This contains the public key file path"
 }
