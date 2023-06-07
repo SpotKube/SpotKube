@@ -13,5 +13,3 @@ for service in os.listdir('../load_testing/outputs'):
     serviceTuple = calculator.calculate(service)
     print(serviceTuple)
     utils.updatePodCount(serviceTuple[0], serviceTuple[1])
-
- 
