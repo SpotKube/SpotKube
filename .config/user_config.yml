@@ -4,24 +4,14 @@ services:
   - name: prime
     maxRPS: 10000
     minRPS: 100
-    private: True
-    helmChartPath: "/home/pasindu/projects/fyp/microservices/microservices-python/src/auth/auth-chart"
+    private: False
+    helmChartPath: /home/pasindu/projects/fyp/microservices/microservices-python/src/auth/auth-chart
 
   - name: service2
     maxRPS: 50000
     minRPS: 100
     private: True
-    helmChartPath: "/home/pasindu/projects/fyp/microservices/microservices-python/src/converter/converter-chart"
-
-  - name: service3
-    maxRPS: 50000
-    minRPS: 100
-    private: False
-
-  - name: service4
-    maxRPS: 50000
-    minRPS: 100
-    private: False
+    helmChartPath: /home/pasindu/projects/fyp/microservices/microservices-python/src/converter/converter-chart
 
 privateResources:
       nodeCount: 10

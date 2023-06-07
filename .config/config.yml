@@ -5,19 +5,6 @@ resources:
   privateResources:
     nodeCount: 3
 services:
-- helmChartPath: ~/helm_charts/auth-chart
-  maxRPS:
-    cpu: // these values will be updated by the prediction model
-    memory: null
-    pods: null
-    rps: 200
-  minRPS:
-    cpu: null
-    memory: null
-    pods: 2
-    rps: 100
-  name: prime
-  private: false
 - helmChartPath: ~/helm_charts/converter-chart
   maxRPS:
     cpu: null
@@ -55,4 +42,10 @@ services:
     rps: 100
   name: service4
   private: true
+- helmChartPath: ~/helm_charts/auth-chart
+  minRPS:
+    pods: 2
+    rps: 100
+  name: prime
+  private: false
 version: 1.0
