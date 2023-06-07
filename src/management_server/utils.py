@@ -54,6 +54,13 @@ def run_subprocess_cmd(command, cwd):
     
 
 def run_subprocess_popen_cmd(command, cwd):
+    ansible_collections_path = os.path.expanduser("~/.ansible/collections")
+    ansible_config_path = "/etc/ansible/ansible.cfg"
+
+    env = os.environ.copy()
+    env["ANSIBLE_COLLECTIONS_PATH"] = ansible_collections_path
+    env["ANSIBLE_CONFIG"] = ansible_config_path
+    
     proc = subprocess.Popen(command, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
     while proc.poll() is None:
         line = proc.stdout.readline()

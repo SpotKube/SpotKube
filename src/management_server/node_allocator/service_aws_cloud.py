@@ -3,8 +3,7 @@ from .ansible.public_cloud.configure import *
 
 # Destroy aws cloud
 async def service_destroy_aws_cloud():
-    await destroy_aws_cloud()
-    return {"message": "Private cloud destroyed"}
+    return await destroy_aws_cloud()
 
 # Destroy and provision aws cloud
 async def service_destroy_and_provision_aws_cloud():

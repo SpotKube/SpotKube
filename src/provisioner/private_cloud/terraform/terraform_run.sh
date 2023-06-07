@@ -1,4 +1,5 @@
 #! /bin/bash
+set -o errexit
 
 # Import common functions
 source ../../../scripts/common.sh
@@ -193,75 +194,82 @@ COMMENT
 print_info "Coping required files to the private host"
 
 # Connect to the remote server
-ssh -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH $PRIVATE_HOST_USER@$PRIVATE_HOST_IP <<EOF
-if [ ! -d "/home/spotkube/.config/spotkube" ]; then
-    mkdir -p /home/spotkube/.config/spotkube
-fi
-if [ ! -d "/home/spotkube/.ssh" ]; then
-    mkdir -p /home/spotkube/.ssh
-fi
-if [ ! -d "/home/spotkube/helm_charts" ]; then
-    mkdir -p /home/helm_charts
-fi
-EOF
+# ssh -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH $PRIVATE_HOST_USER@$PRIVATE_HOST_IP <<EOF
+# if [ ! -d "/home/spotkube/.config/spotkube" ]; then
+#     mkdir -p /home/spotkube/.config/spotkube
+# fi
+# if [ ! -d "/home/spotkube/.ssh" ]; then
+#     mkdir -p /home/spotkube/.ssh
+# fi
+# if [ ! -d "/home/spotkube/helm_charts" ]; then
+#     mkdir -p /home/helm_charts
+# fi
+# EOF
 
-scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr \
-$PRIVATE_INSTANCE_SSH_KEY_PATH "$PRIVATE_INSTANCE_SSH_KEY_PATH.pub" $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/.ssh/
+# # scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr \
+# # "$PRIVATE_INSTANCE_SSH_KEY_PATH" "$PRIVATE_INSTANCE_SSH_KEY_PATH.pub" $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/.ssh
 
-scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr ./scripts/configure_private_management_node.sh \
-$OPENSTACK_CLOUD_YAML_PATH $AWS_SHARED_CONFIG_FILE_PATH $AWS_SHARED_CREDENTIALS_FILE_PATH ~/.config/spotkube/ \
-$PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/
+# scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr ./scripts/configure_private_management_node.sh \
+# "$OPENSTACK_CLOUD_YAML_PATH" $AWS_SHARED_CONFIG_FILE_PATH $AWS_SHARED_CREDENTIALS_FILE_PATH ~/.config/spotkube/ \
+# $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/
 
+# print_info "Copied1"
 
-# ------- Copying helm charts to the private host ------- #
-# Read helm chart paths from user_config.yml
+# # ------- Copying helm charts to the private host ------- #
+# # Read helm chart paths from user_config.yml
 
-print_info "Copying helm charts to the private host"
+# print_info "Copying helm charts to the private host"
 
-HELM_CHARTS=()
-while IFS= read -r line
-do
-    if [[ "$line" == *"helmChartPath"* ]]; then
-        chart_path=$(echo "$line" | cut -d: -f2- | tr -d '[:space:]' | tr -d '"' | tr -d ',')
-        if [[ -d "$chart_path" ]]; then
-            HELM_CHARTS+=("$chart_path")
-        fi
-    fi
-    echo "$line"
-    echo "chart_path: $chart_path"
-done < ~/.config/spotkube/user_config.yml
+# HELM_CHARTS=()
+# while IFS= read -r line
+# do
+#     if [[ "$line" == *"helmChartPath"* ]]; then
+#         chart_path=$(echo "$line" | cut -d: -f2- | tr -d '[:space:]' | tr -d '"' | tr -d ',')
+#         if [[ -d "$chart_path" ]]; then
+#             HELM_CHARTS+=("$chart_path")
+#         fi
+#     fi
+#     echo "$line"
+#     echo "chart_path: $chart_path"
+# done < ~/.config/spotkube/user_config.yml
 
-# Print out the list of helm chart paths
-echo "HELM_CHARTS: ${HELM_CHARTS[@]}"
+# # Print out the list of helm chart paths
+# echo "HELM_CHARTS: ${HELM_CHARTS[@]}"
 
-# Copy helm charts to remote server
-for chart in "${HELM_CHARTS[@]}"
-do
-    echo "Copying $chart to $PRIVATE_HOST_USER@$PRIVATE_HOST_IP"
-    scp -o StrictHostKeyChecking=no -i "$PRIVATE_HOST_SSH_KEY_PATH" -vr "$chart" "$PRIVATE_HOST_USER@$PRIVATE_HOST_IP":~/helm_charts/
-done
+# # Copy helm charts to remote server
+# for chart in "${HELM_CHARTS[@]}"
+# do
+#     echo "Copying $chart to $PRIVATE_HOST_USER@$PRIVATE_HOST_IP"
+#     scp -o StrictHostKeyChecking=no -i "$PRIVATE_HOST_SSH_KEY_PATH" -vr "$chart" "$PRIVATE_HOST_USER@$PRIVATE_HOST_IP":~/helm_charts/
+# done
 
 # SSH to the private host and then ssh to the management node and run the configure_management_node.sh script
 ssh -o StrictHostKeyChecking=no -i "$PRIVATE_HOST_SSH_KEY_PATH" -T $PRIVATE_HOST_USER@$PRIVATE_HOST_IP <<EOF
 
-mkdir -p ~/management_node
-mv ~/configure_private_management_node.sh ~/management_node/
+# mkdir -p ~/management_node
+# mv ~/configure_private_management_node.sh ~/management_node/
 
-# copy configure_management_node.sh to the management node
-echo "Coping required files to the management node"
+# # copy configure_management_node.sh to the management node
+# echo "Coping required files to the management node"
 
-scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr ~/config ~/credentials \
-~/management_node/configure_private_management_node.sh ~/clouds.yaml ~/spotkube/ ~/helm_charts/ \
-$PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/
+# scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr ~/config ~/credentials \
+# ~/management_node/configure_private_management_node.sh ~/clouds.yaml ~/spotkube/ ~/helm_charts/ \
+# $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/
 
-scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr \
-$PRIVATE_HOST_USER@$PRIVATE_HOST_IP:"~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/.ssh
+# scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr \
+# "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/.ssh
 
-scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr \
-$PRIVATE_HOST_USER@$PRIVATE_HOST_IP:"~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME.pub" $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/.ssh
+# scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr \
+# $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:"~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME.pub" $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/.ssh
 
 ssh -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -T $PRIVATE_INSTANCE_USER@$management_node_floating_ip <<FED1
 sudo sed -i '1i127.0.0.1 private-management' /etc/hosts
+
+touch ~/resolv.conf
+echo "nameserver 8.8.8.8" > ~/resolv.conf
+sudo cp ~/resolv.conf /etc/resolv.conf
+sudo chattr +i /etc/resolv.conf
+sudo /etc/init.d/networking restart
 
 mkdir -p ~/scripts
 mv ~/configure_private_management_node.sh ~/scripts/

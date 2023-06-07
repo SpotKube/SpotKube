@@ -42,7 +42,9 @@ async def destroy_and_provision_aws_cloud():
         run_subprocess_cmd(["terraform", "init"], cwd=terraform_dir)
         
         # Apply terraform
-        await apply_terraform()
+        result = await apply_terraform()
+        if(result["status"] != 200):
+            return result
         
         logger.info("Destroy and provisioning completed")
         return {"message": "Destroy and provisioning completed", "status": 200}

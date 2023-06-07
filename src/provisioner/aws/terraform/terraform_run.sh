@@ -3,7 +3,7 @@
 # Import common functions
 source ../../../scripts/common.sh
 
-set -e
+set -o errexit
 
 # ------------------------------------------------ Help function ---------------------------------------------------- #
 
