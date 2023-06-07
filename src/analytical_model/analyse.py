@@ -12,4 +12,4 @@ from metric_analyser import cpuAnalyser, memoryAnalyser, preprocess
 for service in os.listdir('../load_testing/outputs'):
     serviceTuple = calculator.calculate(service)
     print(serviceTuple)
-    utils.updatePodCount(serviceTuple[0], serviceTuple[1])
+    utils.updatePodCount(serviceTuple[0], serviceTuple[1], serviceTuple[2], serviceTuple[3], serviceTuple[4])
