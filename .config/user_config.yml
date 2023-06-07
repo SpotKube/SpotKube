@@ -4,8 +4,8 @@ services:
   - name: service1_auth
     maxRPS: 10000
     minRPS: 100
-    private: True
-    helmChartPath: "/home/pasindu/projects/fyp/microservices/microservices-python/src/auth/auth-chart"
+    private: False
+    helmChartPath: /home/pasindu/projects/fyp/microservices/microservices-python/src/auth/auth-chart
 
   - name: service2_converter
     maxRPS: 50000

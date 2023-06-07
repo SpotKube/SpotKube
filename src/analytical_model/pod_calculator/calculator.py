@@ -10,20 +10,26 @@ for i in dirs:
 from metric_analyser import cpuAnalyser, memoryAnalyser, preprocess
 import utils
 
-def calculate():
-    pod_count = []
+def calculate(service):
+    serviceConfig = {}
     services = utils.getMinRps()
-    df_cpu, df_mem = preprocess.preprocess()
-    cpu_throttle_rps = cpuAnalyser.analyze(df_cpu) # assuming cpu throttling rps for each service
-    mem_throttle_rps = memoryAnalyser.analyze(df_mem) # assuming memory throttling rps for each service
+    df_cpu = preprocess.preprocess(service)
+
+    cpu_throttle_rps = cpuAnalyser.analyse(df_cpu) # assuming cpu throttling rps for each service
+    # mem_throttle_rps = memoryAnalyser.analyse(df_mem) # assuming memory throttling rps for each service
     
-    for service in services:
-        cpu_count = math.ceil(service['minRps']/ cpu_throttle_rps[service['name']]['rps'])
-        mem_count = math.ceil(service['minRps']/ mem_throttle_rps[service['name']]['rps'])
-        count = max(cpu_count, mem_count)
-        pod_count.append({'name': service['name'], 'podCount': count}) # assuming the resource limitaion for  load testing pod and actual deploying pod are equal
-    
-    return pod_count
+    for serviceDic in services:
+        if(service == serviceDic['name']):
+            serviceConfig = serviceDic
+            break
+    cpu_count = math.ceil(serviceConfig['minRPS']/ cpu_throttle_rps)
+    mem_count = 0 # math.ceil(service['minRps']/ mem_throttle_rps[service['name']]['rps'])
+    count = max(cpu_count, mem_count)
+    # pod_count.append({'name': service['name'], 'podCount': count}) # assuming the resource limitaion for  load testing pod and actual deploying pod are equal
+
+    # Prepare helm chart path
+    helmPath = "~/helm_charts/"+ serviceConfig['helmChartPath'].split('/')[-1]
+    return (service, count, serviceConfig['minRPS'], serviceConfig['private'], helmPath)
 
 
 
