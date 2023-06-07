@@ -1,10 +1,10 @@
 version: 1.0
 
 services:
-  - name: service1
+  - name: prime
     private: False
     maxRPS: 
-      rps: 10000
+      rps: 200
       cpu: // these values will be updated by the prediction model
       memory:
       pods:
@@ -12,7 +12,7 @@ services:
       rps: 100
       cpu:
       memory:
-      pods: 2
+      pods: 0
     helmChartPath: "~/helm_charts/auth-chart"
 
   - name: service2
