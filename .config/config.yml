@@ -41,6 +41,7 @@ services:
       cpu:
       memory:
       pods: 6
+    helmChartPath: "~/helm_charts/converter-chart"
 
   - name: service4
     private: True
@@ -54,6 +55,7 @@ services:
       cpu:
       memory:
       pods: 6
+    helmChartPath: "~/helm_charts/auth-chart"
 
 resources:
   privateResources:

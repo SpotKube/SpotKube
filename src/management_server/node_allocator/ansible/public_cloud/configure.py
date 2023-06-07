@@ -5,29 +5,21 @@ import subprocess
 from utils import get_logger, format_terraform_error_message, run_subprocess_popen_cmd
 
 current_dir = os.getcwd()
-ansible_dir = os.path.join(current_dir, "node_allocator", "ansible", "private_cloud")
-terraform_dir = os.path.join(current_dir, "node_allocator", "terraform", "private_cloud")
+ansible_dir = os.path.join(current_dir, "node_allocator", "ansible", "public_cloud")
+terraform_dir = os.path.join(current_dir, "node_allocator", "terraform", "aws")
 logger_dir = os.path.join(current_dir, "logs")
 
-logger = get_logger(path=logger_dir, log_file="private_cloud_ansible.log")
+logger = get_logger(path=logger_dir, log_file="aws_cloud_ansible.log")
 
-async def generate_private_cloud_hosts_file():
+async def generate_aws_cloud_hosts_file():
     try:
         # Read control_plane_ip and worker_ips from input.json using jq
-        with open(f"{terraform_dir}/private_instance_terraform_output.json") as f:
+        with open(f"{terraform_dir}/aws_instance_terraform_output.json") as f:
             output = json.load(f)
-            control_plane_ip = output['private_master_ip']['value']
-            worker_ips = [worker['private_ip'] for worker in output['private_workers']['value']]
+            control_plane_ip = output['master_node_ip']['value']
+            worker_ips = [worker['public_ip'] for worker in output['spot_instances']['value']]
             
-        CONFIG_PATH = '~/.config/spotkube/provisioner.conf'
-        config_path_expanded = os.path.expanduser(CONFIG_PATH)
-        key_name = None
-
-        with open(config_path_expanded, "r") as f:
-            for line in f:
-                if line.startswith("PRIVATE_INSTANCE_SSH_KEY_PATH="):
-                    key_path = line.strip().split("=")[1]
-                    key_name = key_path.split("/")[-1].replace("'", "")
+        key_name = "id_rsa"
 
         # Write the Ansible hosts file
         with open(f'{ansible_dir}/hosts', 'w') as f:
@@ -40,11 +32,11 @@ async def generate_private_cloud_hosts_file():
             f.write('[control_plane:vars]\n')
             f.write('ansible_connection=ssh\n')
             f.write('ansible_user=ubuntu\n')
-            f.write(f'ansible_ssh_private_key_file=~/.ssh/{key_name}\n\n')
+            f.write(f'ansible_ssh_aws_key_file=~/.ssh/{key_name}\n\n')
             f.write('[workers:vars]\n')
             f.write('ansible_connection=ssh\n')
             f.write('ansible_user=ubuntu\n')
-            f.write(f'ansible_ssh_private_key_file=~/.ssh/{key_name}\n')
+            f.write(f'ansible_ssh_aws_key_file=~/.ssh/{key_name}\n')
             
         return {"message": "Ansible hosts file generated", "status": "success"}
     
@@ -54,10 +46,10 @@ async def generate_private_cloud_hosts_file():
         logger.error(error_message)
         return {"error_message": error_message, "status": "failed"}
         
-async def configure_private_nodes():
+async def configure_aws_nodes():
     try:
         # Generate the Ansible hosts file
-        await generate_private_cloud_hosts_file()
+        await generate_aws_cloud_hosts_file()
         
         # Run the initial playbook
         run_subprocess_popen_cmd(["ansible-playbook", "-i", "hosts", "initial.yml"], cwd=ansible_dir)
@@ -74,7 +66,7 @@ async def configure_private_nodes():
         # Run the setup_kubectl playbook
         run_subprocess_popen_cmd(["ansible-playbook", "-i", "hosts", "setup_kubectl.yml"], cwd=ansible_dir)
         
-        logger.info("Private cloud nodes configured")
+        logger.info("Aws cloud nodes configured")
         
         return {"message": "Nodes configured", "status": "success"}
     

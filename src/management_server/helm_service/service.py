@@ -6,14 +6,16 @@ from utils import run_subprocess_cmd, run_subprocess_popen_cmd, format_terraform
 current_dir = os.getcwd()
 logger_dir = os.path.join(current_dir, "logs")
 
-logger = get_logger(path=logger_dir, log_file="private_cloud_helm_service.log")
+logger = get_logger(path=logger_dir, log_file="helm_service.log")
 
 # configFilePath = os.path.join(os.path.dirname(__file__), 'config.yml')
 
 async def deploy_helm_charts():
     try:
         # Load the config.yml file
-        with open('~/.config/spotkube/config.yml') as f:
+        CONFIG_PATH = "~/.config/spotkube/config.yml"
+        file_path = os.path.expanduser(CONFIG_PATH)
+        with open(file_path) as f:
             config = yaml.safe_load(f)
 
         # Loop through each service and install the corresponding Helm chart
