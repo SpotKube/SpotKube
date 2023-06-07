@@ -5,8 +5,8 @@ import subprocess
 from utils import get_logger, format_terraform_error_message, run_subprocess_popen_cmd
 
 current_dir = os.getcwd()
-ansible_dir = os.path.join(current_dir, "node_allocator", "ansible", "aws_cloud")
-terraform_dir = os.path.join(current_dir, "node_allocator", "terraform", "aws_cloud")
+ansible_dir = os.path.join(current_dir, "node_allocator", "ansible", "public_cloud")
+terraform_dir = os.path.join(current_dir, "node_allocator", "terraform", "aws")
 logger_dir = os.path.join(current_dir, "logs")
 
 logger = get_logger(path=logger_dir, log_file="aws_cloud_ansible.log")
