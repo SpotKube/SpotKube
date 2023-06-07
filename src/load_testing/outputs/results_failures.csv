@@ -1,3 +1,0 @@
-Method,Name,Error,Occurrences
-POST,/login,HTTPError('502 Server Error: Bad Gateway for url: /login'),33
-POST,/login,HTTPError('504 Server Error: Gateway Time-out for url: /login'),217

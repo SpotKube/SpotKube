@@ -30,6 +30,8 @@ def fetch_cpu_metrics(service, host, start, end, api_token):
     response = requests.post(url, headers={"Content-Type": "application/json", "Authorization": f"Bearer {api_token}"}, data=json.dumps(body))
     json_response = json.loads(response.text)
 
+    print(json_response)
+    
     data = json_response["results"]["A"]["frames"][0]["data"]["values"]
     return data
 
@@ -57,7 +59,9 @@ def fetch_memory_metrics(service, host, start, end, api_token):
     }
     response = requests.post(url, headers={"Content-Type": "application/json", "Authorization": f"Bearer {api_token}"}, data=json.dumps(body))
     json_response = json.loads(response.text)
-
+    
+    print(json_response)
+    
     data = json_response["results"]["A"]["frames"][0]["data"]["values"]
     return data
 
