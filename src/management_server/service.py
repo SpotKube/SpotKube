@@ -33,6 +33,7 @@ async def startUpPrivateCloud():
     end_time = time.time()
     elapsed_time = end_time - start_time
     logger.info("Total time taken to start up the private cloud: " + str(elapsed_time) + " seconds")
+    return {"message": "Private cloud started", "status": 200, "elapsedTime": elapsed_time}
     
 # This function is called when the elastic scaler wants to update the private cloud
 async def updatePrivateCloud():
@@ -52,6 +53,7 @@ async def updatePrivateCloud():
     end_time = time.time()
     elapsed_time = end_time - start_time
     logger.info("Total time taken to update the private cloud: " + str(elapsed_time) + " seconds")
+    return {"message": "Private cloud updated", "status": 200, "elapsedTime": elapsed_time}
 
 # Public cloud related services
 
@@ -72,7 +74,7 @@ async def startUpAwsCloud():
     end_time = time.time()
     elapsed_time = end_time - start_time
     logger.info("Total time taken to start up the aws cloud: " + str(elapsed_time) + " seconds")
-    
+    return {"message": "Aws cloud started", "status": 200, "elapsedTime": elapsed_time}
     
     
 # This function is called when the elastic scaler wants to update the aws cloud
@@ -93,4 +95,5 @@ async def updateAwsCloud():
     end_time = time.time()
     elapsed_time = end_time - start_time
     logger.info("Total time taken to update the aws cloud: " + str(elapsed_time) + " seconds")
+    return {"message": "Aws cloud updated", "status": 200, "elapsedTime": elapsed_time}
     
