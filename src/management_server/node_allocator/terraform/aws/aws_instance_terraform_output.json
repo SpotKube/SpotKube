@@ -2,7 +2,7 @@
   "master_node_ip": {
     "sensitive": false,
     "type": "string",
-    "value": "10.0.1.12"
+    "value": "10.0.1.230"
   },
   "spot_instances": {
     "sensitive": false,
@@ -77,12 +77,12 @@
     "value": [
       {
         "associate_public_ip_address": false,
-        "id": "sir-seh6hm2n",
+        "id": "sir-rap6kqxq",
         "instance_type": "t2.small",
         "key_name": "id_rsa",
-        "private_ip": "10.0.1.161",
+        "private_ip": "10.0.1.41",
         "public_ip": "",
-        "subnet_id": "subnet-02ec461066bcdc78d",
+        "subnet_id": "subnet-0d3f4a4d41eadd22d",
         "tags": {
           "Name": "spot-1"
         },
@@ -91,17 +91,17 @@
           "sg-001d823dca71ea64a",
           "sg-002f4e2c40a91ac53",
           "sg-01676708452c31ca7",
-          "sg-08274b2a77141f9ac"
+          "sg-08d62e016444a8568"
         ]
       },
       {
         "associate_public_ip_address": false,
-        "id": "sir-jpgpgxtq",
+        "id": "sir-wv2yhpmq",
         "instance_type": "t2.small",
         "key_name": "id_rsa",
-        "private_ip": "10.0.1.137",
+        "private_ip": "10.0.1.87",
         "public_ip": "",
-        "subnet_id": "subnet-02ec461066bcdc78d",
+        "subnet_id": "subnet-0d3f4a4d41eadd22d",
         "tags": {
           "Name": "spot-2"
         },
@@ -110,17 +110,17 @@
           "sg-001d823dca71ea64a",
           "sg-002f4e2c40a91ac53",
           "sg-01676708452c31ca7",
-          "sg-08274b2a77141f9ac"
+          "sg-08d62e016444a8568"
         ]
       },
       {
         "associate_public_ip_address": false,
-        "id": "sir-qbt6j4fq",
+        "id": "sir-4snpjtip",
         "instance_type": "t2.small",
         "key_name": "id_rsa",
-        "private_ip": "10.0.1.150",
+        "private_ip": "10.0.1.203",
         "public_ip": "",
-        "subnet_id": "subnet-02ec461066bcdc78d",
+        "subnet_id": "subnet-0d3f4a4d41eadd22d",
         "tags": {
           "Name": "spot-3"
         },
@@ -129,7 +129,7 @@
           "sg-001d823dca71ea64a",
           "sg-002f4e2c40a91ac53",
           "sg-01676708452c31ca7",
-          "sg-08274b2a77141f9ac"
+          "sg-08d62e016444a8568"
         ]
       }
     ]
