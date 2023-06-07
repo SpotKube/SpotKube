@@ -3,6 +3,8 @@
 # Import common functions
 source ../../../scripts/common.sh
 
+cp ../../../../.config/* ~/.config/spotkube
+
 set -o errexit
 
 # ------------------------------------------------ Help function ---------------------------------------------------- #
@@ -226,6 +228,10 @@ ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" ubuntu@$management_node_
 cd SpotKube/src/provisioner/aws/terraform/scripts
 chmod +x configure_management_node.sh
 ./configure_management_node.sh
+
+cd /home/ubuntu/SpotKube/src/management_server
+chmod +x run_mgt_server.sh
+bash run_mgt_server.sh
 EOF
 
 # Copy the aws shared config and credentials files to the management node
