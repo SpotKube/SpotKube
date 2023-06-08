@@ -138,6 +138,7 @@ fi
 
 # Read control_plane_ip and worker_ips from input.json using jq
 control_plane_ip=$(jq -r '.master_node_ip.value' public_env_terraform_output.json)
+on_demand_worker_ip=$(jq -r '.worker_node_ip.value.private_ip' public_env_terraform_output.json)
 worker_ips=$(jq -r '.spot_instances.value[].private_ip' public_env_terraform_output.json)
 management_node_public_ip=$(jq -r '.management_node_public_ip.value' ../../../../provisioner/aws/terraform/public_env_terraform_output.json)
 
@@ -153,6 +154,7 @@ cat > hosts << EOF
 $control_plane_ip 
 
 [workers]
+$on_demand_worker_ip
 EOF
 
 for worker_ip in $worker_ips; do
