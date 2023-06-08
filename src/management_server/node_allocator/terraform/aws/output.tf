@@ -16,3 +16,7 @@ output "spot_instances" {
 output "master_node_ip" {
   value = aws_instance.master_node.private_ip
 }
+
+output "worker_node_ip" {
+  value = aws_instance.worker_node.private_ip
+}
