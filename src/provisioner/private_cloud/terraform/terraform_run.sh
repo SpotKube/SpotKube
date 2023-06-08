@@ -1,7 +1,10 @@
 #! /bin/bash
+set -o errexit
 
 # Import common functions
 source ../../../scripts/common.sh
+
+cp ../../../../.config/* ~/.config/spotkube
 
 # Help function
 function help() {
@@ -171,7 +174,7 @@ then
 fi
 
 # Read the management node floating IP from terraform output
-management_node_floating_ip=$(jq -r '.private_management_test_floating_ip.value' private_env_terraform_output.json)
+management_node_floating_ip=$(jq -r '.private_management_floating_ip.value' private_env_terraform_output.json)
 print_info "Management node floating IP: $management_node_floating_ip"
 
 # Get private instance SSH key name
@@ -180,7 +183,7 @@ print_info "Management node floating IP: $management_node_floating_ip"
 PRIVATE_INSTANCE_SSH_KEY_NAME=$(basename "$PRIVATE_INSTANCE_SSH_KEY_PATH")
 
 # Print the value of PRIVATE_INSTANCE_SSH_KEY_NAME
-echo "PRIVATE_INSTANCE_SSH_KEY_NAME: $PRIVATE_INSTANCE_SSH_KEY_NAME"
+print_error "PRIVATE_INSTANCE_SSH_KEY_NAME: $PRIVATE_INSTANCE_SSH_KEY_NAME"
 
 # ------------------------------------ Configuring the private cloud ------------------------------------------------ #
 <<COMMENT
@@ -192,17 +195,33 @@ COMMENT
 # Copy required files to the private host
 print_info "Coping required files to the private host"
 
-scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr \
-$PRIVATE_INSTANCE_SSH_KEY_PATH "$PRIVATE_INSTANCE_SSH_KEY_PATH.pub" $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/.ssh/
+# Connect to the remote server
+ssh -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH $PRIVATE_HOST_USER@$PRIVATE_HOST_IP <<EOF
+if [ ! -d "/home/spotkube/.config/spotkube" ]; then
+    mkdir -p /home/spotkube/.config/spotkube
+fi
+if [ ! -d "/home/spotkube/.ssh" ]; then
+    mkdir -p /home/spotkube/.ssh
+fi
+if [ ! -d "/home/spotkube/helm_charts" ]; then
+    mkdir -p /home/helm_charts
+fi
+EOF
+
+# scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr \
+# "$PRIVATE_INSTANCE_SSH_KEY_PATH" "$PRIVATE_INSTANCE_SSH_KEY_PATH.pub" $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/.ssh
 
 scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr ./scripts/configure_private_management_node.sh \
-$OPENSTACK_CLOUD_YAML_PATH $AWS_SHARED_CONFIG_FILE_PATH $AWS_SHARED_CREDENTIALS_FILE_PATH ~/.config/spotkube/ \
+"$OPENSTACK_CLOUD_YAML_PATH" $AWS_SHARED_CONFIG_FILE_PATH $AWS_SHARED_CREDENTIALS_FILE_PATH ~/.config/spotkube/ \
 $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/
 
-ssh -o StrictHostKeyChecking=no -i "$PRIVATE_HOST_SSH_KEY_PATH" -T $PRIVATE_HOST_USER@$PRIVATE_HOST_IP "mkdir -p ~/helm_charts"
+print_info "Copied1"
 
 # ------- Copying helm charts to the private host ------- #
 # Read helm chart paths from user_config.yml
+
+print_info "Copying helm charts to the private host"
+
 HELM_CHARTS=()
 while IFS= read -r line
 do
@@ -240,7 +259,7 @@ scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr ~
 $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/
 
 scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr \
-$PRIVATE_HOST_USER@$PRIVATE_HOST_IP:"~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/.ssh
+"~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/.ssh
 
 scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr \
 $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:"~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME.pub" $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/.ssh
@@ -248,11 +267,30 @@ $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:"~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME.pub" 
 ssh -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -T $PRIVATE_INSTANCE_USER@$management_node_floating_ip <<FED1
 sudo sed -i '1i127.0.0.1 private-management' /etc/hosts
 
+touch ~/resolv.conf
+echo "nameserver 8.8.8.8" > ~/resolv.conf
+sudo cp ~/resolv.conf /etc/resolv.conf
+sudo chattr +i /etc/resolv.conf
+sudo /etc/init.d/networking restart
+
 mkdir -p ~/scripts
 mv ~/configure_private_management_node.sh ~/scripts/
 
 sh ~/scripts/configure_private_management_node.sh
 echo "Configure management node done"
+
+if [ ! -d "/home/ubuntu/.config/spotKube" ]; then
+    mkdir -p /home/ubuntu/.config/spotKube
+fi
+if [ ! -d "/home/ubuntu/SpotKube" ]; then
+    git clone https://github.com/SpotKube/SpotKube.git
+fi
+
+mv /home/ubuntu/spotkube /home/ubuntu/.config/spotKube/
+
+cd /home/ubuntu/SpotKube/src/management_server
+chmod +x run_mgt_server.sh
+bash run_mgt_server.sh
 
 FED1
 EOF

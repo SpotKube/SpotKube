@@ -1,5 +1,5 @@
 import os
-from helpers import *
+from optimization_engine.cost_model.helpers import *
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(dir_path, '../../.spotConfig.json')

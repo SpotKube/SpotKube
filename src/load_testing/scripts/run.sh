@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# set -e 
+
 # Import common functions
 source ../../scripts/common.sh
 # Import configs
@@ -16,6 +18,8 @@ HOST_URL=""
 NUMBER_OF_USERS=0
 SPAWN_RATE=0
 RUN_TIME=0
+GRAFANA_HOST="http://192.168.49.2:30468"
+GRAFANA_API_KEY="eyJrIjoiRFNOQmpobzZTbG1qWDZCMjNJb2xGNHBDM01FUXNHSU8iLCJuIjoiU3BvdGt1YmUyIiwiaWQiOjF9"
 
 function help() {
     print_info "Usage:"
@@ -111,7 +115,9 @@ start_time=$(date +%s%3N)
 locust -f test.py --csv=results --host $HOST_URL --users $NUMBER_OF_USERS --spawn-rate $SPAWN_RATE --run-time $RUN_TIME --headless
 
 print_info "Moving results to outputs directory"
-mv ./results* $load_testing_path/outputs/
+# Create service if not exists
+mkdir -p $load_testing_path/outputs/$SERVICE_NAME
+mv ./results* $load_testing_path/outputs/$SERVICE_NAME
 
 print_info "Sleep for 1 min"
 sleep 60
@@ -123,3 +129,7 @@ print_success "Locust run completed. Start time: $start_time, End time: $end_tim
 
 # Collect metrics from Grafana
 python3 ../packages/fetch_metrics.py $SERVICE_NAME $GRAFANA_HOST $NUMBER_OF_USERS $SPAWN_RATE $start_time $end_time $GRAFANA_API_KEY 
+
+# Move cpu and memory usage data to outputs directory
+mv ./cpu.csv $load_testing_path/outputs/$SERVICE_NAME
+mv ./mem.csv $load_testing_path/outputs/$SERVICE_NAME

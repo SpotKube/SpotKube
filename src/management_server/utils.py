@@ -1,13 +1,32 @@
 import logging
 import subprocess
 import re
+import os
 
 def get_logger(path, log_level=logging.DEBUG, log_file="log.log"):
+    # # Set up the logger
+    # logger = logging.getLogger(__name__)
+    # logger.setLevel(log_level)
+    # formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    # file_handler = logging.FileHandler(f"{path}/{log_file}")
+    # file_handler.setLevel(log_level)
+    # file_handler.setFormatter(formatter)
+    # logger.addHandler(file_handler)
+    # # return logger
+    # Check if log file exists
+    # Create the directory if it doesn't exist
+    os.makedirs(path, exist_ok=True)
+    
+    log_file_path = os.path.join(path, log_file)
+    if not os.path.exists(log_file_path):
+        # Create the log file if it doesn't exist
+        open(log_file_path, 'a').close()
+
     # Set up the logger
     logger = logging.getLogger(__name__)
     logger.setLevel(log_level)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    file_handler = logging.FileHandler(f"{path}/{log_file}")
+    file_handler = logging.FileHandler(log_file_path)
     file_handler.setLevel(log_level)
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
@@ -35,6 +54,13 @@ def run_subprocess_cmd(command, cwd):
     
 
 def run_subprocess_popen_cmd(command, cwd):
+    ansible_collections_path = os.path.expanduser("~/.ansible/collections")
+    ansible_config_path = "/etc/ansible/ansible.cfg"
+
+    env = os.environ.copy()
+    env["ANSIBLE_COLLECTIONS_PATH"] = ansible_collections_path
+    env["ANSIBLE_CONFIG"] = ansible_config_path
+    
     proc = subprocess.Popen(command, cwd=cwd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
     while proc.poll() is None:
         line = proc.stdout.readline()

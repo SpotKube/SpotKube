@@ -5,6 +5,8 @@ sudo apt update
 sudo apt install -y python3-pip
 sudo pip3 install --upgrade pip
 sudo apt install -y python3-venv
+sudo apt install -y nginx
+sudo apt install -y openssl
 
 # Install ansible
 sudo apt install -y software-properties-common

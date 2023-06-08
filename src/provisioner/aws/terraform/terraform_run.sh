@@ -3,7 +3,9 @@
 # Import common functions
 source ../../../scripts/common.sh
 
-set -e
+cp ../../../../.config/* ~/.config/spotkube
+
+set -o errexit
 
 # ------------------------------------------------ Help function ---------------------------------------------------- #
 
@@ -34,12 +36,12 @@ print_title "Provisioning public cloud environment"
 CONF_FILE_ERROR=false
 
 # Check if provisioner.conf exists
-if [[ ! -f "~/.config/spotkube/provisioner.conf" ]]; then
+if [[ ! -f "$HOME/.config/spotkube/provisioner.conf" ]]; then
     print_error "provisioner.conf does not exist"
     CONF_FILE_ERROR=true
     exit 1
 else
-    source "~/.config/spotkube/provisioner.conf"
+    source "$HOME/.config/spotkube/provisioner.conf"
 fi
 
 # Check if AWS_SHARED_CONFIG_FILE_PATH is set and exists
@@ -100,6 +102,10 @@ do
     key="$1"
 
     case $key in
+        -h|--help)
+        help
+        exit 0
+        ;;
         -d|--destroy)
         destroy=true
         ;;
@@ -158,8 +164,9 @@ then
 
     terraform apply -auto-approve -var "aws_shared_config_file_path=$AWS_SHARED_CONFIG_FILE_PATH" -var "aws_shared_credentials_file_path=$AWS_SHARED_CREDENTIALS_FILE_PATH" -var "pub_id_file_path=$PUBLIC_INSTANCE_SSH_KEY_PATH"
     sleep 60 # Wait for 60 seconds to ensure the instances are fully provisioned
-    terraform output -json > public_env_terraform_output.json
 fi
+
+terraform output -json > public_env_terraform_output.json
 
 # Read control_plane_ip and worker_ips from input.json using jq
 management_node_public_ip=$(jq -r '.management_node_public_ip.value' public_env_terraform_output.json)
@@ -168,16 +175,70 @@ print_info "AWS Management node public IP: $management_node_public_ip"
 
 # ------------------------------------ Configuring the public cloud ------------------------------------------------ #
 
-# Copy the Ansible hosts file, terraform output and kube_cluster files to the management node
-scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr scripts/configure_management_node.sh ubuntu@$management_node_public_ip:~/
-scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr ~/.ssh/id_spotkube.pub ~/.ssh/id_spotkube ubuntu@$management_node_public_ip:~/.ssh
+# ------- Copying helm charts to the private host ------- #
+# Read helm chart paths from user_config.yml
 
 # Connect to the remote server
 ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" ubuntu@$management_node_public_ip <<EOF
+if [ ! -d "/home/ubuntu/.config/spotkube" ]; then
+    mkdir -p /home/ubuntu/.config/spotkube
+fi
+if [ ! -d "/home/ubuntu/.ssh" ]; then
+    mkdir -p /home/ubuntu/.ssh
+fi
+if [ ! -d "/home/ubuntu/SpotKube" ]; then
+    git clone https://github.com/SpotKube/SpotKube.git
+fi
+if [ ! -d "/home/ubuntu/helm_charts" ]; then
+    mkdir -p /home/ubuntu/helm_charts
+fi
+EOF
+
+HELM_CHARTS=()
+while IFS= read -r line
+do
+    if [[ "$line" == *"helmChartPath"* ]]; then
+        chart_path=$(echo "$line" | cut -d: -f2- | tr -d '[:space:]' | tr -d '"' | tr -d ',')
+        if [[ -d "$chart_path" ]]; then
+            HELM_CHARTS+=("$chart_path")
+        fi
+    fi
+done < ~/.config/spotkube/user_config.yml
+
+# Print out the list of helm chart paths
+echo "HELM_CHARTS: ${HELM_CHARTS[@]}"
+
+# Copy helm charts to remote server
+for chart in "${HELM_CHARTS[@]}"
+do
+    scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr "$chart" "ubuntu@$management_node_public_ip":~/helm_charts/
+done
+
+echo "Helm charts copied to the remote server"
+
+echo $HOME
+
+# Copy the Ansible hosts file, terraform output and kube_cluster files to the management node
+scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -r $HOME/.config/spotkube ubuntu@$management_node_public_ip:~/.config/
+scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr $HOME/.ssh/id_spotkube.pub ~/.ssh/id_spotkube ubuntu@$management_node_public_ip:~/.ssh
+scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr public_env_terraform_output.json ubuntu@$management_node_public_ip:~/SpotKube/src/provisioner/aws/terraform/
+
+# Connect to the remote server
+ssh -o StrictHostKeyChecking=no -i "~/.ssh/id_spotkube" ubuntu@$management_node_public_ip <<EOF
+cd SpotKube/src/provisioner/aws/terraform/scripts
 chmod +x configure_management_node.sh
 ./configure_management_node.sh
+
+cd /home/ubuntu/SpotKube/src/management_server
+chmod +x run_mgt_server.sh
+chmod +x configure_reverse_proxy.sh
+bash configure_reverse_proxy.sh $management_node_public_ip
+bash run_mgt_server.sh
+
 EOF
 
 # Copy the aws shared config and credentials files to the management node
 scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr $AWS_SHARED_CONFIG_FILE_PATH ubuntu@$management_node_public_ip:~/.aws/config
 scp -o StrictHostKeyChecking=no -i ~/.ssh/id_spotkube -vr $AWS_SHARED_CREDENTIALS_FILE_PATH ubuntu@$management_node_public_ip:~/.aws/credentials
+
+echo "AWS cloud configuration done"
