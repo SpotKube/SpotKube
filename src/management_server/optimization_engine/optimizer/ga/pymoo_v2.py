@@ -4,24 +4,9 @@ from pymoo.factory import get_problem, get_algorithm, get_termination
 from pymoo.optimize import minimize
 from pymoo.core.problem import Problem
 
+import matplotlib.pyplot as plt
+
 from optimizer import helper
-from collections import defaultdict
-
-# Define the EC2 instances and their properties
-# instances = {
-#     "t2.micro": {"cpu": 1, "memory": 1, "cost": 0.01},
-#     "t2.small": {"cpu": 1, "memory": 2, "cost": 0.02},
-#     "t3.medium": {"cpu": 2, "memory": 4, "cost": 0.04},
-#     # Add more instance types as needed
-# }
-
-# Define the microservice workloads and their properties
-# workloads = {
-#     "service1": {"cpu": 0.5, "memory": 0.5},
-#     "service2": {"cpu": 1, "memory": 1},
-#     "service3": {"cpu": 1.5, "memory": 2},
-#     # Add more services as needed
-# }
 
 
 # Define a custom problem for deployment optimization
@@ -47,24 +32,30 @@ class DeploymentProblem(Problem):
         total_instances = np.zeros(len(x))
 
         for i in range(len(x)):
-            nodes = defaultdict(dict)
+            nodes = []
             for j in range(len(x[i])):
                 node_type = list(self.instances.keys())[j]
-                num_nodes = int(x[i][j])
+                num_nodes = int(round(x[i][j]))
                 total_instances[i] += num_nodes
-                nodes[node_type]['cost'] = self.instances[node_type]["cost"] * num_nodes
+                nodes += [node_type] * num_nodes
             total_cost[i] = self.cost_func.cost(nodes)
             
             if not self.node_sufficient(self.flag, self.services, nodes, self.instances):
-                total_cost[i],  total_instances[i] =  1e6, -1e6
+                total_cost[i],  total_instances[i] =  np.inf, -np.inf
+            
+            # print(nodes)
+            # print(total_cost[i],  total_instances[i])
         # Set the objectives (minimize cost, maximize number of instances)
-        out["F"] = np.column_stack((-total_cost, total_instances))
+        out["F"] = np.column_stack((total_cost, -total_instances))
+
 
 def node_sufficient(flag, services, node_combination, instances):
+    output = False
     workload = helper.calculateResources(flag, services)
+    max_pod_cpu, max_pod_memory = helper.getPodDetails()
+    total_pods = sum(service['pods'] for service in workload.values())
     total_memory_pods = sum(service['memory'] for service in workload.values())
     total_cpu_pods = sum(service['cpu'] for service in workload.values())
-    
     total_memory_nodes = 0
     total_cpu_nodes = 0
     
@@ -72,47 +63,101 @@ def node_sufficient(flag, services, node_combination, instances):
         total_memory_nodes += instances[node]['memory']
         total_cpu_nodes += instances[node]['cpu']
         
-    if total_memory_nodes >= total_memory_pods and total_cpu_nodes >= total_cpu_pods:
-        return True
+    memory_ration = round(total_memory_nodes / total_memory_pods, 2)
+    cpu_ratio = round(total_cpu_nodes / total_cpu_pods, 2)
+    if (1 <= memory_ration <= 4 and 1 <= cpu_ratio <= 4):
+        remaining_pods = total_pods
+        for node in node_combination:
+            pod_mem = instances[node]['memory'] // max_pod_memory
+            pod_cpu = instances[node]['cpu'] // max_pod_cpu
+            remaining_pods -= min(pod_mem, pod_cpu)
+            
+            if (remaining_pods <= 0):
+                output = True
+                break
     
-    return False
+    # print("node sufficient output: ",output)
+    return output
 
+def plot_pareto(optimal_f):
+    # Extract the cost and number of instances from the objectives
+    total_cost = optimal_f[:, 0]
+    total_instances = -optimal_f[:, 1]
+
+    # Plot the Pareto optimal solutions
+    plt.scatter(total_cost, total_instances)
+    plt.xlabel('Total Cost')
+    plt.ylabel('Number of Instances')
+    plt.title('Pareto Optimal Solutions')
+    plt.grid(True)
+    plt.show()
+    
+def display_optimal_solution(optimal_x, optimal_f, instances):
+    for i in range(len(optimal_x)):
+        node_combination = []
+        for j in range(len(optimal_x[i])):
+            if int(round(optimal_x[i][j])) >= 1:
+                node_type = list(instances.keys())[j]
+                num_nodes = int(round(optimal_x[i][j]))
+                node_combination.extend([node_type] * num_nodes)
+        cost = optimal_f[i][0]  # Extract the cost from the objective values
+
+        print("Node Combination:", node_combination)
+        print("Total Cost:", cost)
+        
 def optimize(instances, flag, costFunc, services, allocated_nodes):
-    r = len(helper.calculateResources(flag, services))
+    workload = helper.calculateResources(flag, services)
+    r = len(workload)
     problem = DeploymentProblem(cost_func = costFunc, node_sufficient = node_sufficient, flag = flag, services = services, instances = instances, r= r)
 
     # Define the algorithm and perform optimization
-    algorithm = NSGA2(pop_size=50)
-    termination = get_termination("n_gen", 50)
+    algorithm = NSGA2(pop_size=100)
+    termination = get_termination("n_gen", 100)
     res = minimize(problem,
                 algorithm,
                 termination,
-                ("n_gen", 50),
+                ("n_gen", 100),
                 verbose=True)
 
     # Get the optimal solutions and objectives
     optimal_x = res.X
     optimal_f = res.F
+    
+    # print("Optimal_x: ", optimal_x)
+    # print("Optimal_f: ", optimal_f)
+    
+    #Plot the Pareto optimal solutions
+    plot_pareto(optimal_f)
 
     # Print the optimal solutions and objectives
     # print("Optimal Solutions:")
-    # print("Optimal_x: ", optimal_x)
-    # print("Optimal_f: ", optimal_f)
     # for i in range(len(optimal_x)):
     #     workload = list(workloads.keys())[i]
     #     num_instances = int(optimal_x[i])
     #     print(f"{workload}: {num_instances}")
 
-    # print("Optimal Objectives:")
-    # print(f"Total Cost: {-optimal_f[:, 0]}")
-    # print(f"Number of Instances: {optimal_f[:, 1]}")
     
-    nodes = defaultdict(dict)
-    for i in range(len(optimal_x)):
-            for j in range(len(optimal_x[i])):
-                node_type = list(instances.keys())[j]
-                num_nodes = int(optimal_x[i][j])
-                nodes[f'solution_{i}'][node_type] = {"count": num_nodes}
-            nodes[f'solution_{i}']['total_cost'] = -optimal_f[i][0]
     
-    print(nodes)
+    
+    
+    # best_solution_index = 0
+    # for i in range(1, len(optimal_x)):
+    #     if optimal_f[i][0] < optimal_f[best_solution_index][0] and -optimal_f[i][1] > -optimal_f[best_solution_index][1]:
+    #         best_solution_index = i
+
+    # # Store the selected node combination and total cost of the best solution
+    # best_solution_x = optimal_x[best_solution_index]
+    # best_solution_total_cost = optimal_f[best_solution_index][0]
+    # best_solution_total_count = -optimal_f[best_solution_index][1]
+
+
+    # # Print or return the best solution
+    # print("Best Solution:")
+    # print("Optimal_x: ", best_solution_x)
+    # print("Total Cost: ", best_solution_total_cost)
+    # print("Total Count: ", best_solution_total_count)
+    
+    print("Wokloads: ", workload)
+    display_optimal_solution(optimal_x, optimal_f, instances)
+    
+   
