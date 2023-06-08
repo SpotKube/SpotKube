@@ -47,9 +47,9 @@ def interpolate(df):
     forecast = model.predict(future)
     predicted_price = forecast['yhat'].iloc[-1]
     
-    print('Predicted spot price:', round(predicted_price, 3))
-    
-    return round(predicted_price, 3)
+    print('Predicted spot price:', round(predicted_price, 4))
+    print('Saved spot price:', round(predicted_price + predicted_price*0.05, 4) )
+    return round(predicted_price + predicted_price*0.05, 4)
 
 def updateJson(file, instance, cost=None, cpu=None, mem=None):
     with open(file, "r") as jsonFile:
