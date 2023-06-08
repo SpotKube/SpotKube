@@ -5,3 +5,8 @@ type CalcUsage struct {
 	NumOfPods int
 	Services  map[string]int
 }
+
+type SvcDetails struct {
+	Name string `json:"name"`
+	Pods int    `json:"pods"`
+}
