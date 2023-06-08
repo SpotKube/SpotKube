@@ -26,6 +26,10 @@ class DeploymentProblem(Problem):
         self.node_sufficient = node_sufficient
         self.workload = workload
         
+    def _initialize(self):
+        num_nodes = len(self.instances)
+        self.x = np.full(num_nodes, 1)
+        
     def _evaluate(self, x, out, *args, **kwargs):
     # Initialize variables for total cost and total instances
         total_cost = np.zeros(len(x))
@@ -43,6 +47,7 @@ class DeploymentProblem(Problem):
             if not self.node_sufficient(self.workload, nodes, self.instances):
                 total_cost[i],  total_instances[i] =  np.inf, -np.inf
             
+        
         # Set the objectives (minimize cost, maximize number of instances)
         out["F"] = np.column_stack((total_cost, -total_instances))
 
@@ -61,7 +66,7 @@ def node_sufficient(workload, node_combination, instances):
         
     memory_ration = round(total_memory_nodes / total_memory_pods, 2)
     cpu_ratio = round(total_cpu_nodes / total_cpu_pods, 2)
-    if (1 <= memory_ration <= 3 and 1 <= cpu_ratio <= 3):
+    if (1 <= memory_ration <= 2 and 1 <= cpu_ratio <= 2):
         remaining_pods = total_pods
         for node in node_combination:
             pod_mem = instances[node]['memory'] // max_pod_memory
@@ -122,12 +127,14 @@ def optimize(instances, flag, costFunc, services, allocated_nodes):
     workload = helper.calculateResources(flag, services)
     if (len(workload) == 0):
         return []
-    r = len(workload)
+    r = len(workload) * 2
+    if (flag):
+        r = helper.getPrivateNodeCount()
     problem = DeploymentProblem(cost_func = costFunc, node_sufficient = node_sufficient, workload = workload, instances = instances, r= r)
 
     # Define the algorithm and perform optimization
-    algorithm = NSGA2(pop_size=100)
-    termination = get_termination("n_gen", 100)
+    algorithm = NSGA2(pop_size=50)
+    termination = get_termination("n_gen", 50)
     res = minimize(problem,
                 algorithm,
                 termination,
