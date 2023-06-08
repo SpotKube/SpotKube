@@ -1,7 +1,7 @@
 import heapq
 from optimization_engine.optimizer.optimizerMain import helper
 
-def optimize(instances, flag, costFunc, services):
+def optimize(instances, flag, costFunc, services, allocated_nodes):
     """
     Finds the optimal set of compute nodes for a workload given their hourly cost and resource availability
     using a greedy algorithm.

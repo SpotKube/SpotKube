@@ -13,6 +13,8 @@ from . import optimizerStrategy
 from . import helper
 from .bruteforce import bruteforce_v1, bruteforce_v2
 from .greedy import greedy_v1, greedy_v2, greedy_v3
+from .ga import pymoo_v2
+
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
 spot_path = os.path.join(dir_path, '../.spotConfig.json')
@@ -33,12 +35,14 @@ async def returnNodeConfiguration(optimizer_strategy_name):
             optimizer = optimizerStrategy.OptimizerStrategy(greedy_v2.optimize)
         elif optimizer_strategy_name == "greedy_v3":
             optimizer = optimizerStrategy.OptimizerStrategy(greedy_v3.optimize)
+        elif optimizer_strategy_name == "pymoo_v2":
+            optimizer = optimizerStrategy.OptimizerStrategy(pymoo_v2.optimize)
         else:
             return {"message": "Invalid optimizer strategy name", "status": 500}
 
         if optimizer is not None:
-            spotNodes = optimizer.optimize(spot, False, publicCost_v1, [])
-            privateNodes = optimizer.optimize(private, True, privateCost_v1, [])
+            spotNodes = optimizer.optimize(spot, False, publicCost_v1, [], [])
+            privateNodes = optimizer.optimize(private, True, privateCost_v1, [], [])
             helper.returnTf(spotNodes, False)
             helper.returnTf(privateNodes, True)
             return {"message": "Optimization completed", "status": 200, "spot": spotNodes, "private": privateNodes}
