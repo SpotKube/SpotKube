@@ -3,6 +3,7 @@ package optimizer
 import (
 	"encoding/json"
 
+	"github.com/SpotKube/SpotKube/src/elastic_scalar/pkg/api"
 	"github.com/SpotKube/SpotKube/src/elastic_scalar/pkg/kube"
 	log "github.com/sirupsen/logrus"
 )
@@ -77,12 +78,12 @@ func Run() {
 		log.Warn("Total CPU usage is greater than total CPU capacity")
 		// Invoke optimization engine to scale up
 		log.Info("Invoking optimization engine")
-		log.Info(servicesJson)
+		api.InvokeOptimizationEngine(servicesJson)
 	} else if totalCpuUsage.TotalCpu < 0.5*totalCpuCapacity {
 		log.Warn("Total CPU usage is less than 50% of total CPU capacity")
 		// Invoke optimization engine to scale down
 		log.Info("Invoking optimization engine")
-		log.Info(servicesJson)
+		api.InvokeOptimizationEngine(servicesJson)
 	} else {
 		log.Info("Total CPU usage is less than total CPU capacity")
 	}
