@@ -125,9 +125,6 @@ def optimize(instances, flag, costFunc, services, allocated_nodes):
     
     # print("Optimal_x: ", optimal_x)
     # print("Optimal_f: ", optimal_f)
-    
-    #Plot the Pareto optimal solutions
-    plot_pareto(optimal_f)
 
     # Print the optimal solutions and objectives
     # print("Optimal Solutions:")
@@ -159,5 +156,5 @@ def optimize(instances, flag, costFunc, services, allocated_nodes):
     
     print("Wokloads: ", workload)
     display_optimal_solution(optimal_x, optimal_f, instances)
-    
+    plot_pareto(optimal_f)
    
