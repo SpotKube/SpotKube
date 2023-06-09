@@ -13,7 +13,7 @@ resource "aws_instance" "master_node" {
 
 resource "aws_instance" "worker_node" {
   ami           = var.ami_id
-  instance_type = "t2.small"
+  instance_type = "t3.medium"
   key_name      = aws_key_pair.key.key_name
 
   subnet_id              = aws_subnet.spot_private_subnet.id
