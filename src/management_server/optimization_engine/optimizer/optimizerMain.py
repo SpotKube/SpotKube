@@ -7,7 +7,7 @@ for i in dirs:
     sys.path.append(package_path)
 
 from optimization_engine.cost_model.publicModel import publicCost_v1
-from optimization_engine.cost_model.privateModel import privateCost_v1
+from optimization_engine.cost_model.privateModel import privateCost_v1, privateCost_v2
 
 from . import optimizerStrategy
 from . import helper
@@ -48,8 +48,9 @@ async def returnNodeConfiguration(optimizer_strategy_name):
             return {"message": "Optimization completed", "status": 200, "spot": spotNodes, "private": privateNodes}
         else:
             return {"message": "Failed to initialize optimizer", "status": 500}
-    except:
+    except Exception as e:
         print("Unexpected error:", sys.exc_info()[0])
+        print("Exception: ", e)
         return {"message": "Error in optimization engine", "status": 500}
     
     

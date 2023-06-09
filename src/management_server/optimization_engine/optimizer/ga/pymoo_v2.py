@@ -1,6 +1,7 @@
 import numpy as np
 from pymoo.algorithms.moo.nsga2 import NSGA2
-from pymoo.factory import get_problem, get_algorithm, get_termination
+from pymoo.termination import get_termination
+
 from pymoo.optimize import minimize
 from pymoo.core.problem import Problem
 
@@ -12,7 +13,7 @@ max_pod_cpu, max_pod_memory = helper.getPodDetails()
 
 # Define a custom problem for deployment optimization
 class DeploymentProblem(Problem):
-    def __init__(self, cost_func, node_sufficient, workload, instances, r):
+    def __init__(self, cost_func, node_sufficient, workload, instances, r, count):
         super().__init__(n_var=len(instances),
                          n_obj=2,
                          n_constr=0,
@@ -25,6 +26,11 @@ class DeploymentProblem(Problem):
         self.cost_func = cost_func
         self.node_sufficient = node_sufficient
         self.workload = workload
+        self.count = count
+        
+    def _initialize(self):
+        num_nodes = len(self.instances)
+        self.x = np.full(num_nodes, 0)
         
     def _evaluate(self, x, out, *args, **kwargs):
     # Initialize variables for total cost and total instances
@@ -40,9 +46,13 @@ class DeploymentProblem(Problem):
                 nodes += [node_type] * num_nodes
             total_cost[i] = self.cost_func.cost(nodes)
             
-            if not self.node_sufficient(self.workload, nodes, self.instances):
-                total_cost[i],  total_instances[i] =  np.inf, -np.inf
-            
+            suff, ratio = self.node_sufficient(self.workload, nodes, self.instances)
+            if not suff:
+                total_cost[i],  total_instances[i] =  1e9, -1e9
+            if suff and 2 < ratio:
+                total_cost[i] = total_cost[i] * ratio
+                total_instances[i] = int(total_instances[i] / ratio)
+        
         # Set the objectives (minimize cost, maximize number of instances)
         out["F"] = np.column_stack((total_cost, -total_instances))
 
@@ -59,9 +69,9 @@ def node_sufficient(workload, node_combination, instances):
         total_memory_nodes += instances[node]['memory']
         total_cpu_nodes += instances[node]['cpu']
         
-    memory_ration = round(total_memory_nodes / total_memory_pods, 2)
+    memory_ratio = round(total_memory_nodes / total_memory_pods, 2)
     cpu_ratio = round(total_cpu_nodes / total_cpu_pods, 2)
-    if (1 <= memory_ration <= 3 and 1 <= cpu_ratio <= 3):
+    if (1 <= memory_ratio and 1 <= cpu_ratio ):
         remaining_pods = total_pods
         for node in node_combination:
             pod_mem = instances[node]['memory'] // max_pod_memory
@@ -72,7 +82,7 @@ def node_sufficient(workload, node_combination, instances):
                 output = True
                 break
     
-    return output
+    return output, max(memory_ratio, cpu_ratio)
 
 def plot_pareto(optimal_f):
     # Extract the cost and number of instances from the objectives
@@ -122,18 +132,23 @@ def optimize(instances, flag, costFunc, services, allocated_nodes):
     workload = helper.calculateResources(flag, services)
     if (len(workload) == 0):
         return []
-    r = len(workload)
-    problem = DeploymentProblem(cost_func = costFunc, node_sufficient = node_sufficient, workload = workload, instances = instances, r= r)
+    r = len(workload) * 2
+    if (flag):
+        r = helper.getPrivateNodeCount() 
+    pop_size = 100
+    n_gen = 100
+    problem = DeploymentProblem(cost_func = costFunc, node_sufficient = node_sufficient, workload = workload, instances = instances, r= r, count = 10)
 
     # Define the algorithm and perform optimization
-    algorithm = NSGA2(pop_size=100)
+    algorithm = NSGA2(pop_size=pop_size)
     termination = get_termination("n_gen", 100)
+    
     res = minimize(problem,
                 algorithm,
                 termination,
-                ("n_gen", 100),
                 verbose=True)
 
+    
     # Get the optimal solutions and objectives
     optimal_x = res.X
     optimal_f = res.F
