@@ -1,6 +1,9 @@
 package optimizer
 
 import (
+	"encoding/json"
+
+	"github.com/SpotKube/SpotKube/src/elastic_scalar/pkg/api"
 	"github.com/SpotKube/SpotKube/src/elastic_scalar/pkg/kube"
 	log "github.com/sirupsen/logrus"
 )
@@ -40,6 +43,7 @@ func calculateTotalCpuUsage() CalcUsage {
 	}
 	log.Info("Total CPU usage: ", totalCpuUsage)
 	log.Info("Number of pods: ", numOfPods)
+	log.Info("Services: ", services)
 
 	return CalcUsage{TotalCpu: totalCpuUsage, NumOfPods: numOfPods, Services: services}
 }
@@ -54,16 +58,32 @@ func calculateTotalCpuCapacity() float64 {
 	return totalCpuCapacity
 }
 
+func convertToJson(services map[string]int) []byte {
+	svc := make([]SvcDetails, 0)
+	for k, v := range services {
+		svc = append(svc, SvcDetails{Name: k, Pods: v})
+	}
+	jsonData, err := json.Marshal(svc)
+	if err != nil {
+		log.Error("Error marshalling services: ", err)
+	}
+	return jsonData
+}
+
 func Run() {
 	totalCpuUsage := calculateTotalCpuUsage()
 	totalCpuCapacity := calculateTotalCpuCapacity()
+	servicesJson := convertToJson(totalCpuUsage.Services)
 	if totalCpuUsage.TotalCpu > 0.8*totalCpuCapacity {
 		log.Warn("Total CPU usage is greater than total CPU capacity")
 		// Invoke optimization engine to scale up
 		log.Info("Invoking optimization engine")
+		api.InvokeOptimizationEngine(servicesJson)
 	} else if totalCpuUsage.TotalCpu < 0.5*totalCpuCapacity {
 		log.Warn("Total CPU usage is less than 50% of total CPU capacity")
 		// Invoke optimization engine to scale down
+		log.Info("Invoking optimization engine")
+		api.InvokeOptimizationEngine(servicesJson)
 	} else {
 		log.Info("Total CPU usage is less than total CPU capacity")
 	}
