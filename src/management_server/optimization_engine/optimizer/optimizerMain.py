@@ -22,7 +22,7 @@ private_path = os.path.join(dir_path, '../.privateConfig.json')
 spot = helper.readJson(spot_path)
 private = helper.readJson(private_path)
 
-async def returnNodeConfiguration(optimizer_strategy_name):
+async def returnNodeConfiguration(optimizer_strategy_name, service_list, allocated_nodes, private_cost_func):
     try :
         optimizer = None
         if optimizer_strategy_name == "bruteforce_v1":
@@ -41,8 +41,8 @@ async def returnNodeConfiguration(optimizer_strategy_name):
             return {"message": "Invalid optimizer strategy name", "status": 500}
 
         if optimizer is not None:
-            spotNodes = optimizer.optimize(spot, False, publicCost_v1, [], [])
-            privateNodes = optimizer.optimize(private, True, privateCost_v1, [], [])
+            spotNodes = optimizer.optimize(spot, False, publicCost_v1, service_list, allocated_nodes)
+            privateNodes = optimizer.optimize(private, True, private_cost_func, service_list, allocated_nodes)
             helper.returnTf(spotNodes, False)
             helper.returnTf(privateNodes, True)
             return {"message": "Optimization completed", "status": 200, "spot": spotNodes, "private": privateNodes}
