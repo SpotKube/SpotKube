@@ -7,7 +7,7 @@ current_dir = os.getcwd()
 terraform_dir = os.path.join(current_dir, "node_allocator", "terraform", "aws")
 logger_dir = os.path.join(current_dir, "logs")
 
-logger = get_logger(path=logger_dir, log_file="aws_terraform.log")
+logger = get_logger(path=logger_dir, log_file="aws_cloud_terraform.log")
     
 # Destroy aws cloud
 async def destroy_aws_cloud():

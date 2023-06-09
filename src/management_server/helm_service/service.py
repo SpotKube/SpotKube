@@ -18,10 +18,14 @@ async def deploy_helm_charts(privateCloud=False):
         file_path = os.path.expanduser(CONFIG_PATH)
         with open(file_path) as f:
             config = yaml.safe_load(f)
+            
+        if privateCloud:
+            logger = get_logger(path=logger_dir, log_file="private_cloud_helm_service.log")
+        else:
+            logger = get_logger(path=logger_dir, log_file="aws_cloud_helm_service.log")
 
         # Loop through each service and install the corresponding Helm chart
         for service in config['services']:
-            
             cloud = service['private']
             if privateCloud != cloud:
                 continue
