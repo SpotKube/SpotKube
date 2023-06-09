@@ -11,11 +11,11 @@ helm_router = APIRouter(
 async def root():
     return {"message": "This is the helm service router"}
 
-@helm_router.get("/deploy-private")
+@helm_router.get("/deploy_private")
 async def route_deploy_helm_chart():
     return await deploy_helm_charts(True)
 
-@helm_router.get("/deploy-aws")
+@helm_router.get("/deploy_aws")
 async def route_deploy_helm_chart():
     return await deploy_helm_charts()
 

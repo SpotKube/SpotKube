@@ -31,7 +31,7 @@ resource "openstack_networking_subnet_v2" "private_subnet" {
   network_id   = openstack_networking_network_v2.private_network.id
   enable_dhcp  = true
   ip_version   = 4
-  dns_nameservers = ["8.8.8.8", "1.1.1.1", "127.0.0.53"]
+  dns_nameservers = ["8.8.8.8"]
 }
 
 # Create public network
