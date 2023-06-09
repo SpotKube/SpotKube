@@ -10,7 +10,7 @@ import (
 
 func InvokeOptimizationEngine(jsonData []byte) {
 	// Make an HTTP GET request to the API endpoint
-	response, err := http.Post("https://api.example.com/data", "application/json", bytes.NewBuffer(jsonData))
+	response, err := http.Post("http://127.0.0.1:8000/opt_eng/get_nodes", "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
 		log.Error("Error:", err)
 		return
