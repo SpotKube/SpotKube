@@ -9,7 +9,7 @@ ansible_dir = os.path.join(current_dir, "node_allocator", "ansible", "public_clo
 terraform_dir = os.path.join(current_dir, "node_allocator", "terraform", "aws")
 logger_dir = os.path.join(current_dir, "logs")
 
-logger = get_logger(path=logger_dir, log_file="aws_cloud_ansible.log")
+public_configure_logger = get_logger(path=logger_dir, log_file="aws_cloud_ansible.log")
 
 async def generate_aws_cloud_hosts_file():
     try:
@@ -43,7 +43,7 @@ async def generate_aws_cloud_hosts_file():
     except  Exception as error:
         print(error)
         error_message = format_terraform_error_message(str(error))
-        logger.error(error_message)
+        public_configure_logger.error(error_message)
         return {"error_message": error_message, "status": 500}
         
 async def configure_aws_nodes():
@@ -68,7 +68,7 @@ async def configure_aws_nodes():
         # # Run the setup_kubectl playbook
         # run_subprocess_popen_cmd(["ansible-playbook", "-i", "hosts", "setup_kubectl.yml"], cwd=ansible_dir)
         
-        logger.info("Aws cloud nodes configured")
+        public_configure_logger.info("Aws cloud nodes configured")
         
         return {"message": "Nodes configured", "status": 200}
     
@@ -77,12 +77,12 @@ async def configure_aws_nodes():
         error_message = e.output.decode("utf-8")
         print(error_message)
         error_message = format_terraform_error_message(str(error_message))
-        logger.error(error_message)
+        public_configure_logger.error(error_message)
         return {"error_message": error_message, "status": 500}
     
     except  Exception as error:
         print(error)
         error_message = format_terraform_error_message(str(error))
-        logger.error(error_message)
+        public_configure_logger.error(error_message)
         return {"error_message": error_message, "status": 500}
 

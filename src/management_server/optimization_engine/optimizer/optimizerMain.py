@@ -8,12 +8,18 @@ for i in dirs:
 
 from optimization_engine.cost_model.publicModel import publicCost_v1
 from optimization_engine.cost_model.privateModel import privateCost_v1, privateCost_v2
+from utils import get_logger
 
 from . import optimizerStrategy
 from . import helper
 from .bruteforce import bruteforce_v1, bruteforce_v2
 from .greedy import greedy_v1, greedy_v2, greedy_v3
 from .ga import pymoo_v2
+
+current_dir = os.getcwd()
+logger_dir = os.path.join(current_dir, "logs")
+
+logger = get_logger(path=logger_dir, log_file="management_server.log")
 
 
 dir_path = os.path.dirname(os.path.abspath(__file__))
@@ -38,6 +44,7 @@ async def returnNodeConfiguration(optimizer_strategy_name, service_list, allocat
         elif optimizer_strategy_name == "pymoo_v2":
             optimizer = optimizerStrategy.OptimizerStrategy(pymoo_v2.optimize)
         else:
+            logger.error("Invalid optimizer strategy name")
             return {"message": "Invalid optimizer strategy name", "status": 500}
 
         if optimizer is not None:
@@ -45,12 +52,15 @@ async def returnNodeConfiguration(optimizer_strategy_name, service_list, allocat
             privateNodes = optimizer.optimize(private, True, private_cost_func, service_list, allocated_nodes)
             helper.returnTf(spotNodes, False)
             helper.returnTf(privateNodes, True)
+            logger.info("Optimization completed")
             return {"message": "Optimization completed", "status": 200, "spot": spotNodes, "private": privateNodes}
         else:
+            logger.error("Failed to initialize optimizer")
             return {"message": "Failed to initialize optimizer", "status": 500}
     except Exception as e:
         print("Unexpected error:", sys.exc_info()[0])
         print("Exception: ", e)
+        logger.error("Error in optimization engine: {0}".format(e))
         return {"message": "Error in optimization engine", "status": 500}
     
     
