@@ -5,7 +5,7 @@ from node_allocator.router_private_cloud import na_private_router
 from node_allocator.router_aws_cloud import na_aws_router
 from helm_service.router import helm_router
 from optimization_engine.router import optimize_engine_router
-from logs.router import log_router
+from log_service.router import log_router
 from router import main_router
 from fastapi.middleware.cors import CORSMiddleware
 
