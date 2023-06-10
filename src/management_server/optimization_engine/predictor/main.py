@@ -1,6 +1,6 @@
-from . import helpers
-from . import spotPredictor
-from . import privateInit
+import helpers
+import spotPredictor
+import privateInit
 
 def predict():
     spots = helpers.getSpotInstances()
