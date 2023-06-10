@@ -73,3 +73,32 @@ resource "aws_security_group" "ingress_kubeapi" {
   }
 }
 
+resource "aws_security_group" "ingress_prometheus" {
+  name_prefix = "allow-prom-sg"
+  vpc_id = data.terraform_remote_state.env_setup.outputs.vpc_id
+
+  ingress {
+    from_port   = 30000
+    to_port     = 30000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 32000
+    to_port     = 32000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 10250
+    to_port     = 10250
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "Prometheus Ingress"
+  }
+}
