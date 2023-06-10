@@ -8,7 +8,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func InvokeOptimizationEngine(jsonData []byte) {
+func InvokeOptimizationEngine(services map[string]int) {
+	jsonData := convertToJson(services)
 	// Make an HTTP GET request to the API endpoint
 	response, err := http.Post("http://127.0.0.1:8000/opt_eng/get_nodes", "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
