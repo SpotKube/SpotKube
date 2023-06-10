@@ -1,6 +1,5 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-from typing import Callable
 
 from .service import *
 from optimization_engine.cost_model.privateModel import privateCost_v1, privateCost_v2

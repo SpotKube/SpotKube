@@ -11,7 +11,7 @@ import (
 func InvokeOptimizationEngine(services map[string]int) {
 	jsonData := convertToJson(services)
 	// Make an HTTP GET request to the API endpoint
-	response, err := http.Post("http://127.0.0.1:8000/opt_eng/get_nodes", "application/json", bytes.NewBuffer(jsonData))
+	response, err := http.Post("http://127.0.0.1:8000/update_aws_cloud", "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
 		log.Error("Error:", err)
 		return
