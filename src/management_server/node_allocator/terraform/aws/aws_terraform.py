@@ -7,14 +7,14 @@ current_dir = os.getcwd()
 terraform_dir = os.path.join(current_dir, "node_allocator", "terraform", "aws")
 logger_dir = os.path.join(current_dir, "logs")
 
-logger = get_logger(path=logger_dir, log_file="aws_cloud_terraform.log")
+public_provisioner_logger = get_logger(path=logger_dir, log_file="aws_cloud_terraform.log")
     
 # Destroy aws cloud
 async def destroy_aws_cloud():
     try:
         # Destroy resources
         run_subprocess_cmd(["terraform", "destroy", "-auto-approve", "-var-file=spot.tfvars"], cwd=terraform_dir)
-        logger.info("Aws cloud destroyed")
+        public_provisioner_logger.info("Aws cloud destroyed")
         return {"message": "Aws cloud destroyed", "status": 200}
     
     except subprocess.CalledProcessError as e:
@@ -22,13 +22,13 @@ async def destroy_aws_cloud():
         error_message = e.output.decode("utf-8")
         print(error_message)
         error_message = format_terraform_error_message(str(error_message))
-        logger.error(error_message)
+        public_provisioner_logger.error(error_message)
         return {"error_message": error_message, "status": 500}
     
     except  Exception as error:
         print(error)
         error_message = format_terraform_error_message(str(error))
-        logger.error(error_message)
+        public_provisioner_logger.error(error_message)
         return {"error_message": error_message, "status": 500}
     
 
@@ -46,7 +46,7 @@ async def destroy_and_provision_aws_cloud():
         if(result["status"] != 200):
             return result
         
-        logger.info("Destroy and provisioning completed")
+        public_provisioner_logger.info("Destroy and provisioning completed")
         return {"message": "Destroy and provisioning completed", "status": 200}
     
     except subprocess.CalledProcessError as e:
@@ -54,13 +54,13 @@ async def destroy_and_provision_aws_cloud():
         error_message = e.output.decode("utf-8")
         print(error_message)
         error_message = format_terraform_error_message(str(error_message))
-        logger.error(error_message)
+        public_provisioner_logger.error(error_message)
         return {"error_message": error_message, "status": 500}
     
     except  Exception as error:
         print(error)
         error_message = format_terraform_error_message(str(error))
-        logger.error(error_message)
+        public_provisioner_logger.error(error_message)
         return {"error_message": error_message, "status": 500}
     
     
@@ -73,7 +73,7 @@ async def provision_aws_cloud():
         if(result["status"] != 200):
             return result
         
-        logger.info("Aws cloud provisioned")
+        public_provisioner_logger.info("Aws cloud provisioned")
         return {"message": "Aws cloud provisioned", "status": 200}
     
     except subprocess.CalledProcessError as e:
@@ -81,13 +81,13 @@ async def provision_aws_cloud():
         error_message = e.output.decode("utf-8")
         print(error_message)
         error_message = format_terraform_error_message(str(error_message))
-        logger.error(error_message)
+        public_provisioner_logger.error(error_message)
         return {"error_message": error_message, "status": 500}
     
     except  Exception as error:
         print(error)
         error_message = format_terraform_error_message(str(error))
-        logger.error(error_message)
+        public_provisioner_logger.error(error_message)
         return {"error_message": error_message, "status": 500}
 
 # Apply changes
@@ -95,10 +95,10 @@ async def apply_aws_cloud():
     try:
         result = await apply_terraform()
         if(result["status"] != 200):
-            logger.error(result["error_message"])
+            public_provisioner_logger.error(result["error_message"])
             return {"error_message": result["error_message"], "status": 500}
             
-        logger.info("Aws cloud changes applied")
+        public_provisioner_logger.info("Aws cloud changes applied")
         return {"message": "Aws cloud changes applied", "status": 200}
     
     except subprocess.CalledProcessError as e:
@@ -106,13 +106,13 @@ async def apply_aws_cloud():
         error_message = e.output.decode("utf-8")
         error_message = format_terraform_error_message(str(error_message))
         print("Hey this is error",error_message)
-        logger.error(error_message)
+        public_provisioner_logger.error(error_message)
         return {"error_message": "error_message", "status": 500}
     
     except  Exception as error:
         print(error)
         error_message = format_terraform_error_message(str(error))
-        logger.error(error_message)
+        public_provisioner_logger.error(error_message)
         return {"error_message": error_message, "status": 500}
 
 # Aws function to apply changes
@@ -136,13 +136,13 @@ async def apply_terraform():
         error_message = e.output.decode("utf-8")
         print(error_message)
         error_message = format_terraform_error_message(str(error_message))
-        logger.error(error_message)
+        public_provisioner_logger.error(error_message)
         return {"error_message": error_message, "status": 500}
     
     except  Exception as error:
         print(error)
         error_message = format_terraform_error_message(str(error))
-        logger.error(error_message)
+        public_provisioner_logger.error(error_message)
         return {"error_message": error_message, "status": 500}
     
 # Aws function to apply changes
@@ -158,12 +158,12 @@ async def write_terraform_output():
         error_message = e.output.decode("utf-8")
         print(error_message)
         error_message = format_terraform_error_message(str(error_message))
-        logger.error(error_message)
+        public_provisioner_logger.error(error_message)
         return {"error_message": error_message, "status": 500}
     
     except  Exception as error:
         print(error)
         error_message = format_terraform_error_message(str(error))
-        logger.error(error_message)
+        public_provisioner_logger.error(error_message)
         return {"error_message": error_message, "status": 500}
     

@@ -1,18 +1,13 @@
 import logging
+from logging.handlers import RotatingFileHandler
 import subprocess
 import re
 import os
 
+max_bytes = 500000
+backup_count = 5
+
 def get_logger(path, log_level=logging.DEBUG, log_file="log.log"):
-    # # Set up the logger
-    # logger = logging.getLogger(__name__)
-    # logger.setLevel(log_level)
-    # formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    # file_handler = logging.FileHandler(f"{path}/{log_file}")
-    # file_handler.setLevel(log_level)
-    # file_handler.setFormatter(formatter)
-    # logger.addHandler(file_handler)
-    # # return logger
     # Check if log file exists
     # Create the directory if it doesn't exist
     os.makedirs(path, exist_ok=True)
@@ -26,7 +21,7 @@ def get_logger(path, log_level=logging.DEBUG, log_file="log.log"):
     logger = logging.getLogger(__name__)
     logger.setLevel(log_level)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    file_handler = logging.FileHandler(log_file_path)
+    file_handler = RotatingFileHandler(log_file_path, maxBytes=max_bytes, backupCount=backup_count)
     file_handler.setLevel(log_level)
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)

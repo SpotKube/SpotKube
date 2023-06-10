@@ -7,7 +7,7 @@ from utils import run_subprocess_cmd, run_subprocess_popen_cmd, format_terraform
 current_dir = os.getcwd()
 logger_dir = os.path.join(current_dir, "logs")
 
-logger = get_logger(path=logger_dir, log_file="helm_service.log")
+helm_service_logger = get_logger(path=logger_dir, log_file="helm_service.log")
 
 # configFilePath = os.path.join(os.path.dirname(__file__), 'config.yml')
 
@@ -20,9 +20,9 @@ async def deploy_helm_charts(privateCloud=False):
             config = yaml.safe_load(f)
             
         if privateCloud:
-            logger = get_logger(path=logger_dir, log_file="private_cloud_helm_service.log")
+            helm_service_logger = get_logger(path=logger_dir, log_file="private_cloud_helm_service.log")
         else:
-            logger = get_logger(path=logger_dir, log_file="aws_cloud_helm_service.log")
+            helm_service_logger = get_logger(path=logger_dir, log_file="aws_cloud_helm_service.log")
 
         # Loop through each service and install the corresponding Helm chart
         for service in config['services']:
@@ -37,6 +37,8 @@ async def deploy_helm_charts(privateCloud=False):
             helm_chart_path = os.path.expanduser(helm_chart_path)
             run_subprocess_popen_cmd(["helm", "upgrade", service_name, "--install", "--set", f"replicaCount={pod_count}", helm_chart_path], cwd=current_dir)        
             # os.system(f"helm upgrade --install --set replicaCount={pod_count} {service_name} {helm_chart_path}")
+        
+        helm_service_logger.info("Deployed successfully")
         return {"status": 200, "message": "Deployed successfully"}
     
     except subprocess.CalledProcessError as e:
@@ -44,12 +46,12 @@ async def deploy_helm_charts(privateCloud=False):
         error_message = e.output.decode("utf-8")
         print(error_message)
         error_message = format_terraform_error_message(str(error_message))
-        logger.error(error_message)
+        helm_service_logger.error(error_message)
         return {"error_message": error_message, "status": 500}
     
     except  Exception as error:
         print(error)
         error_message = format_terraform_error_message(str(error))
-        logger.error(error_message)
+        helm_service_logger.error(error_message)
         return {"error_message": error_message, "status": 500}
     
