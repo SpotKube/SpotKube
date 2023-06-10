@@ -1,8 +1,11 @@
 #! /bin/bash
-set -o errexit
+set -e
 
+echo "This is testing1"
 # Import common functions
 source ../../../scripts/common.sh
+
+echo "This is testing"
 
 cp ../../../../.config/* ~/.config/spotkube
 
@@ -27,7 +30,6 @@ exec 3>&1 1> >(tee >(sed 's/\x1B\[[0-9;]*[JKmsu]//g' >>"${LOG_FILE}") >&3) 2>&1
 # Set the trap to log the date and time of each command
 trap "date -Is" DEBUG
 
-echo
 print_title "Provisioning private cloud environment"
 
 # ------------------------------------- Check if required files exists ---------------------------------------------- #
@@ -196,7 +198,7 @@ COMMENT
 print_info "Coping required files to the private host"
 
 # Connect to the remote server
-ssh -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH $PRIVATE_HOST_USER@$PRIVATE_HOST_IP <<EOF
+ssh -tt -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH $PRIVATE_HOST_USER@$PRIVATE_HOST_IP <<EOF
 if [ ! -d "/home/spotkube/.config/spotkube" ]; then
     mkdir -p /home/spotkube/.config/spotkube
 fi
@@ -208,14 +210,14 @@ if [ ! -d "/home/spotkube/helm_charts" ]; then
 fi
 EOF
 
-# scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr \
-# "$PRIVATE_INSTANCE_SSH_KEY_PATH" "$PRIVATE_INSTANCE_SSH_KEY_PATH.pub" $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/.ssh
+scp -tt -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr \
+"$PRIVATE_INSTANCE_SSH_KEY_PATH" "$PRIVATE_INSTANCE_SSH_KEY_PATH.pub" $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/.ssh
 
-scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr ./scripts/configure_private_management_node.sh \
+
+
+scp -tt -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr ./scripts/configure_private_management_node.sh \
 "$OPENSTACK_CLOUD_YAML_PATH" $AWS_SHARED_CONFIG_FILE_PATH $AWS_SHARED_CREDENTIALS_FILE_PATH ~/.config/spotkube/ \
 $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/
-
-print_info "Copied1"
 
 # ------- Copying helm charts to the private host ------- #
 # Read helm chart paths from user_config.yml
@@ -246,7 +248,7 @@ do
 done
 
 # SSH to the private host and then ssh to the management node and run the configure_management_node.sh script
-ssh -o StrictHostKeyChecking=no -i "$PRIVATE_HOST_SSH_KEY_PATH" -T $PRIVATE_HOST_USER@$PRIVATE_HOST_IP <<EOF
+ssh -tt -o StrictHostKeyChecking=no -i "$PRIVATE_HOST_SSH_KEY_PATH" -T $PRIVATE_HOST_USER@$PRIVATE_HOST_IP <<EOF
 
 mkdir -p ~/management_node
 mv ~/configure_private_management_node.sh ~/management_node/

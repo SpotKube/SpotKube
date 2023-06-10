@@ -31,10 +31,54 @@ function run_analytical_model {
 
 # ------------------------------------- Provisioner service functions ---------------------------------------------- #
 
+# TODO: Fix and check if this works
+run_with_whiptail() {
+    local command="$1"
+    local title="$2"
+    local message="$3"
+
+    # Create a temporary file to capture the command output
+    local temp_file=$(mktemp)
+
+    whiptail --msgbox "$command" 8 40
+    # Run the command in the background and redirect its output to the temporary file
+    "$command" >"$temp_file" 2>&1 &
+
+    # Start a loop to read the command output from the temporary file
+    while :
+    do
+        # Read the latest output from the temporary file
+        local output=$(tail -n 1 "$temp_file")
+
+        # Check if the command has completed by checking if the output is empty
+        if [ -z "$output" ]; then
+            break
+        fi
+
+        # Update the Whiptail gauge with the current output
+        echo "$output"
+
+        # Sleep for a short duration to allow time for Whiptail to update the display
+        sleep 0.1
+    done | whiptail --gauge "$title" 6 60 0
+
+    # Check if the user pressed the 'ESC' key
+    if [ $? -eq 255 ]; then
+        echo "Operation terminated by the user."
+        kill %1  # Terminate the background command
+        exit 0
+    fi
+
+    # Close and remove the temporary file
+    rm "$temp_file"
+
+    whiptail --msgbox "$message" 8 40
+}
+
 # Function to run provisioner options
 function run_provisioner_options {
     while true; do
-        choice=$(whiptail --title "SpotKube Provisioner Options" --menu "Please choose your action:" 12 50 7 \
+        choice=$(whiptail --title "SpotKube Provisioner Options" --menu "Please choose your action:" 16 50 7 \
             "1" "Initialize" \
             "2" "Configure" \
             "3" "Init Reconfigure" \
@@ -46,19 +90,19 @@ function run_provisioner_options {
 
         case $choice in
             4)
-                ./terraform_run.sh -d
+                run_with_whiptail "terraform_run.sh -d" "Destroying..." "Process completed."
                 ;;
             5)
-                ./terraform_run.sh -db
+                run_with_whiptail "terraform_run.sh -db" "Destroying and deploying..." "Process completed."
                 ;;
             3)
-                ./terraform_run.sh -r
+                run_with_whiptail "terraform_run.sh -r" "Provisioning with reconfiguration..." "Process completed."
                 ;;
             2)
-                ./terraform_run.sh -c
+                run_with_whiptail "terraform_run.sh -c" "Configuring..." "Process completed."
                 ;;
             1)
-                ./terraform_run.sh -i
+                run_with_whiptail "bash terraform_run.sh -i" "Initializing..." "Process completed."
                 ;;
             6)
                 return  # Go back to the previous menu
@@ -67,7 +111,7 @@ function run_provisioner_options {
                 exit_script
                 ;;
             *)
-                whiptail --msgbox "Invalid choice. Please try again." 8 40
+                exit_script
                 ;;
         esac
     done
@@ -101,7 +145,7 @@ function run_provisioner {
                 exit_script
                 ;;
             *)
-                whiptail --msgbox "Invalid choice. Please try again." 8 40
+                exit_script
                 ;;
         esac
     done
@@ -119,7 +163,7 @@ function exit_script {
 # Main loop to prompt user for service choice
 while true
 do
-    choice=$(whiptail --title "SpotKube Menu" --menu --nocancel "Please select a service to run:" --backtitle "Check" 12 50 4 \
+    choice=$(whiptail --title "SpotKube Menu" --menu --nocancel "Please select a service to run:" 12 50 4 \
         "1" "Load Testing" \
         "2" "Analytical Model" \
         "3" "Provisioner" \
@@ -128,6 +172,7 @@ do
 
     case $choice in
         1)
+            # run_load_testing
             run_load_testing
             ;;
         2)
@@ -140,7 +185,8 @@ do
             exit_script
             ;;
         *)
-            whiptail --msgbox "Invalid choice. Please try again." 8 40
+            # whiptail --msgbox "Invalid choice. Please try again." 8 40
+            exit_script
             ;;
     esac
 done
