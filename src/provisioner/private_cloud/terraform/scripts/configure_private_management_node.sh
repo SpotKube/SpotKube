@@ -7,3 +7,5 @@ source "../../../common/scripts/common_pkg_installer.sh"
 touch ~/.ansible.cfg
 echo "[defaults]" >> ~/.ansible.cfg
 echo "host_key_checking = False" >> ~/.ansible.cfg
+
+source "../../../common/scripts/configure_services.sh"

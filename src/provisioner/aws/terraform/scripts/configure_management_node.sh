@@ -34,4 +34,6 @@ sudo apt-get install helm --yes
 # Cleanup
 rm -rf awscliv2.zip aws kubectl
 
+source "../../../common/scripts/configure_services.sh"
+
 print_info "Instalation completed successfully"
