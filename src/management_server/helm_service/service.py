@@ -35,7 +35,7 @@ async def deploy_helm_charts(privateCloud=False):
             service_name = service['name']
             
             helm_chart_path = os.path.expanduser(helm_chart_path)
-            run_subprocess_popen_cmd(["helm", "upgrade", service_name, "--install", "--set", f"replicaCount={pod_count}", helm_chart_path], cwd=current_dir)        
+            run_subprocess_popen_cmd(["helm", "install", "--namespace" ,"default", "--set", f"replicaCount={pod_count}", helm_chart_path, "--generate-name"], cwd=current_dir)        
             # os.system(f"helm upgrade --install --set replicaCount={pod_count} {service_name} {helm_chart_path}")
         
         helm_service_logger.info("Deployed successfully")

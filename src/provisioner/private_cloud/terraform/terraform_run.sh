@@ -1,8 +1,11 @@
 #! /bin/bash
-set -o errexit
+set -e
 
+echo "This is testing1"
 # Import common functions
 source ../../../scripts/common.sh
+
+echo "This is testing"
 
 cp ../../../../.config/* ~/.config/spotkube
 
@@ -27,7 +30,6 @@ exec 3>&1 1> >(tee >(sed 's/\x1B\[[0-9;]*[JKmsu]//g' >>"${LOG_FILE}") >&3) 2>&1
 # Set the trap to log the date and time of each command
 trap "date -Is" DEBUG
 
-echo
 print_title "Provisioning private cloud environment"
 
 # ------------------------------------- Check if required files exists ---------------------------------------------- #
@@ -182,9 +184,6 @@ print_info "Management node floating IP: $management_node_floating_ip"
 # Use the 'basename' command to get the filename without the directory path
 PRIVATE_INSTANCE_SSH_KEY_NAME=$(basename "$PRIVATE_INSTANCE_SSH_KEY_PATH")
 
-# Print the value of PRIVATE_INSTANCE_SSH_KEY_NAME
-print_error "PRIVATE_INSTANCE_SSH_KEY_NAME: $PRIVATE_INSTANCE_SSH_KEY_NAME"
-
 # ------------------------------------ Configuring the private cloud ------------------------------------------------ #
 <<COMMENT
 Due to a limitation in the security rules of the private cloud that prevents the configuration file from being 
@@ -196,7 +195,7 @@ COMMENT
 print_info "Coping required files to the private host"
 
 # Connect to the remote server
-ssh -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH $PRIVATE_HOST_USER@$PRIVATE_HOST_IP <<EOF
+ssh -tt -o StrictHostKeyChecking=no -o ConnectTimeout=10 -i $PRIVATE_HOST_SSH_KEY_PATH $PRIVATE_HOST_USER@$PRIVATE_HOST_IP <<EOF
 if [ ! -d "/home/spotkube/.config/spotkube" ]; then
     mkdir -p /home/spotkube/.config/spotkube
 fi
@@ -208,14 +207,14 @@ if [ ! -d "/home/spotkube/helm_charts" ]; then
 fi
 EOF
 
-# scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr \
-# "$PRIVATE_INSTANCE_SSH_KEY_PATH" "$PRIVATE_INSTANCE_SSH_KEY_PATH.pub" $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/.ssh
+scp -tt -o StrictHostKeyChecking=no -o ConnectTimeout=10 -i $PRIVATE_HOST_SSH_KEY_PATH -vr \
+"$PRIVATE_INSTANCE_SSH_KEY_PATH" "$PRIVATE_INSTANCE_SSH_KEY_PATH.pub" $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/.ssh
 
-scp -o StrictHostKeyChecking=no -i $PRIVATE_HOST_SSH_KEY_PATH -vr ./scripts/configure_private_management_node.sh \
+
+
+scp -tt -o StrictHostKeyChecking=no -o ConnectTimeout=10 -i $PRIVATE_HOST_SSH_KEY_PATH -vr ./scripts/configure_private_management_node.sh \
 "$OPENSTACK_CLOUD_YAML_PATH" $AWS_SHARED_CONFIG_FILE_PATH $AWS_SHARED_CREDENTIALS_FILE_PATH ~/.config/spotkube/ \
 $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:~/
-
-print_info "Copied1"
 
 # ------- Copying helm charts to the private host ------- #
 # Read helm chart paths from user_config.yml
@@ -242,11 +241,11 @@ echo "HELM_CHARTS: ${HELM_CHARTS[@]}"
 for chart in "${HELM_CHARTS[@]}"
 do
     echo "Copying $chart to $PRIVATE_HOST_USER@$PRIVATE_HOST_IP"
-    scp -o StrictHostKeyChecking=no -i "$PRIVATE_HOST_SSH_KEY_PATH" -vr "$chart" "$PRIVATE_HOST_USER@$PRIVATE_HOST_IP":~/helm_charts/
+    scp -o StrictHostKeyChecking=no -o ConnectTimeout=10 -i "$PRIVATE_HOST_SSH_KEY_PATH" -vr "$chart" "$PRIVATE_HOST_USER@$PRIVATE_HOST_IP":~/helm_charts/
 done
 
 # SSH to the private host and then ssh to the management node and run the configure_management_node.sh script
-ssh -o StrictHostKeyChecking=no -i "$PRIVATE_HOST_SSH_KEY_PATH" -T $PRIVATE_HOST_USER@$PRIVATE_HOST_IP <<EOF
+ssh -tt -o StrictHostKeyChecking=no -o ConnectTimeout=10 -i "$PRIVATE_HOST_SSH_KEY_PATH" -T $PRIVATE_HOST_USER@$PRIVATE_HOST_IP <<EOF
 
 mkdir -p ~/management_node
 mv ~/configure_private_management_node.sh ~/management_node/
@@ -254,17 +253,17 @@ mv ~/configure_private_management_node.sh ~/management_node/
 # copy configure_management_node.sh to the management node
 echo "Coping required files to the management node"
 
-scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr ~/config ~/credentials \
+scp -o StrictHostKeyChecking=no -o ConnectTimeout=10 -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr ~/config ~/credentials \
 ~/management_node/configure_private_management_node.sh ~/clouds.yaml ~/spotkube/ ~/helm_charts/ \
 $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/
 
-scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr \
+scp -o StrictHostKeyChecking=no -o ConnectTimeout=10 -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr \
 "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/.ssh
 
-scp -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr \
+scp -o StrictHostKeyChecking=no -o ConnectTimeout=10 -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -vr \
 $PRIVATE_HOST_USER@$PRIVATE_HOST_IP:"~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME.pub" $PRIVATE_INSTANCE_USER@$management_node_floating_ip:~/.ssh
 
-ssh -o StrictHostKeyChecking=no -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -T $PRIVATE_INSTANCE_USER@$management_node_floating_ip <<FED1
+ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 -i "~/.ssh/$PRIVATE_INSTANCE_SSH_KEY_NAME" -T $PRIVATE_INSTANCE_USER@$management_node_floating_ip <<FED1
 sudo sed -i '1i127.0.0.1 private-management' /etc/hosts
 
 touch ~/resolv.conf
