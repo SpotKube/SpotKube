@@ -1,4 +1,4 @@
-import helpers as predictorutils
+from . import helpers as predictorutils
 import os
 import sys
 
