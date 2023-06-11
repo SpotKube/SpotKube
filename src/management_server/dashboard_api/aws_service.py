@@ -78,13 +78,12 @@ def get_spot_pricing(instance_type, region):
 
     response = ec2_client.describe_spot_price_history(
         InstanceTypes=[instance_type],
-        MaxResults=1,
+        MaxResults=10,
         ProductDescriptions=['Linux/UNIX'],
-        AvailabilityZone=region+'a',
+        AvailabilityZone=region+'a', # Currently only supports one AZ, 
     )
 
     prices = []
     for price in response['SpotPriceHistory']:
-        prices.append(price['SpotPrice'])
-
+        prices.insert(0, {'timestamp':price['Timestamp'], 'price':price['SpotPrice']})
     return prices
