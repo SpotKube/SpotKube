@@ -45,22 +45,17 @@ run_with_whiptail() {
     "$command" >"$temp_file" 2>&1 &
 
     # Start a loop to read the command output from the temporary file
-    while :
-    do
-        # Read the latest output from the temporary file
-        local output=$(tail -n 1 "$temp_file")
-
-        # Check if the command has completed by checking if the output is empty
-        if [ -z "$output" ]; then
-            break
-        fi
-
-        # Update the Whiptail gauge with the current output
+    {
+    output=$($command 2>&1)
+    exit_code=$?
+    
+    if [ $exit_code -eq 0 ]; then
+        echo "Process completed."
+    else
+        echo "Error occurred. Exit code: $exit_code"
         echo "$output"
-
-        # Sleep for a short duration to allow time for Whiptail to update the display
-        sleep 0.1
-    done | whiptail --gauge "$title" 6 60 0
+    fi
+    } | whiptail --gauge "Running terraform_run.sh -c" 6 60 0
 
     # Check if the user pressed the 'ESC' key
     if [ $? -eq 255 ]; then
@@ -72,7 +67,7 @@ run_with_whiptail() {
     # Close and remove the temporary file
     rm "$temp_file"
 
-    whiptail --msgbox "$message" 8 40
+    whiptail --msgbox "$output" 8 40
 }
 
 # Function to run provisioner options
@@ -90,19 +85,20 @@ function run_provisioner_options {
 
         case $choice in
             4)
-                run_with_whiptail "terraform_run.sh -d" "Destroying..." "Process completed."
+                terraform_run.sh -d
                 ;;
             5)
-                run_with_whiptail "terraform_run.sh -db" "Destroying and deploying..." "Process completed."
+                terraform_run.sh -db
                 ;;
             3)
-                run_with_whiptail "terraform_run.sh -r" "Provisioning with reconfiguration..." "Process completed."
+                terraform_run.sh -r
                 ;;
             2)
-                run_with_whiptail "terraform_run.sh -c" "Configuring..." "Process completed."
+                terraform_run.sh -c
                 ;;
             1)
-                run_with_whiptail "bash terraform_run.sh -i" "Initializing..." "Process completed."
+               
+                 terraform_run.sh -i
                 ;;
             6)
                 return  # Go back to the previous menu
