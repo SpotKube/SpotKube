@@ -46,12 +46,12 @@ async def startUpPrivateCloud():
     return {"message": "Private cloud started", "status": 200, "elapsedTime": elapsed_time}
     
 # This function is called when the elastic scaler wants to update the private cloud
-async def updatePrivateCloud():
+async def updatePrivateCloud(services_list):
     # Start measuring the time
     start_time = time.time()
     
     # Get optimal node configuration
-    res = await service_get_node_configuration("greedy_v2")
+    res = await service_get_node_configuration(services_list)
     if (res["status"] != 200):
         return res
     
@@ -61,11 +61,6 @@ async def updatePrivateCloud():
         return res
     
     res = await service_configure_private_cloud()
-    if (res["status"] != 200):
-        return res
-    
-    # Deploy the helm charts
-    res = await deploy_helm_charts(True)
     if (res["status"] != 200):
         return res
     
@@ -108,12 +103,12 @@ async def startUpAwsCloud():
     
     
 # This function is called when the elastic scaler wants to update the aws cloud
-async def updateAwsCloud():
+async def updateAwsCloud(optimizer_strategy_name, service_list, allocated_nodes, private_cost_func):
     # Start measuring the time
     start_time = time.time()
     
     # Get optimal node configuration
-    res = await service_get_node_configuration("greedy_v2")
+    res = await service_get_node_configuration(optimizer_strategy_name, service_list, allocated_nodes, private_cost_func)
     if (res["status"] != 200):
         return res
     
@@ -123,11 +118,6 @@ async def updateAwsCloud():
         return res
     
     res = await service_configure_aws_cloud()
-    if (res["status"] != 200):
-        return res
-    
-    # Deploy the helm charts
-    res = await deploy_helm_charts()
     if (res["status"] != 200):
         return res
     

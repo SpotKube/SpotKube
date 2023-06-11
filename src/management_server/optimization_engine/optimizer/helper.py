@@ -28,6 +28,7 @@ def calculateResources(flag, services_list):
                 print(exc)
     else:
         services = services_list
+        maxCPU, maxMemory = getPodDetails()
                
     for service in services:
         pods[service['name']]['pods'] = service['pods']

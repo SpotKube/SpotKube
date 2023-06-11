@@ -1,7 +1,8 @@
-from helpers import history, interpolate, updateJson
+from helpers import history, interpolate, updateJson, readJson
 import os
 import boto3
 import sys
+import datetime
 
 dirs = ['optimizer', 'cost_model']
 for i in dirs:
@@ -12,9 +13,12 @@ def predict(instance):
     print(f"{instance} Prediction Started")
     dir_path = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(dir_path, '../.spotConfig.json')
-    region = "us-east-1"
-    client = boto3.client('ec2', region_name=region)
-    df = history(client, instance, region)
-    price = interpolate(df)
-    updateJson(file_path, instance, cost = price)
-    
+    data = readJson(file_path)
+    if (data[instance]['date'] != datetime.datetime.now().strftime('%Y-%m-%d')):
+        region = "us-east-1"
+        client = boto3.client('ec2', region_name=region)
+        df = history(client, instance, region)
+        price = interpolate(df)
+        updateJson(file_path, instance, cost = price)
+    else:
+        print(f"Already spot price predicted for {instance}")
