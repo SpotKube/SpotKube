@@ -49,12 +49,6 @@ def get_on_demand_pricing(instance_type):
 
     return price
 
-# instance_type = 't2.micro'  # Replace with the desired instance type
-# price = get_on_demand_pricing(instance_type)
-# print(f"On-demand pricing for {instance_type}: ${price}/hour")
-
-# Return spot instances in a given vpc
-
 def get_running_instances(region):
     ec2 = boto3.client('ec2', region_name=region)
     
@@ -71,8 +65,6 @@ def get_running_instances(region):
             instances.append(ec2Details)
     return instances
 
-import boto3
-
 def get_spot_pricing(instance_type, region):
     ec2_client = boto3.client('ec2', region_name=region)
 
@@ -87,3 +79,37 @@ def get_spot_pricing(instance_type, region):
     for price in response['SpotPriceHistory']:
         prices.insert(0, {'timestamp':price['Timestamp'], 'price':price['SpotPrice']})
     return prices
+
+def get_aws_billing_data(start_date, end_date):
+    # Create a Boto3 client for the Cost Explorer service
+    ce_client = boto3.client('ce')
+
+    # Specify the time period for which you want to retrieve billing data
+    time_period = {
+        'Start': start_date,
+        'End': end_date
+    }
+
+    # Specify the metrics you want to retrieve
+    metrics = ['BlendedCost']  # You can add more metrics like 'UnblendedCost', 'UsageQuantity', etc.
+
+    # Make the API call to get the billing data
+    response = ce_client.get_cost_and_usage(
+        TimePeriod=time_period,
+        Granularity='DAILY',  # You can specify other granularities like 'MONTHLY', 'HOURLY', etc.
+        Metrics=metrics
+    )
+
+    # Retrieve the data from the response
+    results = response['ResultsByTime']
+
+    # Print the billing data for each day
+    for result in results:
+        start = result['TimePeriod']['Start']
+        end = result['TimePeriod']['End']
+        cost = result['Total']['BlendedCost']['Amount']
+        unit = result['Total']['BlendedCost']['Unit']
+
+        print(f"Period: {start} - {end}")
+        print(f"Cost: {cost} {unit}")
+        print('---')
