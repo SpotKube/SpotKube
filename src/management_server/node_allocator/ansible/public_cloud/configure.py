@@ -37,7 +37,8 @@ async def generate_aws_cloud_hosts_file():
             f.write('ansible_connection=ssh\n')
             f.write('ansible_user=ubuntu\n')
             f.write(f'ansible_ssh_aws_key_file=~/.ssh/{key_name}\n')
-            
+        
+        public_configure_logger.info("Host file generated") 
         return {"message": "Ansible hosts file generated", "status": 200}
     
     except  Exception as error:
@@ -49,7 +50,9 @@ async def generate_aws_cloud_hosts_file():
 async def configure_aws_nodes():
     try:
         # Generate the Ansible hosts file
-        await generate_aws_cloud_hosts_file()
+        res = await generate_aws_cloud_hosts_file()
+        if (res["status"] != 200):
+            return res
         
         run_subprocess_popen_cmd(["bash", "ansible_run.sh"], cwd=ansible_dir)
         
