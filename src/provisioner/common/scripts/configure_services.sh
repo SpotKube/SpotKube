@@ -39,4 +39,4 @@ sudo systemctl daemon-reload
 
 # Start the spotkube service
 sudo systemctl start spotkube_ms.service
-sudo systemctl start spotkube_es.service
+# sudo systemctl start spotkube_es.service
