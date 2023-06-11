@@ -184,9 +184,6 @@ print_info "Management node floating IP: $management_node_floating_ip"
 # Use the 'basename' command to get the filename without the directory path
 PRIVATE_INSTANCE_SSH_KEY_NAME=$(basename "$PRIVATE_INSTANCE_SSH_KEY_PATH")
 
-# Print the value of PRIVATE_INSTANCE_SSH_KEY_NAME
-print_error "PRIVATE_INSTANCE_SSH_KEY_NAME: $PRIVATE_INSTANCE_SSH_KEY_NAME"
-
 # ------------------------------------ Configuring the private cloud ------------------------------------------------ #
 <<COMMENT
 Due to a limitation in the security rules of the private cloud that prevents the configuration file from being 
