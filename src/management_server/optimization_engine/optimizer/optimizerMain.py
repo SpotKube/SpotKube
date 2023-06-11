@@ -8,6 +8,7 @@ for i in dirs:
 
 from optimization_engine.cost_model.publicModel import publicCost_v1
 from optimization_engine.cost_model.privateModel import privateCost_v1, privateCost_v2
+from optimization_engine.predictor import main
 from utils import get_logger
 
 from . import optimizerStrategy
@@ -47,6 +48,9 @@ async def returnNodeConfiguration(optimizer_strategy_name, service_list, allocat
             logger.error("Invalid optimizer strategy name")
             return {"message": "Invalid optimizer strategy name", "status": 500}
 
+        # predict spot price and private node price if need
+        main.predict()
+        
         if optimizer is not None:
             spotNodes = optimizer.optimize(spot, False, publicCost_v1, service_list, allocated_nodes)
             privateNodes = optimizer.optimize(private, True, private_cost_func, service_list, allocated_nodes)

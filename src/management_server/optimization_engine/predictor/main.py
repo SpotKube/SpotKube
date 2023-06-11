@@ -1,6 +1,6 @@
-import helpers
-import spotPredictor
-import privateInit
+from . import helpers
+from . import spotPredictor
+from . import privateInit
 
 def predict():
     spots = helpers.getSpotInstances()
@@ -8,6 +8,3 @@ def predict():
         spotPredictor.predict(spot)
 
     privateInit.updatePrivateConfig()
-    
-if __name__ == '__main__':
-    predict()

@@ -1,4 +1,4 @@
-from helpers import history, interpolate, updateJson, readJson
+from .helpers import history, interpolate, updateJson, readJson
 import os
 import boto3
 import sys
@@ -18,7 +18,7 @@ def predict(instance):
         region = "us-east-1"
         client = boto3.client('ec2', region_name=region)
         df = history(client, instance, region)
-        price = interpolate(df)
+        price = interpolate(df, instance, region)
         updateJson(file_path, instance, cost = price)
     else:
         print(f"Already spot price predicted for {instance}")
