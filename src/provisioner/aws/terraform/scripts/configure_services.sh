@@ -23,6 +23,9 @@ sudo ln -s /etc/nginx/sites-available/spotkube /etc/nginx/sites-enabled/
 # Restart the nginx service
 sudo systemctl restart nginx.service
 
+# Build binary for elastic scalar
+./../../../elastic_scalar/scripts/setup.sh
+
 # Copy spotkube.service to /etc/systemd/system
 sudo cp spotkube.service /etc/systemd/system/
 sudo chown root:root /etc/systemd/system/spotkube.service
