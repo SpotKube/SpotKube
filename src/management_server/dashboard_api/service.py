@@ -1,7 +1,9 @@
 from .aws_service import get_on_demand_pricing, get_running_instances, get_spot_pricing
 
+region = 'us-east-1'
+
 def get_spot_instances():
-    running_instances = get_running_instances()
+    running_instances = get_running_instances(region)
     spot_instances = []
     on_demand_pricing = {}
     spot_pricing = {}
@@ -13,7 +15,7 @@ def get_spot_instances():
                 if instance['instanceType'] not in on_demand_pricing:
                     on_demand_pricing[instance['instanceType']] = get_on_demand_pricing(instance['instanceType'])
                 if instance['instanceType'] not in spot_pricing:
-                    spot_pricing[instance['instanceType']] = get_spot_pricing(instance['instanceType'], 'us-east-1')
+                    spot_pricing[instance['instanceType']] = get_spot_pricing(instance['instanceType'], region)
                 ec2Details = {
                     'instanceId': instance['instanceId'],
                     'instanceType': instance['instanceType'],

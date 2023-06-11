@@ -55,8 +55,8 @@ def get_on_demand_pricing(instance_type):
 
 # Return spot instances in a given vpc
 
-def get_running_instances():
-    ec2 = boto3.client('ec2')
+def get_running_instances(region):
+    ec2 = boto3.client('ec2', region_name=region)
     
     response = ec2.describe_instances()
     
@@ -80,7 +80,7 @@ def get_spot_pricing(instance_type, region):
         InstanceTypes=[instance_type],
         MaxResults=1,
         ProductDescriptions=['Linux/UNIX'],
-        AvailabilityZone='us-east-1a'
+        AvailabilityZone=region+'a',
     )
 
     prices = []
