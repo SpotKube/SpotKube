@@ -26,12 +26,17 @@ sudo systemctl restart nginx.service
 # Build binary for elastic scalar
 ./../../../elastic_scalar/scripts/setup.sh
 
-# Copy spotkube.service to /etc/systemd/system
-sudo cp spotkube.service /etc/systemd/system/
-sudo chown root:root /etc/systemd/system/spotkube.service
+# Copy spotkube_ms.service to /etc/systemd/system
+sudo cp spotkube_ms.service /etc/systemd/system/
+sudo chown root:root /etc/systemd/system/spotkube_ms.service
+
+# Copy spotkube_es.service to /etc/systemd/system
+sudo cp spotkube_es.service /etc/systemd/system/
+sudo chown root:root /etc/systemd/system/spotkube_es.service
 
 # Reload systemd
 sudo systemctl daemon-reload
 
 # Start the spotkube service
-sudo systemctl start spotkube.service
+sudo systemctl start spotkube_ms.service
+sudo systemctl start spotkube_es.service
