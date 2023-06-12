@@ -275,7 +275,7 @@ sudo /etc/init.d/networking restart
 mkdir -p ~/scripts
 mv ~/configure_private_management_node.sh ~/scripts/
 
-sh ~/scripts/configure_private_management_node.sh
+bash ~/scripts/configure_private_management_node.sh $management_node_floating_ip
 echo "Configure management node done"
 
 if [ ! -d "/home/ubuntu/.config/spotKube" ]; then
