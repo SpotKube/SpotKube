@@ -29,6 +29,18 @@ curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stabl
 sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 rm -rf kubeclt
 
-# Install golang
+# Install nginx
 sudo apt update
-sudo apt install -y golang
+sudo apt install -y nginx
+# Enable nginx service
+sudo systemctl enable nginx.service
+sudo systemctl start nginx.service
+
+# Install golang
+curl -OL https://go.dev/dl/go1.20.5.linux-amd64.tar.gz
+sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.20.5.linux-amd64.tar.gz
+rm -rf go1.20.5.linux-amd64.tar.gz
+export PATH=$PATH:/usr/local/go/bin
+echo "export PATH=$PATH:/usr/local/go/bin" >> ~/.bashrc
+source ~/.bashrc
+
