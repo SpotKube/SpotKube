@@ -196,7 +196,7 @@ function run_provisioner_options {
     while true; do
         choice=$(whiptail --nocancel --title "SpotKube Provisioner Options" --menu "Please choose your action:" 16 50 7 \
             "1" "Initialize" \
-            "2" "Configure" \
+            "2" "Configure Only" \
             "3" "Init Reconfigure" \
             "4" "Destroy" \
             "5" "Destroy and Build" \
@@ -206,20 +206,25 @@ function run_provisioner_options {
 
         case $choice in
             4)
-                terraform_run.sh -d
+                bash terraform_run.sh -d
+                whiptail --title "Result" --msgbox "Destroyed Successfully." 8 40
                 ;;
             5)
-                terraform_run.sh -db
+                bash terraform_run.sh -db
+                whiptail --title "Result" --msgbox "Destroyed and Built Successfully." 8 40
                 ;;
             3)
-                terraform_run.sh -r
+                bash terraform_run.sh -r
+                whiptail --title "Result" --msgbox "Reconfigured Successfully." 8 40
                 ;;
             2)
-                terraform_run.sh -c
+                bash terraform_run.sh -c
+                whiptail --title "Result" --msgbox "Configured Successfully." 8 40
                 ;;
             1)
                
-                 terraform_run.sh -i
+                bash terraform_run.sh -i
+                whiptail --title "Result" --msgbox "Initialized Successfully." 8 40
                 ;;
             6)
                 return  # Go back to the previous menu
