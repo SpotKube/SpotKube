@@ -3,7 +3,7 @@
 management_node="$1"
 
 # Change directory to /etc/nginx
-cd /etc/nginx/sites-available
+pushd /etc/nginx/sites-available
 
 # Create or edit the 'mgt_server' file
 cat <<EOF | sudo tee spotkube
@@ -22,6 +22,9 @@ sudo ln -s /etc/nginx/sites-available/spotkube /etc/nginx/sites-enabled/
 
 # Restart the nginx service
 sudo systemctl restart nginx.service
+
+# Back to the original directory
+popd
 
 # Build binary for elastic scalar
 ./../../../elastic_scalar/scripts/setup.sh
