@@ -227,9 +227,7 @@ scp -o StrictHostKeyChecking=no -o ConnectTimeout=10 -i ~/.ssh/id_spotkube -vr p
 ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 -i "~/.ssh/id_spotkube" ubuntu@$management_node_public_ip <<EOF
 cd SpotKube/src/provisioner/aws/terraform/scripts
 chmod +x configure_management_node.sh
-chmod +x configure_services.sh
-./configure_management_node.sh
-./configure_services.sh $management_node_public_ip
+./configure_management_node.sh $management_node_public_ip
 EOF
 
 # Copy the aws shared config and credentials files to the management node
