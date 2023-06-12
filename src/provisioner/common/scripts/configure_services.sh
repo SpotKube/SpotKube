@@ -10,7 +10,7 @@ cat <<EOF | sudo tee spotkube
 # Management server API
 server {
     listen 80;
-    server_name ${MGT_SERVER};
+    server_name ${management_node};
     location / {
         proxy_pass http://localhost:8000;
     }
@@ -27,7 +27,9 @@ sudo systemctl restart nginx.service
 popd
 
 # Build binary for elastic scalar
-./../../../elastic_scalar/scripts/setup.sh
+../../../../elastic_scalar/scripts/setup.sh
+
+pushd ../../../common/scripts/
 
 # Copy spotkube_ms.service to /etc/systemd/system
 sudo cp spotkube_ms.service /etc/systemd/system/
@@ -43,3 +45,5 @@ sudo systemctl daemon-reload
 # Start the spotkube service
 sudo systemctl start spotkube_ms.service
 # sudo systemctl start spotkube_es.service
+
+popd
