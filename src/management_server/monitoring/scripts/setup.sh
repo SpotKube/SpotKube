@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # Import the helper functions
 source ../../../scripts/common.sh
 
@@ -8,11 +10,11 @@ function setup_prometheus() {
     # Install prometheus
     print_info "Installing prometheus"
 
-    kubectl apply -f ../prom/namepsace.yaml
+    kubectl apply -f ../prom/namespace.yaml
     kubectl apply -f ../prom/clusterRole.yaml
     kubectl apply -f ../prom/config-map.yaml
-    kubectl apply -f ../prom/prometheus_deployment.yaml
-    kubectl apply -f ../prom/prometheus_service.yaml
+    kubectl apply -f ../prom/prometheus-deployment.yaml
+    kubectl apply -f ../prom/prometheus-service.yaml
 
     print_success "Prometheus installed successfully. Sleeping for 30s..."
     sleep 30
@@ -51,7 +53,7 @@ function setup_grafana() {
     sleep 30
 }
 
-pirnt_title "Setting up monitoring"
+print_title "Setting up monitoring"
 
 setup_prometheus
 install_adons
