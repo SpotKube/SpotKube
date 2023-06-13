@@ -9,6 +9,10 @@ pushd /etc/nginx/sites-available
 cat <<EOF | sudo tee spotkube
 # Management server API
 server {
+    proxy_read_timeout 600;
+    proxy_connect_timeout 600;
+    proxy_send_timeout 600;
+
     listen 80;
     server_name ${management_node};
     location / {
