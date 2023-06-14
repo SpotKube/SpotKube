@@ -57,12 +57,16 @@ func GetPodCpuUsage(namespace string) []PodCpuUsage {
 }
 
 // Print namespace and service name of the given daemonset
-func GetDaemonSetSvc(namespace string) map[string]bool {
+func GetDaemonSetSvc(namespace string) map[string]DsDetails {
 	dsList := GetDaemonSets(namespace)
 	// Create map of daemonsets in the given namespace
-	serviceMap := make(map[string]bool)
+	serviceMap := make(map[string]DsDetails)
 	for _, ds := range dsList {
-		serviceMap[ds.Name] = false
+		pods := make([]string, 0)
+		for _, pod := range PodsAssociateWithDS(namespace, &ds) {
+			pods = append(pods, pod.Name)
+		}
+		serviceMap[ds.Name] = DsDetails{Pods: pods, IsUsed: false}
 	}
 	return serviceMap
 }

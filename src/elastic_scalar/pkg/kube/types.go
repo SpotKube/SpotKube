@@ -13,3 +13,8 @@ type PodCpuUsage struct {
 	NodeName    string
 	ServiceName string
 }
+
+type DsDetails struct {
+	Pods   []string
+	IsUsed bool
+}
