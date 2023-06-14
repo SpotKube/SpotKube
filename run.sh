@@ -41,8 +41,6 @@ fi
 # Function to run Load Testing service
 function run_load_testing {
     pushd src/load_testing/scripts
-    
-
     while true; do
         SERVICE_NAME=$(whiptail --inputbox "Enter the name of the service to run Locust for:" 8 40 --title "Load Testing" 3>&1 1>&2 2>&3)
         if [[ -z "$SERVICE_NAME" ]]; then
@@ -100,9 +98,11 @@ function run_load_testing {
     output=$(bash run.sh -sn $SERVICE_NAME -d $ROOT_DIR -h $HOST_URL -r $NUMBER_OF_USERS -u $SPAWN_RATE -t $RUN_TIME 2>&1)
     exit_code=$?
 
+    popd
+
     if [ $exit_code -eq 0 ]; then
     echo "$output"
-    whiptail --title "Result" --msgbox "Configured and Deployed Successfully." 8 40
+    whiptail --title "Result" --msgbox "Load testing executed successfully." 8 40
     else
         echo "$output"
         error_message=$(grep -oP '(?<=^Error: ).*' <<< "$output")
@@ -112,7 +112,7 @@ function run_load_testing {
             whiptail --title "Error" --msgbox "Error occurred. Exit code: $exit_code" 8 40
         fi
     fi
-
+    
 }
 
 
@@ -120,8 +120,27 @@ function run_load_testing {
 
 # Function to run Analytical Model service
 function run_analytical_model {
-    whiptail --msgbox "Running Analytical Model service..." 8 40
+    pushd src/analytical_model
+
+    output=$(bash run_analytical_model.sh 2>&1)
+    exit_code=$?
+
+    if [ $exit_code -eq 0 ]; then
+    echo "$output"
+    whiptail --title "Result" --msgbox "Analytical mode completed successfully." 8 40
+    else
+        echo "$output"
+        error_message=$(grep -oP '(?<=^Error: ).*' <<< "$output")
+        if [ -n "$error_message" ]; then
+            whiptail --title "Error" --msgbox "$error_message. Exit code: $exit_code" 8 40
+        else
+            whiptail --title "Error" --msgbox "Error occurred. Exit code: $exit_code" 8 40
+        fi
+    fi
+    popd
+
 }
+
 
 # ------------------------------------ Managemenet Server service functions ----------------------------------------- #
 
