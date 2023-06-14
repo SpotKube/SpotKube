@@ -46,14 +46,33 @@ func calculateTotalCpuUsage(namespaces map[string]string) CalcUsage {
 		} else {
 			podsCpuUsage := kube.GetPodCpuUsage(v)
 			dsSvcs := kube.GetDaemonSetSvc(v)
+
+			// Search whether the pod is daemonset or not
 			for _, podCpuUsage := range podsCpuUsage {
-				isUsed, ok := dsSvcs[podCpuUsage.PodName]
-				if !ok {
+				var dsName string
+				var isDaemonSet bool
+				for dsK, dsV := range dsSvcs {
+					dsName = dsK
+					for _, pod := range dsV.Pods {
+						if pod == podCpuUsage.PodName {
+							isDaemonSet = true
+							break
+						}
+					}
+					if isDaemonSet {
+						break
+					}
+				}
+
+				if !isDaemonSet {
 					cpuUsageOfPodsInOtherNs += podCpuUsage.CpuUsage
 				} else {
-					if !isUsed {
+					if !dsSvcs[dsName].IsUsed {
 						// Here we are considering only the first daemonset's cpu usage, need to change this to consider all daemonsets and find the max cpu usage
 						cpuUsageOfDSInOtherNs += podCpuUsage.CpuUsage
+						dsTemp := dsSvcs[dsName]
+						dsTemp.IsUsed = true
+						dsSvcs[dsName] = dsTemp
 					}
 				}
 
