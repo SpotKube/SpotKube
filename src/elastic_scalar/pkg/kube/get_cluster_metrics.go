@@ -32,8 +32,8 @@ func GetNodeCpuUsage() []NodeCpuUsage {
 	return nodesCpuUsage
 }
 
-func GetPodCpuUsage() []PodCpuUsage {
-	pods := GetPods()
+func GetPodCpuUsage(namespace string) []PodCpuUsage {
+	pods := GetPods(namespace)
 	podsCpuUsage := make([]PodCpuUsage, len(pods.Items))
 	for _, pod := range pods.Items {
 		podMetrics, err := metricsClientset.MetricsV1beta1().PodMetricses(namespace).Get(context.Background(), pod.ObjectMeta.Name, metav1.GetOptions{})

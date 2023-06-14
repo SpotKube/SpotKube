@@ -8,8 +8,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func InvokeOptimizationEngine(services map[string]int) {
-	jsonData := convertToJson(services)
+func InvokeOptimizationEngine(services map[string]int, cpuUsageOfPodsInOtherNS float64) {
+	jsonData := convertToJson(services, cpuUsageOfPodsInOtherNS)
 	// Make an HTTP GET request to the API endpoint
 	response, err := http.Post("http://127.0.0.1:8000/update_aws_cloud", "application/json", bytes.NewBuffer(jsonData))
 	if err != nil {
