@@ -6,7 +6,7 @@ def sort_node_types(item):
     return float(item[1]['cost'])
 
 
-def optimize(instances, flag, costFunc, services):
+def optimize(instances, flag, costFunc, services, cpu_usage_of_pods_in_other_ns, cpu_usage_of_ds_in_other_ns):
     """
     Finds the optimal set of compute nodes for a workload given their hourly cost and resource availability
     using a bruteforce algorithm.
@@ -23,6 +23,9 @@ def optimize(instances, flag, costFunc, services):
     Returns:
     - optimal_nodes (list): the set of compute nodes that minimizes the cost while satisfying the resource requirements
     """
+    for node in instances.keys():
+        instances[node]['cpu'] = instances[node]['cpu'] - round(cpu_usage_of_ds_in_other_ns*0.001, 2)
+    
     node_types = dict(sorted(instances.items(), key=sort_node_types))
     workload = helper.calculateResources(flag, services)
     total_services = len(workload)
@@ -49,16 +52,20 @@ def optimize(instances, flag, costFunc, services):
         for node in nodes:
             total_memory_nodes += node_types[node]['memory']
             total_cpu_nodes += node_types[node]['cpu']
-
+        total_cpu_nodes-= round(cpu_usage_of_pods_in_other_ns*0.001, 2)
         # Check if the selected nodes can deploy all the pods
         if total_memory_nodes >= total_memory_pods and total_cpu_nodes >= total_cpu_pods:
             # Calculate the cost of the selected nodes
             cost = costFunc.cost(nodes)
             if cost < optimal_cost:
                 remaining_pods = total_pods
-                for node in nodes:
-                    pod_mem = node_types[node]['memory'] // max_pod_memory
-                    pod_cpu = node_types[node]['cpu'] // max_pod_cpu
+                for i, node in enumerate(nodes):
+                    node_mem = node_types[node]['memory']
+                    node_cpu = node_types[node]['cpu']
+                    if (i == 0):
+                        node_cpu -= round(cpu_usage_of_pods_in_other_ns*0.001, 2)
+                    pod_mem = node_mem // max_pod_memory
+                    pod_cpu = node_cpu // max_pod_cpu
                     remaining_pods -= min(pod_mem, pod_cpu)
                     
                 if (remaining_pods <= 0):
