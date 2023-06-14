@@ -17,14 +17,16 @@ async def root():
 class OptimizeRequest(BaseModel):
     optimizer_strategy_name: str = "pymoo_v2"
     services_list: list = []
-    allocated_nodes: list = []
+    cpu_usage_of_pods_in_other_ns: int = 150
+    cpu_usage_of_ds_in_other_ns: int = 20
     private_cost_func: str = "privateCost_v1"
 
 @optimize_engine_router.post("/get_nodes")
 async def route_get_node_configuration(request_data: OptimizeRequest):
     optimizer_strategy_name = request_data.optimizer_strategy_name
     service_list = request_data.services_list
-    allocated_nodes = request_data.allocated_nodes
+    cpu_usage_of_pods_in_other_ns = request_data.cpu_usage_of_pods_in_other_ns
+    cpu_usage_of_ds_in_other_ns = request_data.cpu_usage_of_ds_in_other_ns
     private_cost_func = request_data.private_cost_func
     
     if (private_cost_func == "privateCost_v2" ):
@@ -32,6 +34,6 @@ async def route_get_node_configuration(request_data: OptimizeRequest):
     else:
         private_cost_func = privateCost_v1
         
-    return await returnNodeConfiguration(optimizer_strategy_name, service_list, allocated_nodes, private_cost_func)
+    return await returnNodeConfiguration(optimizer_strategy_name, service_list, cpu_usage_of_pods_in_other_ns, cpu_usage_of_ds_in_other_ns, private_cost_func)
 
     

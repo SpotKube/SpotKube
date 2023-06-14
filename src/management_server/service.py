@@ -16,12 +16,12 @@ logger = get_logger(path=logger_dir, log_file="management_server.log")
 # First call the optimization engine to get the optimal node configuration
 # Then call the node allocator to allocate the nodes to the private cloud
 # Then call the helm service to deploy the helm charts
-async def startUpPrivateCloud(optimizer_strategy_name, service_list, allocated_nodes, private_cost_func):
+async def startUpPrivateCloud(optimizer_strategy_name, service_list, cpu_usage_of_pods_in_other_ns, cpu_usage_of_ds_in_other_ns, private_cost_func):
     # Start measuring the time
     start_time = time.time()
     
     # Get optimal node configuration
-    res = await service_get_node_configuration(optimizer_strategy_name, service_list, allocated_nodes, private_cost_func)
+    res = await service_get_node_configuration(optimizer_strategy_name, service_list, cpu_usage_of_pods_in_other_ns, cpu_usage_of_ds_in_other_ns, private_cost_func)
     if (res["status"] != 200):
         return res
     
@@ -46,12 +46,12 @@ async def startUpPrivateCloud(optimizer_strategy_name, service_list, allocated_n
     return {"message": "Private cloud started", "status": 200, "elapsedTime": elapsed_time}
     
 # This function is called when the elastic scaler wants to update the private cloud
-async def updatePrivateCloud(optimizer_strategy_name, service_list, allocated_nodes, private_cost_func):
+async def updatePrivateCloud(optimizer_strategy_name, service_list, cpu_usage_of_pods_in_other_ns, cpu_usage_of_ds_in_other_ns, private_cost_func):
     # Start measuring the time
     start_time = time.time()
     
     # Get optimal node configuration
-    res = await service_get_node_configuration(optimizer_strategy_name, service_list, allocated_nodes, private_cost_func)
+    res = await service_get_node_configuration(optimizer_strategy_name, service_list, cpu_usage_of_pods_in_other_ns, cpu_usage_of_ds_in_other_ns, private_cost_func)
     if (res["status"] != 200):
         return res
     
@@ -72,12 +72,12 @@ async def updatePrivateCloud(optimizer_strategy_name, service_list, allocated_no
 
 # Public cloud related services
 
-async def startUpAwsCloud(optimizer_strategy_name, service_list, allocated_nodes, private_cost_func):
+async def startUpAwsCloud(optimizer_strategy_name, service_list, cpu_usage_of_pods_in_other_ns, cpu_usage_of_ds_in_other_ns, private_cost_func):
     # Start measuring the time
     res = start_time = time.time()
     
     # Get optimal node configuration
-    res = await service_get_node_configuration(optimizer_strategy_name, service_list, allocated_nodes, private_cost_func)
+    res = await service_get_node_configuration(optimizer_strategy_name, service_list, cpu_usage_of_pods_in_other_ns, cpu_usage_of_ds_in_other_ns, private_cost_func)
     if (res["status"] != 200):
         return res
     
@@ -103,12 +103,12 @@ async def startUpAwsCloud(optimizer_strategy_name, service_list, allocated_nodes
     
     
 # This function is called when the elastic scaler wants to update the aws cloud
-async def updateAwsCloud(optimizer_strategy_name, service_list, allocated_nodes, private_cost_func):
+async def updateAwsCloud(optimizer_strategy_name, service_list, cpu_usage_of_pods_in_other_ns, cpu_usage_of_ds_in_other_ns, private_cost_func):
     # Start measuring the time
     start_time = time.time()
     
     # Get optimal node configuration
-    res = await service_get_node_configuration(optimizer_strategy_name, service_list, allocated_nodes, private_cost_func)
+    res = await service_get_node_configuration(optimizer_strategy_name, service_list, cpu_usage_of_pods_in_other_ns, cpu_usage_of_ds_in_other_ns, private_cost_func)
     if (res["status"] != 200):
         return res
     
