@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	log "github.com/sirupsen/logrus"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -55,4 +54,15 @@ func GetPodCpuUsage(namespace string) []PodCpuUsage {
 		})
 	}
 	return podsCpuUsage
+}
+
+// Print namespace and service name of the given daemonset
+func GetDaemonSetSvc(namespace string) map[string]bool {
+	dsList := GetDaemonSets(namespace)
+	// Create map of daemonsets in the given namespace
+	serviceMap := make(map[string]bool)
+	for _, ds := range dsList {
+		serviceMap[ds.Name] = false
+	}
+	return serviceMap
 }
