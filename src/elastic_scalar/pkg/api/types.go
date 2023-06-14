@@ -6,5 +6,6 @@ type SvcDetails struct {
 }
 
 type ReqBodySvc struct {
-	Services []SvcDetails `json:"services_list"`
+	Services                []SvcDetails `json:"services_list"`
+	CpuUsageOfPodsInOtherNS float64      `json:"cpu_usage_of_pods_in_other_ns"`
 }
