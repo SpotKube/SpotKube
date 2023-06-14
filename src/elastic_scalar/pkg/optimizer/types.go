@@ -5,4 +5,5 @@ type CalcUsage struct {
 	NumOfPods               int
 	Services                map[string]int
 	CpuUsageOfpodsInOtherNs float64
+	CpuUsageOfDSInOtherNs   float64
 }

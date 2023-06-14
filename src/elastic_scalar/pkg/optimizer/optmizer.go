@@ -11,6 +11,7 @@ func calculateTotalCpuUsage(namespaces map[string]string) CalcUsage {
 	var numOfPods int
 	services := make(map[string]int)
 	cpuUsageOfPodsInOtherNs := 0.0
+	cpuUsageOfDSInOtherNs := 0.0
 
 	for k, v := range namespaces {
 		if k == "default" {
@@ -44,8 +45,18 @@ func calculateTotalCpuUsage(namespaces map[string]string) CalcUsage {
 			}
 		} else {
 			podsCpuUsage := kube.GetPodCpuUsage(v)
+			dsSvcs := kube.GetDaemonSetSvc(v)
 			for _, podCpuUsage := range podsCpuUsage {
-				cpuUsageOfPodsInOtherNs += podCpuUsage.CpuUsage
+				isUsed, ok := dsSvcs[podCpuUsage.PodName]
+				if !ok {
+					cpuUsageOfPodsInOtherNs += podCpuUsage.CpuUsage
+				} else {
+					if !isUsed {
+						// Here we are considering only the first daemonset's cpu usage, need to change this to consider all daemonsets and find the max cpu usage
+						cpuUsageOfDSInOtherNs += podCpuUsage.CpuUsage
+					}
+				}
+
 			}
 		}
 	}
@@ -54,8 +65,15 @@ func calculateTotalCpuUsage(namespaces map[string]string) CalcUsage {
 	log.Info("Number of pods: ", numOfPods)
 	log.Info("Services: ", services)
 	log.Info("CPU usage of pods in other namespaces: ", cpuUsageOfPodsInOtherNs)
+	log.Info("CPU usage of daemonsets in other namespaces: ", cpuUsageOfDSInOtherNs)
 
-	return CalcUsage{TotalCpu: totalCpuUsage, NumOfPods: numOfPods, Services: services, CpuUsageOfpodsInOtherNs: cpuUsageOfPodsInOtherNs}
+	return CalcUsage{
+		TotalCpu:                totalCpuUsage,
+		NumOfPods:               numOfPods,
+		Services:                services,
+		CpuUsageOfpodsInOtherNs: cpuUsageOfPodsInOtherNs,
+		CpuUsageOfDSInOtherNs:   cpuUsageOfDSInOtherNs,
+	}
 }
 
 func calculateTotalCpuCapacity() float64 {
@@ -81,12 +99,12 @@ func Run() {
 		log.Warn("Total CPU usage is greater than total CPU capacity")
 		// Invoke optimization engine to scale up
 		log.Info("Invoking optimization engine")
-		api.InvokeOptimizationEngine(totalCpuUsage.Services, totalCpuUsage.CpuUsageOfpodsInOtherNs)
+		api.InvokeOptimizationEngine(totalCpuUsage.Services, totalCpuUsage.CpuUsageOfpodsInOtherNs, totalCpuUsage.CpuUsageOfDSInOtherNs)
 	} else if totalCpuUsage.TotalCpu < 0.5*totalCpuCapacity {
 		log.Warn("Total CPU usage is less than 50% of total CPU capacity")
 		// Invoke optimization engine to scale down
 		log.Info("Invoking optimization engine")
-		api.InvokeOptimizationEngine(totalCpuUsage.Services, totalCpuUsage.CpuUsageOfpodsInOtherNs)
+		api.InvokeOptimizationEngine(totalCpuUsage.Services, totalCpuUsage.CpuUsageOfpodsInOtherNs, totalCpuUsage.CpuUsageOfDSInOtherNs)
 	} else {
 		log.Info("Total CPU usage is less than total CPU capacity")
 	}
