@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# set -e 
+set -e 
 
 # Import common functions
 source ../../scripts/common.sh
@@ -102,7 +102,7 @@ done
 if ! command -v locust &> /dev/null
 then
     print_error "Locust is not installed. Please install it first."
-    exit
+    exit 1
 fi
 
 # Jump to load_testing directory
@@ -133,3 +133,5 @@ python3 ../packages/fetch_metrics.py $SERVICE_NAME $GRAFANA_HOST $NUMBER_OF_USER
 # Move cpu and memory usage data to outputs directory
 mv ./cpu.csv $load_testing_path/outputs/$SERVICE_NAME
 mv ./mem.csv $load_testing_path/outputs/$SERVICE_NAME
+
+

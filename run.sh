@@ -40,7 +40,79 @@ fi
 # ----------------------------------------- Load Testing Service ----------------------------------------------- #
 # Function to run Load Testing service
 function run_load_testing {
-    whiptail --msgbox "Running Load Testing service..." 8 40
+    pushd src/load_testing/scripts
+    
+
+    while true; do
+        SERVICE_NAME=$(whiptail --inputbox "Enter the name of the service to run Locust for:" 8 40 --title "Load Testing" 3>&1 1>&2 2>&3)
+        if [[ -z "$SERVICE_NAME" ]]; then
+            whiptail --msgbox "Service name cannot be empty. Please try again." 8 40
+        else
+            break
+        fi
+    done
+
+    while true; do
+        ROOT_DIR=$(whiptail --inputbox "Enter the root directory of the project:" 8 40 --title "Load Testing" 3>&1 1>&2 2>&3)
+        if [[ -z "$ROOT_DIR" ]]; then
+            whiptail --msgbox "Root directory cannot be empty. Please try again." 8 40
+        else
+            break
+        fi
+    done
+
+    while true; do
+        HOST_URL=$(whiptail --inputbox "Enter the host URL:" 8 40 --title "Load Testing" 3>&1 1>&2 2>&3)
+        if [[ -z "$HOST_URL" ]]; then
+            whiptail --msgbox "Host URL cannot be empty. Please try again." 8 40
+        else
+            break
+        fi
+    done
+
+    while true; do
+        NUMBER_OF_USERS=$(whiptail --inputbox "Enter the number of users:" 8 40 --title "Load Testing" 3>&1 1>&2 2>&3)
+        if [[ -z "$NUMBER_OF_USERS" ]]; then
+            whiptail --msgbox "Number of users cannot be empty. Please try again." 8 40
+        else
+            break
+        fi
+    done
+
+    while true; do
+        SPAWN_RATE=$(whiptail --inputbox "Enter the spawn rate:" 8 40 --title "Load Testing" 3>&1 1>&2 2>&3)
+        if [[ -z "$SPAWN_RATE" ]]; then
+            whiptail --msgbox "Spawn rate cannot be empty. Please try again." 8 40
+        else
+            break
+        fi
+    done
+
+    while true; do
+        RUN_TIME=$(whiptail --inputbox "Enter the running time (e.g., 10s, 1m):" 8 40 --title "Load Testing" 3>&1 1>&2 2>&3)
+        if [[ -z "$RUN_TIME" ]]; then
+            whiptail --msgbox "Running time cannot be empty. Please try again." 8 40
+        else
+            break
+        fi
+    done
+
+    output=$(bash run.sh -sn $SERVICE_NAME -d $ROOT_DIR -h $HOST_URL -r $NUMBER_OF_USERS -u $SPAWN_RATE -t $RUN_TIME 2>&1)
+    exit_code=$?
+
+    if [ $exit_code -eq 0 ]; then
+    echo "$output"
+    whiptail --title "Result" --msgbox "Configured and Deployed Successfully." 8 40
+    else
+        echo "$output"
+        error_message=$(grep -oP '(?<=^Error: ).*' <<< "$output")
+        if [ -n "$error_message" ]; then
+            whiptail --title "Error" --msgbox "$error_message. Exit code: $exit_code" 8 40
+        else
+            whiptail --title "Error" --msgbox "Error occurred. Exit code: $exit_code" 8 40
+        fi
+    fi
+
 }
 
 
