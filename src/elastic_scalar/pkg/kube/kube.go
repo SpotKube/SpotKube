@@ -8,7 +8,6 @@ import (
 
 var clientset *kubernetes.Clientset
 var metricsClientset *versioned.Clientset
-var namespace = "default"
 
 func init() {
 	// Initialize the clientset
@@ -22,8 +21,4 @@ func init() {
 
 	// Initialize the clientset for metrics
 	metricsClientset = versioned.NewForConfigOrDie(config)
-}
-
-func SetNameSpace(ns string) {
-	namespace = ns
 }
