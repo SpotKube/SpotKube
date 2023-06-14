@@ -7,7 +7,7 @@ User=ubuntu
 Group=ubuntu
 WorkingDirectory=/home/ubuntu/SpotKube/src/management_server/
 Environment="SPOTKUBE_PATH=/home/ubuntu/SpotKube"
-ExecStart=/home/ubuntu/SpotKube/src/elastic_scalar/bin/elastic_scalar
+ExecStart=/bin/bash /home/ubuntu/SpotKube/src/elastic_scalar/bin/elastic_scalar
 RestartSec=5
 
 [Install]
