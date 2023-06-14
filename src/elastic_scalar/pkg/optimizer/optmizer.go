@@ -72,7 +72,8 @@ func Run() {
 	namespaces := make(map[string]string)
 	namespaces["default"] = "default"
 	namespaces["kube-system"] = "kube-system"
-	namespaces["monitoring"] = "kubernetes-dashboard"
+	namespaces["monitoring"] = "monitoring"
+	namespaces["kube-flannel"] = "kube-flannel"
 
 	totalCpuUsage := calculateTotalCpuUsage(namespaces)
 	totalCpuCapacity := calculateTotalCpuCapacity()
