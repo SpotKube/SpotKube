@@ -16,8 +16,8 @@ function setup_prometheus() {
     kubectl apply -f ../prom/prometheus-deployment.yaml
     kubectl apply -f ../prom/prometheus-service.yaml
 
-    print_success "Prometheus installed successfully. Sleeping for 30s..."
-    sleep 30
+    print_success "Prometheus installed successfully. Sleeping for 60s..."
+    sleep 60
 }
 
 function install_adons() {
