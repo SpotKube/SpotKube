@@ -31,8 +31,8 @@ scaler.
 
 ## Pre-requisite
 
-
-
+- Terraform: Terraform is used to provision the necessary infrastructure in both public and private cloud environments.
+- Ansible: Ansible is used to configure the provisioned infrastructure.
 
 <!-------------------------------------------------- Getting Started  --------------------------------------------------->
 ## Getting Started
@@ -55,11 +55,46 @@ This will create a local copy of the SpotKube repository in the current director
 
 ### 2. Configuring Components
 
-- Configuring Load Testing
+#### 1. Configuring Load Testing
 
-- Configuring Analytical Model
+#### 2. Configuring Analytical Model
 
-- [Configuring Provisioner](documentation/provisioner.md)
+#### 3. Configuring Provisioner
+
+To use the Provisioner component, you need to create a `provisioner.conf` file in the `<PROJECT-ROOT-DIRECTORY>/.config/` directory. This file contains configuration information for both private and public cloud environments. 
+Here is a sample `provisioner.conf` file:
+
+```
+# Private Cloud Configuration
+PRIVATE_INSTANCE_SSH_KEY_PATH='/home/user/.ssh/id_spotkube'
+PRIVATE_INSTANCE_USER=username
+PRIVATE_HOST_IP=10.0.0.0
+PRIVATE_HOST_USER=username
+PRIVATE_HOST_SSH_KEY_PATH='/home/user/.ssh/id_spotkube'
+OPENSTACK_CLOUD_YAML_PATH='/home/user/.config/openstack/clouds.yaml'
+
+# Public Cloud Configuration
+AWS_SHARED_CONFIG_FILE_PATH='/home/user/.aws/config'
+AWS_SHARED_CREDENTIALS_FILE_PATH='/home/user/.aws/credentials'
+```
+
+To use the Provisioner, fill in the appropriate information for your private and public cloud configurations. You can 
+find the necessary information in your cloud provider's documentation. Once you have filled in the configuration 
+information, save the file and place it in the `<PROJECT-ROOT-DIRECTORY>/.config/` folder.
+
+The following table describes the configuration parameters in the `provisioner.conf` file:
+
+| Parameter | Description |
+| --- | --- |
+| `PRIVATE_INSTANCE_SSH_KEY_PATH` | The path to the SSH key used to authenticate with private cloud instances. |
+| `PRIVATE_INSTANCE_USER` | The username used to authenticate with private cloud instances. |
+| `PRIVATE_HOST_IP` | The IP address of the private cloud instance that will be used as the management node. |
+| `PRIVATE_HOST_USER` | The username used to authenticate with the private cloud host machine. |
+| `PRIVATE_HOST_SSH_KEY_PATH` | The path to the SSH key used to authenticate with the private cloud host machine. |
+| `OPENSTACK_CLOUD_YAML_PATH` | The path to the OpenStack cloud configuration file. This file contains authentication information for connecting to OpenStack clouds. |
+| `AWS_SHARED_CONFIG_FILE_PATH` | The path to the AWS configuration file. This file contains configuration information for connecting to AWS services. |
+| `AWS_SHARED_CREDENTIALS_FILE_PATH` | The path to the AWS credentials file. This file contains credentials for authenticating with AWS services. |
+
 
 ### 3. Run SpotKube service
 Before running SpotKube, make sure that you have configured all the necessary components by following the instructions 
