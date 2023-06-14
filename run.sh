@@ -120,8 +120,8 @@ function run_load_testing {
 
 # Function to run Analytical Model service
 function run_analytical_model {
+    
     pushd src/analytical_model
-
     output=$(bash run_analytical_model.sh 2>&1)
     exit_code=$?
 

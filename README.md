@@ -53,16 +53,41 @@ git clone https://github.com/SpotKube/SpotKube.git
 
 This will create a local copy of the SpotKube repository in the current directory.
 
-### 2. Configuring Components
+### 2. Configuring SpotKube
 
-#### 1. Configuring Load Testing
+This guide provides step-by-step instructions on how to configure the SpotKube application by filling out the necessary configuration files. The configuration files include `user_config.yml`, `provisioner.conf`, `load_test.conf`, and 
+`privateCost.json`.
 
-#### 2. Configuring Analytical Model
+#### User Configuration (`user_config.yml`)
 
-#### 3. Configuring Provisioner
+The `user_config.yml` file contains user-specific configurations required for the SpotKube application. Follow the steps below to configure the `user_config.yml` file:
 
-To use the Provisioner component, you need to create a `provisioner.conf` file in the `<PROJECT-ROOT-DIRECTORY>/.config/` directory. This file contains configuration information for both private and public cloud environments. 
-Here is a sample `provisioner.conf` file:
+- Open the `user_config.yml` file in a text editor.
+- Within the services section, you can define multiple services that SpotKube will manage. 
+- Each service requires the following information:
+  - name: The name of the service.
+  - maxRPS: The maximum number of requests per second the service can handle.
+  - minRPS: The minimum number of requests per second the service needs to handle.
+  - private: Set this to True if the service should be deployed on private resources, or False for public resources.
+  - helmChartPath: The path to the Helm chart of the service.
+  -
+
+- Optionally, you can configure the privateResources section to specify the resources for private deployments:
+  - nodeCount: The number of nodes to allocate for private resources.
+  - nodeCPU: The CPU resources allocated per node.
+  - nodeMemory: The memory resources allocated per node.
+
+Make sure to save the changes to the `user_config.yml` file after completing the configuration.
+
+#### Provisioner Configuration (`provisioner.conf`)
+
+The `provisioner.conf` file contains configuration settings for the provisioner component of SpotKube. 
+Follow the steps below to configure the `provisioner.conf` file:
+
+- Open the `provisioner.conf` file in a text editor.
+- Modify the configuration parameters as required based on your cloud environment and provisioning needs. 
+- Please refer to the appropriate documentation for the specific configuration options relevant to your cloud environment.
+- Save the changes to the `provisioner.conf` file after completing the configuration.
 
 ```
 # Private Cloud Configuration
@@ -78,10 +103,6 @@ AWS_SHARED_CONFIG_FILE_PATH='/home/user/.aws/config'
 AWS_SHARED_CREDENTIALS_FILE_PATH='/home/user/.aws/credentials'
 ```
 
-To use the Provisioner, fill in the appropriate information for your private and public cloud configurations. You can 
-find the necessary information in your cloud provider's documentation. Once you have filled in the configuration 
-information, save the file and place it in the `<PROJECT-ROOT-DIRECTORY>/.config/` folder.
-
 The following table describes the configuration parameters in the `provisioner.conf` file:
 
 | Parameter | Description |
@@ -95,6 +116,27 @@ The following table describes the configuration parameters in the `provisioner.c
 | `AWS_SHARED_CONFIG_FILE_PATH` | The path to the AWS configuration file. This file contains configuration information for connecting to AWS services. |
 | `AWS_SHARED_CREDENTIALS_FILE_PATH` | The path to the AWS credentials file. This file contains credentials for authenticating with AWS services. |
 
+Make sure to save the changes to the `provisioner.conf` file after completing the configuration.
+
+#### Load Test Configuration (`load_test.conf`)
+
+The `load_test.conf` file contains configuration settings for the load testing component of SpotKube. Follow the steps below to configure the `load_test.conf` file:
+
+- Open the `load_test.conf` file in a text editor.
+- Set the `GRAFANA_API_KEY` parameter to your Grafana API key.
+- Update the `GRAFANA_HOST` parameter with the URL of your Grafana instance.
+- Save the changes to the `load_test.conf` file after completing the configuration.
+
+#### Private Cost Configuration (`privateCost.json`)
+The `privateCost.json` file contains cost-related configurations for private deployments in SpotKube. Follow the steps below to configure the `privateCost.json` file:
+
+Open the `privateCost.json` file in a text editor.
+Modify the values of the various cost-related parameters based on your cost structure. The parameters include:
+fixedCost: Represents the fixed costs associated with private deployments, such as server cost, network device cost, software license cost, space cost, non-electric cost, Dit, Df, and Du.
+variableCost: Represents the variable costs associated with private deployments, such as electricity unit cost, Eidle, Erunning, internet cost, and labor cost.
+Save the changes to the `privateCost.json` file after completing the configuration.
+
+Once you have filled out and saved the necessary configuration files (`user_config.yml`, `provisioner.conf`, `load_test.conf`, and `privateCost.json`), you can proceed to the next step.
 
 ### 3. Run SpotKube service
 Before running SpotKube, make sure that you have configured all the necessary components by following the instructions 
@@ -141,11 +183,12 @@ to be calculated.
 - After the Cloud Environment Setup is completed, select the `Management Server` option from the menu. 
 - Choose the cloud environment (AWS, private cloud). 
 - Run the management server and select the `Configure and Deploy` option from the menu. 
-- Wait for the management server to be initialized. 
-- You will be notified once the management server is initialized. 
-- This will configure the management server and deploy the microservices application on the Kubernetes cluster.
+- Wait for microservices to be deployed. 
 
-For further information on how to use interactive cli tool, refer to the 
+These management server services are available on `SpotKube Web-UI`. You can run the SpotKube Web-UI locally by running 
+the following instructions in this [SpotKube Web-UI](https://github.com/SpotKube/Spotkube-UI)
+
+For further information on using interactive cli tool, refer to the 
 [SpotKube CLI tool documentation](documentation/cli.md).
 
 That's it! Once the services are up and running, you can use the SpotKube product to deploy and manage your 
