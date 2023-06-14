@@ -18,6 +18,7 @@ async def generate_aws_cloud_hosts_file():
             output = json.load(f)
             control_plane_ip = output['master_node_ip']['value']
             worker_ips = [worker['private_ip'] for worker in output['spot_instances']['value']]
+            worker_node_ip = output['worker_node_ip']['value']
             
         key_name = "id_rsa"
 
@@ -28,6 +29,7 @@ async def generate_aws_cloud_hosts_file():
             f.write('[workers]\n')
             for worker_ip in worker_ips:
                 f.write(f'{worker_ip}\n')
+            f.write(f'{worker_node_ip}\n')
             f.write('\n')
             f.write('[control_plane:vars]\n')
             f.write('ansible_connection=ssh\n')
