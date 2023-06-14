@@ -29,7 +29,7 @@ private_path = os.path.join(dir_path, '../.privateConfig.json')
 spot = helper.readJson(spot_path)
 private = helper.readJson(private_path)
 
-async def returnNodeConfiguration(optimizer_strategy_name, service_list, allocated_nodes, private_cost_func):
+async def returnNodeConfiguration(optimizer_strategy_name, service_list, cpu_usage_of_pods_in_other_ns, cpu_usage_of_ds_in_other_ns, private_cost_func):
     try :
         optimizer = None
         if optimizer_strategy_name == "bruteforce_v1":
@@ -52,8 +52,8 @@ async def returnNodeConfiguration(optimizer_strategy_name, service_list, allocat
         main.predict()
         
         if optimizer is not None:
-            spotNodes = optimizer.optimize(spot, False, publicCost_v1, service_list, allocated_nodes)
-            privateNodes = optimizer.optimize(private, True, private_cost_func, service_list, allocated_nodes)
+            spotNodes = optimizer.optimize(spot, False, publicCost_v1, service_list, cpu_usage_of_pods_in_other_ns, cpu_usage_of_ds_in_other_ns)
+            privateNodes = optimizer.optimize(private, True, private_cost_func, service_list, cpu_usage_of_pods_in_other_ns, cpu_usage_of_ds_in_other_ns)
             helper.returnTf(spotNodes, False)
             helper.returnTf(privateNodes, True)
             logger.info("Optimization completed")

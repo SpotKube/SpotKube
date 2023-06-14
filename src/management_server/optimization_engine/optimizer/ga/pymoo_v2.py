@@ -13,7 +13,7 @@ max_pod_cpu, max_pod_memory = helper.getPodDetails()
 
 # Define a custom problem for deployment optimization
 class DeploymentProblem(Problem):
-    def __init__(self, cost_func, node_sufficient, workload, instances, r, count):
+    def __init__(self, cost_func, node_sufficient, workload, instances, r, cpu_usage_of_pods_in_other_ns):
         super().__init__(n_var=len(instances),
                          n_obj=2,
                          n_constr=0,
@@ -26,7 +26,7 @@ class DeploymentProblem(Problem):
         self.cost_func = cost_func
         self.node_sufficient = node_sufficient
         self.workload = workload
-        self.count = count
+        self.cpu_usage_of_pods_in_other_ns = cpu_usage_of_pods_in_other_ns
         
     def _initialize(self):
         num_nodes = len(self.instances)
@@ -46,7 +46,7 @@ class DeploymentProblem(Problem):
                 nodes += [node_type] * num_nodes
             total_cost[i] = self.cost_func.cost(nodes)
             
-            suff, ratio = self.node_sufficient(self.workload, nodes, self.instances)
+            suff, ratio = self.node_sufficient(self.workload, nodes, self.instances, self.cpu_usage_of_pods_in_other_ns)
             if not suff:
                 total_cost[i],  total_instances[i] =  1e9, -1e9
             if suff and 2 < ratio:
@@ -57,7 +57,7 @@ class DeploymentProblem(Problem):
         out["F"] = np.column_stack((total_cost, -total_instances))
 
 
-def node_sufficient(workload, node_combination, instances):
+def node_sufficient(workload, node_combination, instances, cpu_usage_of_pods_in_other_ns):
     output = False
     total_pods = sum(service['pods'] for service in workload.values())
     total_memory_pods = sum(service['memory'] for service in workload.values())
@@ -68,14 +68,18 @@ def node_sufficient(workload, node_combination, instances):
     for node in node_combination:
         total_memory_nodes += instances[node]['memory']
         total_cpu_nodes += instances[node]['cpu']
-        
+    total_cpu_nodes -= round(cpu_usage_of_pods_in_other_ns*0.001, 2)  
     memory_ratio = round(total_memory_nodes / total_memory_pods, 2)
     cpu_ratio = round(total_cpu_nodes / total_cpu_pods, 2)
     if (1 <= memory_ratio and 1 <= cpu_ratio ):
         remaining_pods = total_pods
-        for node in node_combination:
-            pod_mem = instances[node]['memory'] // max_pod_memory
-            pod_cpu = instances[node]['cpu'] // max_pod_cpu
+        for i, node in enumerate(node_combination):
+            node_mem = instances[node]['memory']
+            node_cpu = instances[node]['cpu']
+            if (i == 0):
+                node_cpu -= round(cpu_usage_of_pods_in_other_ns*0.001, 2) 
+            pod_mem =  node_mem // max_pod_memory
+            pod_cpu = node_cpu // max_pod_cpu
             remaining_pods -= min(pod_mem, pod_cpu)
             
             if (remaining_pods <= 0):
@@ -128,7 +132,7 @@ def sort_nodes(optimal_x, optimal_f):
     sorted_optimal_x = optimal_x[sorted_indices]
     return sorted_optimal_x, sorted_optimal_f
 
-def optimize(instances, flag, costFunc, services, allocated_nodes):
+def optimize(instances, flag, costFunc, services, cpu_usage_of_pods_in_other_ns, cpu_usage_of_ds_in_other_ns):
     workload = helper.calculateResources(flag, services)
     if (len(workload) == 0):
         return []
@@ -137,7 +141,10 @@ def optimize(instances, flag, costFunc, services, allocated_nodes):
         r = helper.getPrivateNodeCount() 
     pop_size = 100
     n_gen = 100
-    problem = DeploymentProblem(cost_func = costFunc, node_sufficient = node_sufficient, workload = workload, instances = instances, r= r, count = 10)
+    for node in instances.keys():
+        instances[node]['cpu'] = instances[node]['cpu'] - round(cpu_usage_of_ds_in_other_ns*0.001, 2)
+    
+    problem = DeploymentProblem(cost_func = costFunc, node_sufficient = node_sufficient, workload = workload, instances = instances, r= r, cpu_usage_of_pods_in_other_ns = cpu_usage_of_pods_in_other_ns)
 
     # Define the algorithm and perform optimization
     algorithm = NSGA2(pop_size=pop_size)

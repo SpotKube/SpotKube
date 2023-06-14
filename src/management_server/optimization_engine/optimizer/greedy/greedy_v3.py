@@ -5,7 +5,7 @@ from optimization_engine.optimizer.optimizerMain import helper
 def sort_node_types(item):
     return float(item[1]['cost'])
 
-def optimize(instances, flag, costFunc, services):
+def optimize(instances, flag, costFunc, services, cpu_usage_of_pods_in_other_ns, cpu_usage_of_ds_in_other_ns):
     """
     Finds the optimal set of compute nodes for a workload given their hourly cost and resource availability
     using a greedy algorithm.
@@ -22,6 +22,9 @@ def optimize(instances, flag, costFunc, services):
     Returns:
     - optimal_nodes (list): the set of compute nodes that minimizes the cost while satisfying the resource requirements
     """
+    for node in instances.keys():
+        instances[node]['cpu'] = instances[node]['cpu'] - round(cpu_usage_of_ds_in_other_ns*0.001, 2)
+    
     node_types = dict(sorted(instances.items(), key=sort_node_types))
     workload = helper.calculateResources(flag, services)
     max_pod_cpu, max_pod_memory = helper.getPodDetails()
@@ -40,7 +43,8 @@ def optimize(instances, flag, costFunc, services):
     remaining_pods = total_pods
     
     # Select nodes until all pods are assigned or there are no more available nodes
-    while remaining_pods > 0 and len(node_heap) > 0:    
+    i = 0
+    while remaining_pods > 0 and len(node_heap) > 0:   
         if (flag and len(selected_nodes) > private_node_count):
             # No nodes available for private cluster to allocate
             break
@@ -48,8 +52,12 @@ def optimize(instances, flag, costFunc, services):
         _, node = heapq.heappop(node_heap)
         if node_types[node]['memory'] >= max_pod_memory and node_types[node]['cpu'] >= max_pod_cpu:
             # Calculate the number of pods that can be assigned to the node
-            pod_mem = node_types[node]['memory'] // max_pod_memory
-            pod_cpu = node_types[node]['cpu'] // max_pod_cpu
+            node_mem = node_types[node]['memory']
+            node_cpu = node_types[node]['cpu']
+            if (i == 0):
+                node_cpu -= round(cpu_usage_of_pods_in_other_ns*0.001, 2)
+            pod_mem = node_mem // max_pod_memory
+            pod_cpu = node_cpu // max_pod_cpu
             pods = min(pod_mem, pod_cpu)
             
             remaining_pods -= pods
@@ -62,7 +70,8 @@ def optimize(instances, flag, costFunc, services):
             
             # Assign the pods to the node
             selected_nodes.append(node)
-
+            i += 1
+            
     # Print the optimal solution
     print(f"Services need to be deployed {workload}")
     if remaining_pods > 0:
