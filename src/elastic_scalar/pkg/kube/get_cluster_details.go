@@ -3,6 +3,7 @@ package kube
 import (
 	"context"
 
+	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -30,4 +31,14 @@ func GetNodes() *v1.NodeList {
 	// }
 
 	return nodeList
+}
+
+// List deamonsets in a namespace
+func GetDaemonSets(namespace string) []appsv1.DaemonSet {
+	daemonSets, err := clientset.AppsV1().DaemonSets(namespace).List(context.Background(), metav1.ListOptions{})
+	if err != nil {
+		panic(err)
+	}
+
+	return daemonSets.Items
 }
