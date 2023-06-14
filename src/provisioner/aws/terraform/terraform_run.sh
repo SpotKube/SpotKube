@@ -164,6 +164,8 @@ then
 
     terraform apply -auto-approve -var "aws_shared_config_file_path=$AWS_SHARED_CONFIG_FILE_PATH" -var "aws_shared_credentials_file_path=$AWS_SHARED_CREDENTIALS_FILE_PATH" -var "pub_id_file_path=$PUBLIC_INSTANCE_SSH_KEY_PATH"
     sleep 60 # Wait for 60 seconds to ensure the instances are fully provisioned
+    terraform apply -auto-approve -var "aws_shared_config_file_path=$AWS_SHARED_CONFIG_FILE_PATH" -var "aws_shared_credentials_file_path=$AWS_SHARED_CREDENTIALS_FILE_PATH" -var "pub_id_file_path=$PUBLIC_INSTANCE_SSH_KEY_PATH"
+    sleep 60
 fi
 
 terraform output -json > public_env_terraform_output.json
