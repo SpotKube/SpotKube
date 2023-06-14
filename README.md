@@ -160,10 +160,8 @@ microservices in the cloud.
 ### High Level Architecture
 
 <p align="center">
-  <img src="documentation/images/hl_a3.png" width="600">
+  <img src="documentation/images/design/hl_a3.png" width="600">
 </p>
-
-## High-Level Architecture
 
 The high-level architecture of SpotKube is designed to optimize the deployment cost of microservices applications on 
 hybrid clouds. It consists of several components working together to achieve efficient autoscaling and deployment.
