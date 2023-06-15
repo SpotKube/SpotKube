@@ -5,7 +5,7 @@ set -e
 # Import common functions
 source ../../../scripts/common.sh
 
-worker_ip=$(cat ../../node_allocator/terraform/aws/public_env_terraform_output.json| jq -r '.worker_node_ip.value')
+worker_ip=$(cat ../../node_allocator/terraform/aws/aws_instance_terraform_output.json| jq -r '.worker_node_ip.value')
 
 # Exit if worker IP is empty
 if [ -z "$worker_ip" ]; then
@@ -22,5 +22,7 @@ if [ -z "$node_name" ]; then
     exit 1
 fi
 
+print_info "Worker Ip: $worker_ip, Node name: $node_name"
+
 # Attach label to node
-kubectl label node $node_name monitor=True
+kubectl label node $node_name monitor=True --overwrite
