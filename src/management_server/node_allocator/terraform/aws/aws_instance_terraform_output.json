@@ -2,7 +2,7 @@
   "master_node_ip": {
     "sensitive": false,
     "type": "string",
-    "value": "10.0.1.12"
+    "value": "10.0.1.205"
   },
   "spot_instances": {
     "sensitive": false,
@@ -29,109 +29,35 @@
               "string"
             ]
           }
-        ],
-        [
-          "object",
-          {
-            "associate_public_ip_address": "bool",
-            "id": "string",
-            "instance_type": "string",
-            "key_name": "string",
-            "private_ip": "string",
-            "public_ip": "string",
-            "subnet_id": "string",
-            "tags": [
-              "map",
-              "string"
-            ],
-            "user_data": "string",
-            "vpc_security_group_ids": [
-              "set",
-              "string"
-            ]
-          }
-        ],
-        [
-          "object",
-          {
-            "associate_public_ip_address": "bool",
-            "id": "string",
-            "instance_type": "string",
-            "key_name": "string",
-            "private_ip": "string",
-            "public_ip": "string",
-            "subnet_id": "string",
-            "tags": [
-              "map",
-              "string"
-            ],
-            "user_data": "string",
-            "vpc_security_group_ids": [
-              "set",
-              "string"
-            ]
-          }
         ]
       ]
     ],
     "value": [
       {
         "associate_public_ip_address": false,
-        "id": "sir-seh6hm2n",
-        "instance_type": "t2.small",
+        "id": "sir-g696kpyp",
+        "instance_type": "t3.medium",
         "key_name": "id_rsa",
-        "private_ip": "10.0.1.161",
+        "private_ip": "10.0.1.59",
         "public_ip": "",
-        "subnet_id": "subnet-02ec461066bcdc78d",
+        "subnet_id": "subnet-0abc51c7e7ade8168",
         "tags": {
           "Name": "spot-1"
         },
         "user_data": null,
         "vpc_security_group_ids": [
-          "sg-001d823dca71ea64a",
-          "sg-002f4e2c40a91ac53",
-          "sg-01676708452c31ca7",
-          "sg-08274b2a77141f9ac"
-        ]
-      },
-      {
-        "associate_public_ip_address": false,
-        "id": "sir-jpgpgxtq",
-        "instance_type": "t2.small",
-        "key_name": "id_rsa",
-        "private_ip": "10.0.1.137",
-        "public_ip": "",
-        "subnet_id": "subnet-02ec461066bcdc78d",
-        "tags": {
-          "Name": "spot-2"
-        },
-        "user_data": null,
-        "vpc_security_group_ids": [
-          "sg-001d823dca71ea64a",
-          "sg-002f4e2c40a91ac53",
-          "sg-01676708452c31ca7",
-          "sg-08274b2a77141f9ac"
-        ]
-      },
-      {
-        "associate_public_ip_address": false,
-        "id": "sir-qbt6j4fq",
-        "instance_type": "t2.small",
-        "key_name": "id_rsa",
-        "private_ip": "10.0.1.150",
-        "public_ip": "",
-        "subnet_id": "subnet-02ec461066bcdc78d",
-        "tags": {
-          "Name": "spot-3"
-        },
-        "user_data": null,
-        "vpc_security_group_ids": [
-          "sg-001d823dca71ea64a",
-          "sg-002f4e2c40a91ac53",
-          "sg-01676708452c31ca7",
-          "sg-08274b2a77141f9ac"
+          "sg-0195ac4d6f516a10d",
+          "sg-01c6461cc28b78648",
+          "sg-01d6368b081b1d186",
+          "sg-0213d90f59415ac09",
+          "sg-028bc1827fd77c7c7"
         ]
       }
     ]
+  },
+  "worker_node_ip": {
+    "sensitive": false,
+    "type": "string",
+    "value": "10.0.1.5"
   }
 }
