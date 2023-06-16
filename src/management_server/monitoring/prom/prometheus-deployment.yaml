@@ -36,3 +36,12 @@ spec:
   
         - name: prometheus-storage-volume
           emptyDir: {}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: monitor
+                operator: Equals
+                values: 
+                - "True"

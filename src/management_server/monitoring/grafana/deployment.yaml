@@ -40,3 +40,12 @@ spec:
           configMap:
               defaultMode: 420
               name: grafana-datasources
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: monitor
+                operator: Equals
+                values: 
+                - "True"
