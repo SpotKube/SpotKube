@@ -55,8 +55,8 @@ function setup_grafana() {
 
 print_title "Setting up monitoring"
 
-setup_prometheus
 install_adons
+setup_prometheus
 install_scrapers
 setup_grafana
 
