@@ -95,7 +95,7 @@ function run_load_testing {
         fi
     done
 
-    output=$(bash run.sh -sn $SERVICE_NAME -d $ROOT_DIR -h $HOST_URL -r $NUMBER_OF_USERS -u $SPAWN_RATE -t $RUN_TIME 2>&1)
+    output=$(bash run.sh -sn $SERVICE_NAME -d $ROOT_DIR -h $HOST_URL -r $NUMBER_OF_USERS -u $SPAWN_RATE -t $RUN_TIME)
     exit_code=$?
 
     popd
