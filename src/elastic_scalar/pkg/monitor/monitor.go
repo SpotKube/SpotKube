@@ -9,7 +9,7 @@ import (
 func Watch() {
 	log.Info("Starting the monitor")
 	c := cron.New()
-	c.AddFunc("5 * * * *", monitor)
+	c.AddFunc("*/5 * * * *", monitor)
 	go c.Start()
 }
 
