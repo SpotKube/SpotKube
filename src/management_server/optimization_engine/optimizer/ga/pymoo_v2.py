@@ -136,7 +136,8 @@ def optimize(instances, flag, costFunc, services, cpu_usage_of_pods_in_other_ns,
     workload = helper.calculateResources(flag, services)
     if (len(workload) == 0):
         return []
-    r = len(workload) * 2
+    total_pods = sum(service['pods'] for service in workload.values())
+    r = max(4, total_pods // len(instances.keys()))
     if (flag):
         r = helper.getPrivateNodeCount() 
     pop_size = 100
