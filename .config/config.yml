@@ -5,47 +5,16 @@ resources:
   privateResources:
     nodeCount: 3
 services:
-- helmChartPath: ~/helm_charts/converter-chart
-  maxRPS:
-    cpu: null
-    memory: null
-    pods: null
-    rps: 50000
+- helmChartPath: ~/helm_charts/prime-chart
   minRPS:
-    cpu: null
-    memory: null
-    pods: 1
-    rps: 100
-  name: service2
-  private: false
-- maxRPS:
-    cpu: null
-    memory: null
-    pods: null
-    rps: 50000
-  minRPS:
-    cpu: null
-    memory: null
-    pods: 6
-    rps: 100
-  name: service3
-  private: true
-- maxRPS:
-    cpu: null
-    memory: null
-    pods: null
-    rps: 50000
-  minRPS:
-    cpu: null
-    memory: null
-    pods: 6
-    rps: 100
-  name: service4
-  private: true
-- helmChartPath: ~/helm_charts/auth-chart
-  minRPS:
-    pods: 2
+    pods: 20
     rps: 100
   name: prime
+  private: false
+- helmChartPath: ~/helm_charts/auth-chart
+  minRPS:
+    pods: 1
+    rps: 100
+  name: auth
   private: false
 version: 1.0
