@@ -3,7 +3,7 @@ version: 1.0
 services:
   - name: prime
     maxRPS: 10000
-    minRPS: 100
+    minRPS: 40
     private: False
     helmChartPath: /home/ksr/Documents/FYP/dev/microservices-python/src/prime/prime-chart
 
