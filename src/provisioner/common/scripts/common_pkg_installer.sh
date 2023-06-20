@@ -44,3 +44,6 @@ export PATH=$PATH:/usr/local/go/bin
 echo "export PATH=$PATH:/usr/local/go/bin" >> ~/.bashrc
 source ~/.bashrc
 
+# Install k9s
+curl -sS https://webinstall.dev/k9s | bash
+source ~/.config/envman/PATH.env
