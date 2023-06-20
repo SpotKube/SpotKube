@@ -114,12 +114,12 @@ func Run() {
 
 	totalCpuUsage := calculateTotalCpuUsage(namespaces)
 	totalCpuCapacity := calculateTotalCpuCapacity()
-	if totalCpuUsage.TotalCpu > 0.5*totalCpuCapacity {
+	if totalCpuUsage.TotalCpu > 0.3*totalCpuCapacity {
 		log.Warn("Total CPU usage is greater than total CPU capacity")
 		// Invoke optimization engine to scale up
 		log.Info("Invoking optimization engine")
 		api.InvokeOptimizationEngine(totalCpuUsage.Services, totalCpuUsage.CpuUsageOfpodsInOtherNs, totalCpuUsage.CpuUsageOfDSInOtherNs)
-	} else if totalCpuUsage.TotalCpu < 0.5*totalCpuCapacity {
+	} else if totalCpuUsage.TotalCpu < 0.1*totalCpuCapacity {
 		log.Warn("Total CPU usage is less than 50% of total CPU capacity")
 		// Invoke optimization engine to scale down
 		// log.Info("Invoking optimization engine")
