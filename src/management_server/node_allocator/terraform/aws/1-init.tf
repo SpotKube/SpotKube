@@ -68,6 +68,13 @@ resource "aws_security_group" "ingress_kubeapi" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    from_port   = 10250
+    to_port     = 10250
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   tags = {
     Name = "Kube api Ingress"
   }
@@ -87,13 +94,6 @@ resource "aws_security_group" "ingress_prometheus" {
   ingress {
     from_port   = 32000
     to_port     = 32000
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    from_port   = 10250
-    to_port     = 10250
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
