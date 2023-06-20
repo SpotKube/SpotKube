@@ -42,6 +42,6 @@ spec:
             nodeSelectorTerms:
             - matchExpressions:
               - key: monitor
-                operator: Equals
+                operator: In
                 values: 
                 - "True"
