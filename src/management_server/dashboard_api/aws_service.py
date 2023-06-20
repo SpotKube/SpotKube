@@ -57,10 +57,13 @@ def get_running_instances(region):
     instances = []
     for reservation in response['Reservations']:
         for instance in reservation['Instances']:
+            tags = []
+            if 'Tags' in instance:
+                tags = instance['Tags']
             ec2Details = {
                 'instanceId': instance['InstanceId'],
                 'instanceType': instance['InstanceType'],
-                'tags': instance['Tags'],
+                'tags':tags,
             } 
             instances.append(ec2Details)
     return instances
