@@ -11,6 +11,39 @@
   <img src="documentation/images/logo.png" width="250">
 </p>
 
+---
+
+**Authors:** [Dasith Edirisinghe][de], [Kavinda Rajapakse][kr], [Pasindu Abeysinghe][py]
+
+[de]:https://dasithedirisinghe.github.io/
+[kr]:https://github.com/kavindasr
+[py]:https://medium.com/@pasinduyeshann
+
+**✨ News ✨**
+
+Oct 2024 - SpotKube got accepted to appear at CLOUDCOM 2024
+
+
+---
+
+## 📖 Citation
+
+If you use this project in your research or publications, please cite using this bibtex:
+```
+@INPROCEEDINGS{10838375,
+  author={Edirisinghe, Dasith and Rajapakse, Kavinda and Abeysinghe, Pasindu and Rathnayake, Sunimal},
+  booktitle={2024 IEEE International Conference on Cloud Computing Technology and Science (CloudCom)}, 
+  title={SpotKube: Cost-Optimal Microservices Deployment with Cluster Autoscaling and Spot Pricing}, 
+  year={2024},
+  volume={},
+  number={},
+  pages={87-94},
+  keywords={Computers;Cloud computing;Costs;Microservice architectures;Pricing;Organizations;Resource management;Transient analysis;Optimization;Genetic algorithms;Microservices;Cost Optimization;Genetic Algorithm;Transient Pricing;Cluster Auto Scaling},
+  doi={10.1109/CloudCom62794.2024.00026}}
+
+```
+
+
 ## Table of Contents
 
 - [Introduction](#introduction)
